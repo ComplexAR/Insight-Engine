@@ -1,0 +1,16 @@
+{
+  "name": "insight-engine-marketplace",
+  "owner": { "name": "Complex-AR" },
+  "metadata": {
+    "description": "The Insight Engine — verification-graded analysis for high-stakes, complex, and wicked problems.",
+    "version": "0.1.7"
+  },
+  "plugins": [
+    {
+      "name": "insight-engine",
+      "source": "./",
+      "version": "0.1.7",
+      "description": "Analysis engine for high-stakes, complex, and wicked problems: proportionality triage, provocation page, source-tiered web verification with disconfirmation, a conditional systems-investigation pass, deep-core routing, a forced judgement gate, an assumption-resilience check, a grade-locked decision brief, audience rendering, and a living investigation workspace."
+    }
+  ]
+}
