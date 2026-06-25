@@ -11,6 +11,10 @@ Built one controlled test at a time, keeping only what beats a strong plain pass
 - **`/render`** — re-voice a finished analysis for a specific reader (board, counsel, regulator, family, adversary, or any named standpoint) without changing a claim or a grade.
 - **`/track`** — keep an investigation live across sessions as new facts arrive.
 
+## Documentation
+
+- [**ICD-203 alignment**](docs/ICD-203-Alignment.md) — how the Insight Engine maps to the nine US Intelligence Community analytic tradecraft standards (blind-assessed at 92% vs a bare model's 75%), with the bounding "architected-around, not certified" caveat.
+
 ## Install
 
 ### Claude Code (CLI) — one-command install
