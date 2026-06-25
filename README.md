@@ -1,6 +1,6 @@
 # Insight Engine
 
-A light plugin for analysing high-stakes, complex, and wicked problems — the kind where the danger is that the important things hide, the evidence is mixed or interested, and the deciding questions are value judgements. **The model provides the insight; the engine makes it verified, defensible, and audience-ready.**
+**Insight Engine** is a lightweight plugin for Claude Code and Claude Cowork that analyses high-stakes, complex, and wicked problems — the kind where the danger is that the important things hide, the evidence is mixed or interested, and the deciding questions are value judgements. It wraps a strong LLM in an assurance layer: source-tiered web verification, a disconfirmation pass, grade-locked decision briefs, and audience rendering, architected around the ICD-203 analytic tradecraft standards. **The model provides the insight; the engine makes it verified, defensible, and audience-ready.**
 
 Built one controlled test at a time, keeping only what beats a strong plain pass. Every load-bearing claim is graded `[V]` (independently corroborated) or `[N]` (rests on an interested or self-reporting party), with strength tiers `[V1]`/`[V2]`/`[V3]`; once a grade is set it is never changed downstream — only re-expressed.
 
