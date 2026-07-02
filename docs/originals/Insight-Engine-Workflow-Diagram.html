@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Insight Engine — Workflow</title>
+<style>
+  body{margin:0;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#1b2430;background:#f6f8fb;}
+  .wrap{max-width:760px;margin:0 auto;padding:28px;}
+  .diagram{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:26px 28px 30px;box-shadow:0 1px 3px rgba(20,30,50,.06);}
+  .dgm-title{font-size:26px;font-weight:700;text-align:center;}
+  .dgm-sub{font-size:13px;color:#5b6776;text-align:center;margin:6px 0 22px;}
+  .flow{display:flex;flex-direction:column;align-items:center;}
+  .node{width:580px;max-width:100%;box-sizing:border-box;background:#eef4ff;border:1.3px solid #c2d4f0;border-radius:10px;padding:11px 16px;text-align:center;}
+  .node b{font-size:14.5px;} .nsub{font-size:11.5px;color:#5b6776;margin-top:3px;line-height:1.45;}
+  .node.green{background:#e9f5ee;border-color:#a9d4bd;}
+  .node.gate{background:#fdf1df;border-color:#e8a33d;}
+  .node.gate b{color:#8a4f08;}
+  .node.start{background:#2c5282;color:#fff;border-color:#2c5282;font-weight:600;}
+  .node.start code{background:rgba(255,255,255,.18);color:#fff;padding:1px 6px;border-radius:4px;}
+  .node.decision{background:#fff7ec;border-color:#eac489;}
+  .node.decision b{color:#8a4f08;}
+  .step{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.5px;color:#5b6776;background:#fff;border:1px solid #cbd5e1;border-radius:5px;padding:1px 6px;margin-bottom:4px;}
+  .node.green .step{color:#2f7a52;border-color:#a9d4bd;} .node.gate .step{color:#8a4f08;border-color:#e8a33d;}
+  .branch{margin-top:8px;font-size:11.5px;background:#eef6ef;border:1px dashed #9cc7ab;border-radius:7px;padding:6px 10px;color:#2f6a48;}
+  .you{display:inline-block;background:#c4781a;color:#fff;font-size:10px;font-weight:700;border-radius:5px;padding:1px 6px;margin-left:6px;vertical-align:middle;letter-spacing:.5px;}
+  .arr{color:#9aa6b4;font-size:15px;margin:5px 0;text-align:center;}
+  .arr-label{font-size:11px;color:#8a6a2a;font-weight:600;}
+  .flow-note{text-align:center;font-size:12px;color:#2f4a3c;margin-top:18px;background:#e9f5ee;border:1px solid #a9d4bd;border-radius:8px;padding:9px 14px;}
+  code{font-family:'SFMono-Regular',Consolas,monospace;font-size:.92em;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="diagram">
+    <div class="dgm-title">How the Insight Engine works</div>
+    <div class="dgm-sub">the <code>/analyse</code> runtime &mdash; what happens when you hand it a problem</div>
+
+    <div class="flow">
+      <div class="node start">You &middot; <code>/analyse "&lt;your problem&gt;"</code></div>
+      <div class="arr">&#9660;</div>
+
+      <div class="node decision"><b>&#9873; Proportionality triage</b><div class="nsub">Unambiguously trivial, self-contained, reversible, no third parties or legal exposure?</div>
+        <div class="branch"><b>YES (rare)</b> &rarr; a short, proportionate answer &mdash; and an offer to run the full pass</div>
+      </div>
+      <div class="arr"><span class="arr-label">NO / any doubt &rarr; full depth (the default)</span><br>&#9660;</div>
+
+      <div class="node"><span class="step">STEP 0</span><br><b>Optional scoping</b><div class="nsub">a few skippable questions &mdash; the decision, the audience, the value frame, any documents you hold</div></div>
+      <div class="arr">&#9660;</div>
+
+      <div class="node"><span class="step">STEP 1</span><br><b>Provocation pass</b><div class="nsub">surface what's material but sits where attention doesn't go; mark each claim [V] or [N]</div></div>
+      <div class="arr">&#9660;</div>
+
+      <div class="node green"><span class="step">STEP 2</span><br><b>Verification</b><div class="nsub">route each claim &middot; tier it [V1]/[V2]/[V3] &middot; search the negation of the load-bearing few &middot; re-scan for what focus dropped</div></div>
+      <div class="arr">&#9660;</div>
+
+      <div class="node" style="border-style:dashed;"><span class="step">STEP 2.5</span><br><b>Systems-investigation pass <span style="font-weight:600;color:#5b6776;font-size:11px;">&middot; conditional</span></b><div class="nsub">only when the problem is genuinely systemic (feedback, stocks, delays, possible tipping): map a graded causal structure &mdash; loops, tipping <i>conditions</i>, leverage. Investigate, don't predict.</div></div>
+      <div class="arr">&#9660;</div>
+
+      <div class="node"><span class="step">STEP 3</span><br><b>Deep-core routing</b><div class="nsub">set aside the questions no evidence can settle: framing &middot; legitimacy &middot; opportunity-cost &middot; value</div></div>
+      <div class="arr">&#9660;</div>
+
+      <div class="node green"><span class="step">STEP 4</span><br><b>Grade-lock + resilience check</b><div class="nsub">fix every grade; stress-test whether the call survives its load-bearing assumptions moving together</div></div>
+      <div class="arr">&#9660;</div>
+
+      <div class="node gate"><span class="step">STEP 5</span><br><b>&#9733; THE FORCED GATE <span class="you">YOU</span></b><div class="nsub">you take a one-line position on each deep-core question &mdash; or explicitly defer.<br><b>The brief does not finalise until you do.</b></div></div>
+      <div class="arr">&#9660;</div>
+
+      <div class="node"><span class="step">STEP 6</span><br><b>Assemble &rarr; the decision brief</b><div class="nsub">your positions &middot; graded findings &middot; <b>call &middot; calibration &middot; dominant unknown &middot; what-to-verify-first &middot; what-would-flip-it</b> &middot; sources</div></div>
+   

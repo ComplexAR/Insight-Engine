@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Insight Engine — User Operating Manual</title>
+<style>
+  body{margin:0;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#27313d;background:#f6f8fb;}
+  .doc{max-width:880px;margin:0 auto;padding:34px 26px 64px;background:#fff;}
+  h1{font-size:30px;margin:0 0 2px;color:#1b2430;}
+  .tagline{color:#5b6776;font-size:14px;margin:6px 0 10px;}
+  .ver{display:inline-block;background:#eef4ff;color:#2c5282;border:1px solid #c2d4f0;border-radius:6px;font-size:12px;font-weight:700;padding:2px 8px;letter-spacing:.5px;}
+  h2{font-size:20px;margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid #eef1f5;color:#1b2430;}
+  h3{font-size:15px;margin:18px 0 6px;color:#2c5282;}
+  p,li{font-size:14.5px;line-height:1.62;}
+  .lead{font-size:15.5px;color:#3b4757;}
+  code{font-family:'SFMono-Regular',Consolas,monospace;background:#eef1f5;border-radius:4px;padding:1px 6px;font-size:.9em;color:#1b2430;}
+  .cmd{font-family:'SFMono-Regular',Consolas,monospace;font-weight:700;color:#2c5282;background:#eef4ff;border-radius:4px;padding:1px 7px;font-size:.92em;}
+  .callout{background:#fdf7ec;border:1px solid #ecd3a0;border-left:4px solid #d99a2b;border-radius:8px;padding:12px 16px;margin:16px 0;font-size:14px;}
+  .callout b{color:#8a5a10;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px;}
+  @media(max-width:680px){.grid2{grid-template-columns:1fr;}}
+  .card{background:#f7f9fc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;}
+  .card h3{margin:0 0 4px;}
+  table.gloss{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:8px;}
+  table.gloss td{border-top:1px solid #e6ebf1;padding:8px;vertical-align:top;}
+  table.gloss td.k{white-space:nowrap;font-weight:700;color:#2c5282;width:185px;}
+  ul{margin:8px 0;padding-left:22px;} li{margin:5px 0;}
+  .foot{margin-top:42px;border-top:1px solid #e6ebf1;padding-top:14px;color:#5b6776;font-size:12.5px;}
+  /* ---- embedded diagram styles ---- */
+  .diagram{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:24px 22px 26px;margin:14px 0;}
+  .dgm-title{font-size:22px;font-weight:700;text-align:center;color:#1b2430;}
+  .dgm-sub{font-size:12.5px;color:#5b6776;text-align:center;margin:6px 0 20px;}
+  .triage{background:#fdf1df;border:1px solid #e9c089;color:#8a4f08;border-radius:22px;padding:9px 16px;text-align:center;font-size:12.5px;font-weight:600;}
+  .down{text-align:center;color:#9aa6b4;font-size:18px;margin:4px 0;}
+  .engine{border:1.5px solid #c9d4e2;border-radius:14px;padding:28px 16px 16px;position:relative;background:#fbfcfe;}
+  .engine-label{position:absolute;top:-11px;left:16px;background:#fff;padding:0 8px;font-size:11.5px;font-weight:700;letter-spacing:1.5px;color:#2c5282;}
+  .cols{display:flex;gap:14px;align-items:stretch;}
+  .stack{flex:1;display:flex;flex-direction:column;gap:8px;}
+  .layer{display:flex;align-items:center;gap:11px;background:#eef4ff;border:1.2px solid #c2d4f0;border-radius:9px;padding:8px 12px;}
+  .layer .ln{flex:none;width:32px;height:32px;border-radius:8px;background:#2c5282;color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;}
+  .layer b{font-size:14px;} .layer .sf{font-size:11px;color:#5b6776;margin-top:2px;}
+  .layer.green{background:#e9f5ee;border-color:#a9d4bd;} .layer.green .ln{background:#2f7a52;}
+  .layer.gate{background:#fdf1df;border-color:#e8a33d;} .layer.gate .ln{background:#c4781a;}
+  .you{display:inline-block;background:#c4781a;color:#fff;font-size:10px;font-weight:700;border-radius:5px;padding:1px 6px;margin-left:6px;vertical-align:middle;letter-spacing:.5px;}
+  .spine{width:235px;flex:none;background:#e9f5ee;border:1.4px solid #a9d4bd;border-radius:11px;padding:13px 14px;}
+  .spine-h{font-weight:700;color:#236244;font-size:13px;letter-spacing:.5px;}
+  .spine-note{font-size:10.5px;color:#4f7a63;margin:2px 0 9px;}
+  .spine ul{margin:0;padding-left:16px;} .spine li{font-size:11.5px;color:#2f4a3c;margin:5px 0;}
+  .spine-rule{height:1px;background:#bfe0cd;margin:11px 0;}
+  .spine-foot{font-size:11px;color:#2f4a3c;}
+  .model{margin-top:9px;background:#eef1f5;border:1.3px solid #bcc7d4;border-radius:9px;padding:10px 12px;font-size:12.5px;font-weight:600;color:#3b4757;text-align:center;}
+  .skills-title{text-align:center;font-size:11px;font-weight:700;letter-spacing:1px;color:#5b6776;margin:20px 0 9px;}
+  .skills{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+  .skill{background:#f1f5f9;border:1px solid #cbd5e1;border-radius:10px;padding:10px 12px;}
+  .skill b{color:#2c5282;font-size:13.5px;} .skill .sf{font-size:10.5px;color:#5b6776;margin-top:4px;}
+  .flow{display:flex;flex-direction:column;align-items:center;}
+  .node{width:560px;max-width:100%;box-sizing:border-box;background:#eef4ff;border:1.3px solid #c2d4f0;border-radius:10px;padding:10px 15px;text-align:center;}
+  .node b{font-size:14px;} .nsub{font-size:11px;color:#5b6776;margin-top:3px;line-height:1.45;}
+  .node.green{background:#e9f5ee;border-color:#a9d4bd;} .node.gate{background:#fdf1df;border-color:#e8a33d;} .node.gate b{color:#8a4f08;}
+  .node.start{background:#2c5282;color:#fff;border-color:#2c5282;font-weight:600;}
+  .node.start code{background:rgba(255,255,255,.18);color:#fff;}
+  .node.decision{background:#fff7ec;border-color:#eac489;} .node.decision b{color:#8a4f08;}
+  .step{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.5px;color:#5b6776;background:#fff;border:1px solid #cbd5e1;border-radius:5px;padding:1px 6px;margin-bottom:3px;}
+  .node.green .step{color:#2f7a52;border-color:#a9d4bd;} .node.gate .step{color:#8a4f08;border-color:#e8a33d;}
+  .branch{margin-top:7px;font-size:11px;background:#eef6ef;border:1px dashed #9cc7ab;border-radius:7px;padding:5px 9px;color:#2f6a48;}
+  .arr{color:#9aa6b4;font-size:14px;margin:5px 0;text-align:center;} .arr-label{font-size:10.5px;color:#8a6a2a;font-weight:600;}
+  .flow-note{text-align:center;font-size:11.5px;color:#2f4a3c;margin-top:16px;background:#e9f5ee;border:1px solid #a9d4bd;border-radius:8px;padding:8px 14px;}
+  @media(max-width:720px){.cols{flex-direction:column;}.spine{width:auto;}.skills{grid-template-columns:repeat(2,1fr);}}
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <h1>Insight Engine</h1>
+  <div class="tagline">User Operating Manual &nbsp;<span class="ver">v0.1.8</span></div>
+  <p class="lead">A tool for investigating high-stakes, complex, contested, and wicked problems &mdash; the kind where the important things hide, the evidence is mixed or interested, and the deciding questions are value judgements. The engine surfaces the hidden contributors, conditions, and causal structure beneath a situation &mdash; sources of success and adaptation as well as failure &mdash; verifies every load-bearing claim against current sources, and routes what cannot be verified to your judgement. It offers understanding and a defensible next step, not control or prediction: wicked problems are navigated, not solved. <b>The large language model provides the insight; the engine makes it verified, defensible, and audience-ready.</b></p>
+
+  <h2>1. What it&rsquo;s for (and when not)</h2>
+  <p>Reach for the Insight Engine when a decision matters and the surface is not the whole story &mdash; a strategy call, a post-incident review, a contract or regulatory question, an investment, a contested situation where you need to know what is really going on and how strongly you actually know it.</p>
+  <p>It is not a search box or a chatbot. It is a discipline: <b>verify what can be verified, grade how strongly each claim is established, separate fact from value, and make you own the value calls.</b> What you get back is a graded, defensible analysis and a decision brief &mdash; and, on request, the same analysis re-voiced for a particular reader, or kept live as an investigation.</p>
+  <div class="callout">You don&rsquo;t need it for genuinely trivial things. It will notice triviality and right-size itself to a short answer &mdash; but you get the most from it on problems that actually have hidden depth.</div>
+
+  <h2>2. Quick start</h2>
+  <p>The engine is the <code>insight-engine</code> plugin. To update, re-install the latest <code>.plugin</code> from Customize &rarr; Skills. You drive it with four chat commands:</p>
+  <div class="grid2">
+    <div class="card"><h3><span class="cmd">/analyse</span></h3><p style="margin:0">The main one. Hand it a problem in your own words, or attach a document and say &ldquo;analyse this.&rdquo;</p></div>
+    <div class="card"><h3><span class="cmd">/verify</span></h3><p style="margin:0">Fact-check a set of claims or a premise before you rely on it.</p></div>
+    <div class="card"><h3><span class="cmd">/render</span></h3><p style="margin:0">Re-voice a finished analysis for a specific reader.</p></div>
+    <div class="card"><h3><span class="cmd">/track</span></h3><p style="margin:0">Keep an investigation live across sessions as new facts arrive.</p></div>
+  </div>
+  <p style="margin-top:12px"><b>Simplest use:</b> type <span class="cmd">/analyse</span> followed by your problem, answer the gate when it asks, and read the brief.</p>
+
+  <h3>A worked first run (what to expect)</h3>
+  <p>Say you run: <code>/analyse Our 40-person firm is about to sign a 5-year exclusive deal with one software vendor. The discount is 30%. Worth it?</code></p>
+  <ol>
+    <li><b>Triage</b> &mdash; not trivial (a 5-year lock-in, material money), so the full pass runs.</li>
+    <li><b>Scoping (optional)</b> &mdash; up to five short questions: the trouble and why now; whose problem it is and who will read the answer; what a good outcome and a serious cost look like; what is fixed and in scope; any documents only you hold. Skip any or all &mdash; skipped items become stated assumptions, and if you skip scoping entirely the engine states its own one-line problem statement (trouble, owner, core question) as an assumption before proceeding.</li>
+    <li><b>Findings arrive graded</b> &mdash; e.g. the vendor&rsquo;s &ldquo;guaranteed 99.9% uptime&rdquo; rests on its own marketing <b>[N]</b>; a 30% discount is roughly the market norm for 5-year exclusivity <b>[V2]</b>; exit costs sit in the contract you hold &mdash; <em>party-held</em>: the termination schedule would settle it.</li>
+    <li><b>The gate</b> &mdash; one question at a time, each with a one-line example answer, with &ldquo;I don&rsquo;t know &mdash; explain this&rdquo; and <em>defer</em> always available. Your positions go on the record at the top of the brief.</li>
+    <li><b>The decision brief</b> &mdash; the call, calibration, the dominant unknown, what to verify first, what would flip the call &mdash; then sources and the plain-language legend.</li>
+  </ol>
+  <p>Nothing in the run predicts the future or makes the value calls for you; that part is deliberately yours.</p>
+
+  <h2>3. The components</h2>
+  <p>The engine is a stack of layers (L0&ndash;L6) held together by an invariant <b>grade-lock spine</b> and owned, at one critical point, by you. A fail-safe <b>proportionality triage</b> sits in front of it and decides whether the full machinery should run at all.</p>
+
+  <div class="diagram">
+    <div class="dgm-title">The Insight Engine &mdash; Components</div>
+    <div class="dgm-sub">the large language model provides the insight; the engine makes it verified, defensible, and audience-ready</div>
+    <div class="triage">&#9873; PROPORTIONALITY TRIAGE &mdash; fail-safe pre-flight &middot; unambiguously trivial? a short answer &middot; under any doubt, full depth</div>
+    <div class="down">&#9660;</div>
+    <div class="engine">
+      <div class="engine-label">INSIGHT ENGINE</div>
+      <div class="cols">
+        <div class="stack">
+          <div class="layer"><span class="ln">L1</span><div><b>Provocation page</b><div class="sf">displacement &amp; 2nd-order &middot; provenance [V]/[N] &middot; seven probes &middot; omission sweep</div></div></div>
+          <div class="layer green"><span class="ln">L2</span><div><b>Verification</b><div class="sf">three-bucket router &middot; source tiers [V1]/[V2]/[V3] &middot; disconfirmation &middot; coverage-retention</div></div></div>
+          <div class="layer"><span class="ln" style="font-size:10.5px">2.5</span><div><b>Systems pass <span style="font-size:10px;color:#5b6776;font-weight:600">&middot; conditional</span></b><div class="sf">feedback-driven problems only &middot; graded causal map: loops &middot; tipping conditions &middot; leverage &middot; investigate, don&rsquo;t predict</div></div></div>
+          <div class="layer"><span class="ln">L3</span><div><b>Deep-core routing</b><div class="sf">framing &middot; legitimacy &middot; opportunity-cost &middot; value &rarr; the un-verifiable OPEN list</div></div></div>
+          <div class="layer gate"><span class="ln">&#9733;</span><div><b>Forced judgement gate <span class="you">YOU</span></b><div class="sf">you record a one-line position on each deep-core question &mdash; or defer</div></div></div>
+          <div class="layer"><span class="ln">L4</span><div><b>Assembly &mdash; the decision brief</b><div class="sf">call &middot; calibration &middot; dominant unknown &middot; what-to-verify-first &middot; what-would-flip-it</div></div></div>
+          <div class="layer"><span class="ln">L5</span><div><b>Rendering</b><div class="sf">audience re-voicing: adversarial &middot; advocate &middot; board &middot; counsel &middot; regulator &middot; family &middot; any</div></div></div>
+          <div class="layer"><span class="ln">L6</span><div><b>Workspace</b><div class="sf">living dossier across sessions: OPEN &middot; UPDATE &middot; STATUS</div></div></div>
+        </div>
+        <div class="spine">
+          <div class="spine-h">GRADE-LOCK SPINE</div>
+          <div class="spine-note">the invariant running through every layer</div>
+          <ul>
+            <li><b>[V1]</b> primary &middot; <b>[V2]</b> secondary</li>
+            <li><b>[V3]</b> weak/contested &middot; <b>[N]</b> interested party</li>
+            <li>the single <b>dominant unknown</b></li>
+            <li>the <b>non-droppable caveat core</b></li>
+          </ul>
+          <div class="spine-rule"></div>
+          <div class="spine-foot">Grades are <b>locked</b>: set once, never changed downstream &mdash; only re-expressed.</div>
+        </div>
+      </div>
+      <div class="model">L0 &middot; Strong model &mdash; provides the insight (the substrate the engine sits on)</div>
+    </div>
+    <div class="skills-title">THE FOUR SKILLS (THE INTERFACE)</div>
+    <div class="skills">
+      <div class="skill"><b>/analyse</b><div class="sf">orchestrates the whole pipeline &mdash; triage &rarr; L1&ndash;L6 with the gate</div></div>
+      <div class="skill"><b>/verify</b><div class="sf">L2 standalone &mdash; fact-check a claim-set or premise</div></div>
+      <div class="skill"><b>/render</b><div class="sf">L5 standalone &mdash; re-voice for an audience</div></div>
+      <div class="skill"><b>/track</b><div class="sf">L6 standalone &mdash; a living investigation</div></div>
+    </div>
+  </div>
+  <p style="font-size:13px;color:#5b6776">In short: <b>L0</b> the model is the substrate; <b>L1&ndash;L6</b> are the processing layers; the <b>spine</b> is the epistemic backbone that never bends; the <b>gate</b> is where you act; the <b>triage</b> decides how much machinery to run.</p>
+
+  <h2>4. How it works</h2>
+  <p>Here is what actually happens when you hand it a problem. Most of the pipeline runs silently &mdash; the one place it stops for you is the gate.</p>
+
+  <div class="diagram">
+    <div class="dgm-title">How the Insight Engine works</div>
+    <div class="dgm-sub">the <code>/analyse</code> runtime &mdash; what happens when you hand it a problem</div>
+    <div class="flow">
+      <div class="node start">You &middot; <code>/analyse "&lt;your problem&gt;"</code></div>
+      <div class="arr">&#9660;</div>
+      <div class="node decision"><b>&#9873; Proportionality triage</b><div class="nsub">Unambiguously trivial, self-contained, reversible, no third parties or legal exposure?</div>
+        <div class="branch"><b>YES (rare)</b> &rarr; a short, proportionate answer &mdash; and an offer to run the full pass</div></div>
+      <div class="arr"><span class="arr-label">NO / any doubt &rarr; full depth (the default)</span><br>&#9660;</div>
+      <div class="node"><span class="step">STEP 0</span><br><b>Optional scoping</b><div class="nsub">a few skippable questions &mdash; the decision, the audience, the value frame, any documents you hold</div></div>
+      <div class="arr">&#9660;</div>
+      <div class="node"><span class="step">STEP 1</span><br><b>Provocation pass</b><div class="nsub">surface what&rsquo;s material but sits where attention doesn&rsquo;t go; mark each claim [V] or [N]</div></div>
+      <div class="arr">&#9660;</div>
+      <div class="node green"><span class="step">STEP 2</span><br><b>Verification</b><div class="nsub">route each claim &middot; tier it [V1]/[V2]/[V3] &middot; search the negation of the load-bearing few &middot; re-scan for what focus dropped</div></div>
+      <div class="arr">&#9660;</div>
+      <div class="node decision"><span class="step">STEP 2.5 &middot; conditional</span><br><b>Systems-investigation pass</b><div class="nsub">only if the problem is genuinely systemic (feedback &middot; stocks &middot; delays &middot; tipping) &mdash; a graded causal map of loops, tipping <em>conditions</em>, and leverage; <b>investigate, don&rsquo;t predict</b>. Otherwise skipped.</div></div>
+      <div class="arr">&#9660;</div>
+      <div class="node"><span class="step">STEP 3</span><br><b>Deep-core routing</b><div class="nsub">set aside the questions no evidence can settle: framing &middot; legitimacy &middot; opportunity-cost &middot; value</div></div>
+      <div class="arr">&#9660;</div>
+      <div class="node green"><span class="step">STEP 4</span><br><b>Grade-lock + resilience check</b><div class="nsub">fix every grade; stress-test whether the call survives its load-bearing assumptions moving together</div></div>
+      <div class="arr">&#9660;</div>
+      <div class="node gate"><span class="step">STEP 5</span><br><b>&#9733; THE FORCED GATE <span class="you">YOU</span></b><div class="nsub">you take a one-line position on each deep-core question &mdash; or explicitly defer.<br><b>The brief does not finalise until you do.</b></div></div>
+      <div class="arr">&#9660;</div>
+      <div class="node"><span class="step">STEP 6</span><br><b>Assemble &rarr; the decision brief</b><div class="nsub">your positions &middot; graded findings &middot; <b>call &middot; calibration &middot; dominant unknown &middot; what-to-verify-first &middot; what-would-flip-it</b> &middot; sources</div></div>
+      <div class="arr">&#9660;</div>
+      <div class="node"><span class="step">STEP 7</span><br><b>Offer follow-ons</b><div class="nsub"><code>/render</code> &mdash; re-voice it for a reader &nbsp;&middot;&nbsp; <code>/track</code> &mdash; keep it live</div></div>
+    </div>
+    <div class="flow-note">From Step 4 onward the <b>grade-lock spine</b> holds: grades never change &mdash; they are only re-expressed.</div>
+  </div>
+
+  <p style="font-size:13px;color:#5b6776"><b>Step 2.5 is new in v0.1.7 and conditional.</b> When a problem is genuinely <em>systemic</em> &mdash; driven by feedback loops, accumulating pressures, delays, or a possible tipping point &mdash; the engine adds a <b>systems-investigation pass</b>: a graded causal map of the loops, the <em>conditions</em> under which the system could tip (never a date or a probability), and the highest-leverage places to intervene. It investigates the structure and routes the &ldquo;will it / when&rdquo; judgement to you; it never forecasts. On a static, one-shot problem it skips this step and says so.</p>
+
+  <h2>5. Using <span class="cmd">/analyse</span></h2>
+  <p><b>What to type:</b> <span class="cmd">/analyse</span> and your problem in plain words, the specific questions you want answered, or a document to analyse &mdash; it will answer your questions inside the graded analysis. The more raw the problem (rather than a pre-digested summary), the more the engine can surface what you might have framed out.</p>
+  <p><b>What it does:</b> runs the pipeline above. You may see it search the web &mdash; that is verification, grading each load-bearing claim and searching for evidence that would <em>disprove</em> the ones the conclusion rests on.</p>
+  <p><b>What you get:</b> a written analysis led by your gate positions, the graded findings (each marked and tiered), and a five-part decision brief.</p>
+
+  <h2>6. Clearing the gate &mdash; the one moment that&rsquo;s yours</h2>
+  <p>Part-way through, the engine stops and puts two to four <b>deep-core questions</b> to you, one at a time &mdash; about the framing, the legitimacy, the opportunity cost, or the values at stake. These have no verifiable answer; they are judgements only you can make. You can:</p>
+  <ul>
+    <li><b>Take a position</b> &mdash; a single line on each is enough.</li>
+    <li><b>Override the engine&rsquo;s framing</b> &mdash; encouraged. If you disagree with how it has framed the problem, say so; it will reshape the brief around your judgement.</li>
+    <li><b>Ask for help</b> &mdash; every question arrives with a one-line example answer; choose &ldquo;I don&rsquo;t know &mdash; explain this&rdquo; and the engine explains it in plain language, then asks again.</li>
+    <li><b>Defer</b> &mdash; logged, not ignored; the brief notes it as open.</li>
+  </ul>
+  <p>The gate opens by asking for your own standpoint in one line, and closes with a stop-record &mdash; why this position is good enough for now. Where the systems pass ran, it also asks at what level to intervene: this problem, or the problem it is a symptom of.</p>
+  <div class="callout"><b>Why it&rsquo;s forced.</b> The engine learned, by test, that if these questions are merely <em>shown</em> to you they get read and then ignored &mdash; attention slides to the verifiable. Being made to take a position is what gets the value questions actually addressed. In real use, an operator&rsquo;s override at the gate materially reshaped the final brief. This is the engine&rsquo;s most valuable interaction; treat it as the decision, not a form to clear.</div>
+
+  <h2>7. Reading the output</h2>
+  <p>Every full-pass deliverable ends with a fixed plain-language legend restating the grade markers in one sentence each &mdash; you never need this manual open to read a brief.</p>
+  <h3>The grade markers</h3>
+  <p>Every load-bearing claim is marked. <code>[V]</code> = independently corroborated; <code>[N]</code> = rests on an interested or self-reporting party. A <code>[V]</code> always carries a strength tier: <code>[V1]</code> primary (the regulation, the official statistic, the study), <code>[V2]</code> secondary (reputable reporting on top of primaries), <code>[V3]</code> weak or contested. The <code>[V3]</code> and <code>[N]</code> items are where the analysis is exposed &mdash; that is where to push.</p>
+  <h3>The decision brief (always five parts)</h3>
+  <ul>
+    <li><b>The call</b> &mdash; the actual recommendation.</li>
+    <li><b>Calibration</b> &mdash; how sure, and the conditions under which it changes (it will name the weakest grade the call leans on).</li>
+    <li><b>The dominant unknown</b> &mdash; the one fact that would most change the conclusion. Chase this first.</li>
+    <li><b>What to verify first</b> &mdash; the cheapest next step that most reduces risk.</li>
+    <li><b>What would flip the call</b> &mdash; including any assumptions that, moved together, the call could not survive.</li>
+  </ul>
+  <h3>Two things that always travel with it</h3>
+  <p>A one-line <b>reliability caveat</b> naming what the analysis rests on; and, for a wicked problem with no verifiable solution, the &ldquo;call&rdquo; arrives as a <b>provisional stance</b> &mdash; the value it trades and what would re-open it &mdash; rather than a false-confident verdict. That is deliberate.</p>
+
+  <h3>Optional finding tags (hard / soft / messy)</h3>
+  <p>Findings may carry an optional tag borrowed from systems engineering (Madhavan, 2024): <b>hard</b> &mdash; bounded and optimisable (<i>solve</i>); <b>soft</b> &mdash; behavioural or political, no optimum, only a defensible accommodation (<i>resolve</i>, by satisficing); <b>messy</b> &mdash; conflicting values or beliefs (<i>dissolve</i>, by reframing until the problem cannot arise in that form). A wicked problem is usually all three colliding &mdash; one crisp verdict cannot fit every finding. Tags are reporting vocabulary only: they change no grade and add no step.</p>
+
+  <h2>8. The other three skills</h2>
+  <div class="grid2">
+    <div class="card"><h3><span class="cmd">/verify</span></h3><p style="margin:0">Hand it a set of claims or a premise. It routes each (web-checkable / your-document / value-judgement), grades and tiers them, searches for counter-evidence, and tells you which are exposed. Use it to check something before you rely on it.</p></div>
+    <div class="card"><h3><span class="cmd">/render</span></h3><p style="margin:0">Takes a finished analysis and re-voices it for a reader. It will ask who &mdash; or you name them: a board, counsel, a regulator, a journalist, the family, an adversary. The grades never change; only the register does.</p></div>
+    <div class="card"><h3><span class="cmd">/track</span></h3><p style="margin:0">For inquiries that evolve. <b>OPEN</b> starts a dossier; <b>UPDATE</b> folds in new facts and re-verifies; <b>STATUS</b> reads back where it stands. (Newest skill &mdash; sound, but the least battle-tested.)</p></div>
+    <div class="card"><h3>Chaining them</h3><p style="margin:0">A natural flow: <span class="cmd">/analyse</span> a problem &rarr; <span class="cmd">/render</span> it for each stakeholder &rarr; <span class="cmd">/track</span> it as the situation develops. <span class="cmd">/verify</span> can be used at any point to re-check a claim.</p></div>
+  </div>
+
+  <h2>9. Tips for good results</h2>
+  <ul>
+    <li><b>Give it the raw problem</b>, not a tidy summary &mdash; it verifies, and it surfaces what a tidy summary has already framed out.</li>
+    <li><b>Upload the documents you hold</b> (contracts, figures). It will not pretend to verify what it cannot see, but it will use what you give it and name what would settle the rest.</li>
+    <li><b>Answer the gate honestly, and override it when you disagree.</b> That is the point of the gate.</li>
+    <li><b>Don&rsquo;t rewrite for a different reader</b> &mdash; use <span class="cmd">/render</span>; the grades stay intact.</li>
+    <li><b>For something that will change, use <span class="cmd">/track</span></b> rather than re-running from scratch.</li>
+    <li><b>Trust the tiers.</b> A <code>[V1]</code> is solid; a <code>[V3]</code> or <code>[N]</code> the call leans on is the soft spot &mdash; push there.</li>
+  </ul>
+
+  <h2>10. What it won&rsquo;t do</h2>
+  <ul>
+    <li>It won&rsquo;t over-analyse a genuinely trivial decision &mdash; it right-sizes, so don&rsquo;t be surprised by a short answer (you can always ask for the full pass).</li>
+    <li>It won&rsquo;t pseudo-verify a private document &mdash; it names what would settle it.</li>
+    <li>It won&rsquo;t resolve your value questions &mdash; it forces <em>you</em> to.</li>
+    <li>It won&rsquo;t change a grade to suit an audience.</li>
+    <li>It won&rsquo;t convene real stakeholders &mdash; it names every affected party and can render their perspectives, but a simulated perspective is labelled as such and is not participation; the people bound by a wicked call still have to be brought in by you.</li>
+    <li>It won&rsquo;t design interventions or trials &mdash; it tells you what to verify first and what would flip the call; staging, piloting, and reversible-trial design are routed to you and your specialists.</li>
+    <li>It won&rsquo;t simulate quantitatively &mdash; the systems pass investigates and grades structure; when genuine modelling is needed it says so and routes out.</li>
+    <li>It won&rsquo;t intervene in power &mdash; where evidence shows outcomes are power-determined, the brief says &ldquo;power problem, not an analysis problem&rdquo; instead of pretending analysis can settle it.</li>
+  </ul>
+
+  <h2>11. Glossary</h2>
+  <table class="gloss">
+    <tr><td class="k">[V] / [N]</td><td>A claim is <b>[V]</b> (independently corroborated) or <b>[N]</b> (rests on an interested or self-reporting party).</td></tr>
+    <tr><td class="k">[V1] / [V2] / [V3]</td><td>Source-strength tiers on a [V] &mdash; how strong the corroborating source itself is. The tier is part of the grade: it travels with the claim and is never dropped.</td></tr>
+    <tr><td class="k">[V1] &mdash; primary</td><td>The strongest tier: the claim is confirmed against the authoritative source itself &mdash; the text of the regulation or statute, the court ruling, the official statistic or regulator publication, the peer-reviewed study, the primary dataset or standard. Nothing stands between the claim and its evidence.</td></tr>
+    <tr><td class="k">[V2] &mdash; secondary</td><td>Confirmed against reputable reporting or interpretation resting on primary sources &mdash; an established news organisation, a professional body, a textbook, a well-regarded analyst. Reliable, but one step removed; where it can, the engine names the primary source that would lift the claim to [V1].</td></tr>
+    <tr><td class="k">[V3] &mdash; weak or contested</td><td>The weakest [V]: the claim is corroborated only by weaker or interested sources (a single blog, a content aggregator, advocacy material, a party&rsquo;s own publications) &mdash; or credible sources genuinely disagree, so it is true-but-disputed. The specific weakness is named and travels with the claim. A [V3] the call leans on is where the analysis is most exposed: treat it as the first thing to verify further.</td></tr>
+    <tr><td class="k">Dominant unknown</td><td>The single fact that, if known, would most change the conclusion.</td></tr>
+    <tr><td class="k">Deep core</td><td>The questions no evidence can settle &mdash; framing, legitimacy, opportunity cost, value. Yours to judge.</td></tr>
+    <tr><td class="k">The gate</td><td>The forced step where you take a position on each deep-core question before the brief finalises.</td></tr>
+    <tr><td class="k">Grade-lock</td><td>Once set, a claim&rsquo;s grade never changes downstream &mdash; only its wording does. What makes the output defensible.</td></tr>
+    <tr><td class="k">Disconfirmation</td><td>For load-bearing claims, a second search aimed at <em>disproving</em> them &mdash; the counter to confirmation bias.</td></tr>
+    <tr><td class="k">Coverage-retention</td><td>A re-scan for material issues that focusing on the load-bearing few may have dropped.</td></tr>
+    <tr><td class="k">Systems-investigation pass</td><td>A conditional step (v0.1.7) for genuinely systemic problems: a graded causal map of feedback loops, tipping <em>conditions</em>, and leverage points &mdash; investigating structure, never predicting whether or when the system tips.</td></tr>
+    <tr><td class="k">Proportionality triage</td><td>The fail-safe pre-flight that right-sizes the analysis &mdash; short answer for the unambiguously trivial, full depth otherwise.</td></tr>
+    <tr><td class="k">Provocation page</td><td>The fixed one-page method applied verbatim every run &mdash; the engine&rsquo;s analytical L1.</td></tr>
+    <tr><td class="k">Wicked problem</td><td>One with no verifiable solution, where the deep core dominates. The call comes as a provisional stance, not a verdict.</td></tr>
+  </table>
+
+  <div class="foot">
+    <b>Insight Engine v0.1.8</b> &mdash; User Operating Manual. The large language model provides the insight; the engine makes it verified, defensible, and audience-ready. For the full design specification, layer-by-layer detail, and the controlled-testing record behind each feature, see the companion <i>Insight Engine Architecture</i> document.
+  </div>
+
+</div>
+</body>
+</html>
