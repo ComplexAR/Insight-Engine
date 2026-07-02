@@ -1,4 +1,4 @@
-# L1 Provocation Page (fixed — same wording every analysis)
+# L1 Provocation Page v1.0 (fixed — same wording every analysis; revised only under the page-revision governance note in the Architecture doc)
 
 Apply this verbatim as the analytical method. It is the 234-framework corpus distilled to one page: two proven always-on moves and a set of candidate probes. Do not rewrite it per problem; only the scenario and the decision change.
 

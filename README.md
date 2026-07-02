@@ -1,6 +1,8 @@
 # Insight Engine
 
-**Insight Engine** is a lightweight plugin for Claude Code and Claude Cowork that analyses high-stakes, complex, and wicked problems — the kind where the danger is that the important things hide, the evidence is mixed or interested, and the deciding questions are value judgements. It wraps a strong LLM in an assurance layer: source-tiered web verification, a disconfirmation pass, grade-locked decision briefs, and audience rendering, architected around the ICD-203 analytic tradecraft standards. **The model provides the insight; the engine makes it verified, defensible, and audience-ready.**
+*Verified, defensible investigation of complex, contested and wicked problems*
+
+A light plugin for investigating high-stakes, complex, contested, and wicked problems — the kind where the important things hide, the evidence is mixed or interested, and the deciding questions are value judgements. The engine surfaces the hidden contributors, conditions, and causal structure beneath a situation — sources of success and adaptation as well as failure — verifies every load-bearing claim against current sources, and routes what cannot be verified to your judgement. It offers understanding and a defensible next step, not control or prediction: wicked problems are navigated, not solved. **The large language model provides the insight; the engine makes it verified, defensible, and audience-ready.**
 
 Built one controlled test at a time, keeping only what beats a strong plain pass. Every load-bearing claim is graded `[V]` (independently corroborated) or `[N]` (rests on an interested or self-reporting party), with strength tiers `[V1]`/`[V2]`/`[V3]`; once a grade is set it is never changed downstream — only re-expressed.
 
@@ -11,9 +13,9 @@ Built one controlled test at a time, keeping only what beats a strong plain pass
 - **`/render`** — re-voice a finished analysis for a specific reader (board, counsel, regulator, family, adversary, or any named standpoint) without changing a claim or a grade.
 - **`/track`** — keep an investigation live across sessions as new facts arrive.
 
-## Documentation
+## What it deliberately does not do
 
-- [**ICD-203 alignment**](docs/ICD-203-Alignment.md) — how the Insight Engine maps to the nine US Intelligence Community analytic tradecraft standards (blind-assessed at 92% vs a bare model's 75%), with the bounding "architected-around, not certified" caveat.
+It does not convene real stakeholders (simulated perspectives are labelled as such — participation is yours to arrange); it does not design interventions or trials (what-to-verify-first and flip conditions, yes; piloting and staging are routed to you); it does not simulate quantitatively (the systems pass grades structure and routes real modelling out); and it does not intervene in power — where evidence shows outcomes are power-determined, the brief says "power problem, not an analysis problem".
 
 ## Install
 
@@ -28,12 +30,12 @@ Built one controlled test at a time, keeping only what beats a strong plain pass
 ### Claude Cowork (desktop app) — install from file
 The desktop app installs plugins from a file rather than from a GitHub marketplace:
 
-1. Download **`dist/insight-engine-0.1.7.plugin`** from this repo (or from the latest [Release](../../releases)).
+1. Download **`dist/insight-engine-0.1.8.plugin`** from this repo (or from the latest [Release](../../releases)).
 2. In Cowork, open **Customize → Skills → Upload from file** and choose the `.plugin`.
 
 ## Version
 
-**0.1.7.** For how releases are cut, see [PUBLISHING.md](PUBLISHING.md).
+**0.1.8.** For how releases are cut, see [PUBLISHING.md](PUBLISHING.md).
 
 ## License
 
