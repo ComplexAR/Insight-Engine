@@ -39,4 +39,4 @@ The desktop app installs plugins from a file rather than from a GitHub marketpla
 
 ## License
 
-No license is set yet. Add a `LICENSE` file (for example MIT) before sharing widely, so others know the terms on which they can use it.
+MIT — see [LICENSE](LICENSE).
