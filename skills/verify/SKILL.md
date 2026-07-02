@@ -32,5 +32,6 @@ Concentrating on the load-bearing few — verifying, tiering, and disconfirming 
 - Weight a self-damaging admission above a self-serving claim.
 - Correct the analysis's own confidently-wrong facts; that is a primary purpose of this step.
 - Name the single dominant unknown after verifying — the one fact that, if known, would most change the conclusion.
+- **The attribution ceiling.** "Person X erred / failed / ignored" in any official account (an inquiry, a coroner, a regulator, an internal review) is an ATTRIBUTION — a recorded judgement by an interested party. That the body made the finding may grade up to `[V1]`; the blame itself is never graded as established fact, and blame allocation routes to human judgement.
 
 Return: a verification table (claim -> `[V1]`/`[V2]`/`[V3]`/`[N]` -> source -> disconfirmation result, or what document is needed), the corrections you made, the load-bearing claims that are `[V3]` or `[N]` (where the analysis is exposed), anything the coverage-retention re-scan recovered, and the revised dominant unknown. Any grade you set is locked — downstream skills may re-express it but never change it.

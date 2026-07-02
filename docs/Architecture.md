@@ -1,6 +1,6 @@
 # The Insight Engine — Architecture, Build Philosophy, and Features
 
-*Reference document for `insight-engine` v0.1.8 · 24 June 2026 (revised 25 June 2026 to add the §9.1 ICD-203 alignment; revised 2 July 2026 for the v0.1.8 wording and operator-experience release — S1-S5 of the 2026-07-01 Optimisation Review).*
+*Reference document for `insight-engine` v0.1.8 · 24 June 2026 (revised 25 June 2026 to add the §9.1 ICD-203 alignment; revised 2 July 2026 for the v0.1.8 wording and operator-experience release — S1-S5 of the 2026-07-01 Optimisation Review; revised again 2 July 2026 for v0.1.9, the attribution ceiling).*
 
 > Markdown edition for reading on GitHub. A formatted `.docx` is in [`originals/`](originals/).
 
@@ -9,7 +9,7 @@
 
 The Insight Engine is a tool for investigating high-stakes, complex, contested, or wicked problems — the kind where the danger is not that the answer is hard to compute but that the most important things sit where attention does not naturally go, where the evidence is mixed or interested, and where the decisive questions are value judgements no amount of analysis can settle. The engine surfaces the hidden contributors, conditions, and causal structure beneath a situation — sources of success and adaptation as well as failure. It offers understanding and a defensible next step, not control or prediction: wicked problems are navigated, not solved.
 
-It is the lightweight successor to the **SAF** (Series of Analytical Frameworks), a 234-framework analytical corpus that has now been frozen. The Insight Engine keeps almost none of the SAF's machinery and all of its hard-won judgement, distilled into a single page and wrapped in an assurance layer. It ships as a Claude/Cowork plugin (`insight-engine`, currently **v0.1.8**) with four skills: `analyse`, `verify`, `render`, and `track`.
+It is the lightweight successor to the **SAF** (Series of Analytical Frameworks), a 234-framework analytical corpus that has now been frozen. The Insight Engine keeps almost none of the SAF's machinery and all of its hard-won judgement, distilled into a single page and wrapped in an assurance layer. It ships as a Claude/Cowork plugin (`insight-engine`, currently **v0.1.9**) with four skills: `analyse`, `verify`, `render`, and `track`.
 
 Its one-line description is also its design thesis: **the large language model provides the insight; the engine makes that insight verified, defensible, and audience-ready.** The engine does not try to be smarter than the model. It tries to make the model's output *trustworthy* and *honest about its own limits* — and to force the human to own the parts that are theirs to own.
 
@@ -182,6 +182,7 @@ The engine's shape is the residue of a controlled-testing program with a consist
 | v0.1.6 | The fail-safe proportionality triage |
 | v0.1.7 | The conditional systems-investigation pass (a graded causal map for feedback-driven problems; investigate, don't predict) |
 | v0.1.8 | Wording and operator-experience release (S1-S5 + P3 of the 2026-07-01 Optimisation Review): canonical purpose statement and reach-not-control vocabulary; boundary statement + power-problem routing line; TOSCA scoping; gate staged one question at a time with an explain route; plain-language legend on every deliverable; gate one-liners (operator standpoint, satisficing stop-record, intervention level); self-stated problem statement on skipped scoping; provocation-page version stamp v1.0 |
+| v0.1.9 | The attribution ceiling, shipped as a grading rule in `verify` and `analyse` (Steps 2 and 6): an official account's finding that a named person or group erred is an attribution — the fact of the finding may grade [V1]; the blame itself never grades as established fact and routes to the operator. Evidenced across the T-IM incident-mode test programme (zero attribution errors in 18 blind rater-checks where the rule was enforced, against repeated slips without it). The incident mode itself (a Step 2.6 knowledge-at-the-time reconstruction) is NOT shipped: its benefit gate registered a fail at the Fable 5 frontier (+1.0-1.3, below the 2.0 bar) and cleared the bar on Opus 4.8 (+3.67, one measurement); its safety and proportionality gates are pending on the deployment substrate; the spec is on file. |
 
 ## 9. Positioning against the field
 
@@ -211,4 +212,4 @@ The shortest honest statement of the road ahead: stop building, start using. Han
 
 ---
 
-*Reference document for `insight-engine` v0.1.8, compiled 24 June 2026 (revised 25 June 2026 to add the ICD-203 alignment, §9.1; revised 2 July 2026 for the v0.1.8 release) from the engine's design and its controlled-testing record. The engine's own grade discipline applies to its self-description: the architecture and version history are recorded fact `[V1]`; the "feature-complete" judgement rests on a small, synthetic-rater test base and is held as a calibrated conclusion, not a proof.*
+*Reference document for `insight-engine` v0.1.9, compiled 24 June 2026 (revised 25 June 2026 to add the ICD-203 alignment, §9.1; revised 2 July 2026 for the v0.1.8 release) from the engine's design and its controlled-testing record. The engine's own grade discipline applies to its self-description: the architecture and version history are recorded fact `[V1]`; the "feature-complete" judgement rests on a small, synthetic-rater test base and is held as a calibrated conclusion, not a proof.*
