@@ -1,6 +1,6 @@
 # Insight Engine — User Operating Guide
 
-**`v0.1.9`** · A tool for investigating high-stakes, complex, contested, and wicked problems — the kind where the important things hide, the evidence is mixed or interested, and the deciding questions are value judgements. The engine surfaces the hidden contributors, conditions, and causal structure beneath a situation — sources of success and adaptation as well as failure — verifies every load-bearing claim against current sources, and routes what cannot be verified to your judgement. It offers understanding and a defensible next step, not control or prediction: wicked problems are navigated, not solved. **The large language model provides the insight; the engine makes it verified, defensible, and audience-ready.**
+**`v0.1.10`** · A tool for investigating high-stakes, complex, contested, and wicked problems — the kind where the important things hide, the evidence is mixed or interested, and the deciding questions are value judgements. The engine surfaces the hidden contributors, conditions, and causal structure beneath a situation — sources of success and adaptation as well as failure — verifies every load-bearing claim against current sources, and routes what cannot be verified to your judgement. It offers understanding and a defensible next step, not control or prediction: wicked problems are navigated, not solved. **The large language model provides the insight; the engine makes it verified, defensible, and audience-ready.**
 
 > This is the Markdown edition, for reading on GitHub. The original styled version (with the rich diagrams) is in [`originals/`](originals/) and on the [project site](https://complexar.github.io/Insight-Engine/).
 
@@ -117,7 +117,7 @@ Part-way through, the engine stops and puts two to four **deep-core questions** 
 - **Ask for help** — every question arrives with a one-line example answer; choose *"I don't know — explain this"* and the engine explains it in plain language, then asks again.
 - **Defer** — logged, not ignored; the brief notes it as open.
 
-The gate opens by asking for your own standpoint in one line, and closes with a stop-record — why this position is good enough for now. Where the systems pass ran, it also asks at what level to intervene: this problem, or the problem it is a symptom of.
+The gate opens by asking for your own standpoint in one line. Where the systems pass ran, it also asks at what level to intervene: this problem, or the problem it is a symptom of.
 
 > **Why it's forced.** The engine learned, by test, that if these questions are merely *shown* to you they get read and then ignored — attention slides to the verifiable. Being made to take a position is what gets the value questions actually addressed. In real use, an operator's override at the gate materially reshaped the final brief. This is the engine's most valuable interaction; treat it as the decision, not a form to clear.
 
@@ -198,4 +198,4 @@ A wicked problem is usually all three colliding, which is why one crisp verdict 
 
 ---
 
-**Insight Engine v0.1.9** — User Operating Guide. The large language model provides the insight; the engine makes it verified, defensible, and audience-ready. For the full design specification, layer-by-layer detail, and the controlled-testing record behind each feature, see the companion [Architecture](Architecture.md) document.
+**Insight Engine v0.1.10** — User Operating Guide. The large language model provides the insight; the engine makes it verified, defensible, and audience-ready. For the full design specification, layer-by-layer detail, and the controlled-testing record behind each feature, see the companion [Architecture](Architecture.md) document.
