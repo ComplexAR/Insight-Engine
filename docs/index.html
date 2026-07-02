@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Insight Engine — Documentation</title>
+<meta name="description" content="Insight Engine — a Claude Code / Cowork plugin for analysing high-stakes, complex, and wicked problems. User guide, architecture, and diagrams.">
+<style>
+  body{margin:0;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#27313d;background:#f6f8fb;}
+  .wrap{max-width:820px;margin:0 auto;padding:40px 24px 64px;}
+  h1{font-size:32px;margin:0 0 4px;color:#1b2430;}
+  .ver{display:inline-block;background:#eef4ff;color:#2c5282;border:1px solid #c2d4f0;border-radius:6px;font-size:12px;font-weight:700;padding:2px 8px;letter-spacing:.5px;margin-left:8px;vertical-align:middle;}
+  .lead{font-size:16px;color:#3b4757;line-height:1.6;margin:14px 0 6px;}
+  .thesis{font-weight:600;color:#1b2430;}
+  h2{font-size:14px;text-transform:uppercase;letter-spacing:1px;color:#5b6776;margin:34px 0 12px;}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:640px){.cards{grid-template-columns:1fr;}}
+  a.card{display:block;text-decoration:none;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px 18px;color:inherit;transition:border-color .15s,box-shadow .15s;}
+  a.card:hover{border-color:#9cc0ee;box-shadow:0 2px 10px rgba(20,40,80,.07);}
+  a.card b{color:#2c5282;font-size:15.5px;}
+  a.card .d{font-size:12.5px;color:#5b6776;margin-top:5px;line-height:1.5;}
+  .tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.5px;border-radius:5px;padding:1px 6px;margin-left:6px;vertical-align:middle;}
+  .tag.rich{background:#e9f5ee;color:#2f7a52;border:1px solid #a9d4bd;}
+  .tag.md{background:#eef4ff;color:#2c5282;border:1px solid #c2d4f0;}
+  .foot{margin-top:40px;border-top:1px solid #e6ebf1;padding-top:16px;color:#5b6776;font-size:12.5px;line-height:1.6;}
+  code{font-family:'SFMono-Regular',Consolas,monospace;background:#eef1f5;border-radius:4px;padding:1px 6px;font-size:.9em;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Insight Engine<span class="ver">v0.1.8</span></h1>
+  <p><em>Verified, defensible investigation of complex, contested and wicked problems</em></p>
+  <p class="lead">A Claude Code / Cowork plugin for investigating high-stakes, complex, contested, and wicked problems &mdash; the kind where the important things hide, the evidence is mixed or interested, and the deciding questions are value judgements. The engine surfaces the hidden contributors, conditions, and causal structure beneath a situation &mdash; sources of success and adaptation as well as failure &mdash; verifies every load-bearing claim against current sources, and routes what cannot be verified to your judgement. It offers understanding and a defensible next step, not control or prediction: wicked problems are navigated, not solved. <span class="thesis">The large language model provides the insight; the engine makes it verified, defensible, and audience-ready.</span></p>
+
+  <h2>Start here</h2>
+  <div class="cards">
+    <a class="card" href="originals/Insight-Engine-User-Operating-Manual.html"><b>User Operating Guide</b> <span class="tag rich">interactive</span><div class="d">How to use the engine: the four commands, the workflow, clearing the gate, and reading the graded output.</div></a>
+    <a class="card" href="https://github.com/ComplexAR/Insight-Engine"><b>Get the plugin</b><div class="d">Install for Claude Code, or download the <code>.plugin</code> for Cowork. Source, releases, and install steps.</div></a>
+  </div>
+
+  <h2>The diagrams</h2>
+  <div class="cards">
+    <a class="card" href="originals/Insight-Engine-Workflow-Diagram.html"><b>How it works &mdash; workflow</b> <span class="tag rich">interactive</span><div class="d">The <code>/analyse</code> runtime, step by step, including the conditional Step&nbsp;2.5 systems-investigation pass.</div></a>
+    <a class="card" href="originals/Insight-Engine-Components-Diagram.html"><b>The components</b> <span class="tag rich">interactive</span><div class="d">The L0&ndash;L6 layer stack, the grade-lock spine, the forced gate, and the four skills.</div></a>
+  </div>
+
+  <h2>Reference</h2>
+  <div class="cards">
+    <a class="card" href="https://github.com/ComplexAR/Insight-Engine/blob/main/docs/Architecture.md"><b>Architecture &amp; build philosophy</b> <span class="tag md">markdown</span><div class="d">The layer-by-layer design and the controlled-testing record behind each feature, with the &sect;9.1 ICD-203 alignment.</div></a>
+    <a class="card" href="https://github.com/ComplexAR/Insight-Engine/blob/main/docs/ICD-203-Alignment.md"><b>ICD-203 alignment</b> <span class="tag md">markdown</span><div class="d">How the engine maps to the nine Intelligence Community analytic tradecraft standards (assessed 92% vs a bare model's 75%).</div></a>
+  </div>
+
+  <div class="foot">
+    Markdown editions of the guide and architecture (with the diagrams recreated as Mermaid) render on the <a href="https://github.com/ComplexAR/Insight-Engine/tree/main/docs">repository <code>docs/</code> folder</a>. The original formatted files (<code>.docx</code>, <code>.html</code>) are in <a href="originals/">originals/</a>.<br>
+    <b>Insight Engine v0.1.8</b> &mdash; architected around the ICD-203 analytic tradecraft standards (by design; not a certification).
+  </div>
+</div>
+</body>
+</html>
