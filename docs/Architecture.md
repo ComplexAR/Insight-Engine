@@ -1,15 +1,17 @@
 # The Insight Engine — Architecture, Build Philosophy, and Features
 
-*Reference document for `insight-engine` v0.1.8 · 24 June 2026 (revised 25 June 2026 to add the §9.1 ICD-203 alignment; revised 2 July 2026 for the v0.1.8 wording and operator-experience release — S1-S5 of the 2026-07-01 Optimisation Review; revised again 2 July 2026 for v0.1.9, the attribution ceiling; revised 3 July 2026 for v0.1.10).*
+*Reference document for `insight-engine` v0.1.11 · 24 June 2026 (revised 25 June 2026 to add the §9.1 ICD-203 alignment; revised 2 July 2026 for the v0.1.8 wording and operator-experience release — S1-S5 of the 2026-07-01 Optimisation Review; revised again 2 July 2026 for v0.1.9, the attribution ceiling; revised 3 July 2026 for v0.1.10; revised again 3 July 2026 to add the companion Foundations document; revised 3 July 2026 for v0.1.11 — checkable per-claim references — and the new §3.1 layer map).*
 
 > Markdown edition for reading on GitHub. A formatted `.docx` is in [`originals/`](originals/).
+>
+> For the ideas each layer is built on — and how to run the method on any capable model outside Claude — see the companion [**Foundations**](Foundations.md) document, written for the general reader.
 
 
 ## 1. What the Insight Engine is
 
 The Insight Engine is a tool for investigating high-stakes, complex, contested, or wicked problems — the kind where the danger is not that the answer is hard to compute but that the most important things sit where attention does not naturally go, where the evidence is mixed or interested, and where the decisive questions are value judgements no amount of analysis can settle. The engine surfaces the hidden contributors, conditions, and causal structure beneath a situation — sources of success and adaptation as well as failure. It offers understanding and a defensible next step, not control or prediction: wicked problems are navigated, not solved.
 
-It is the lightweight successor to the **SAF** (Series of Analytical Frameworks), a 234-framework analytical corpus that has now been frozen. The Insight Engine keeps almost none of the SAF's machinery and all of its hard-won judgement, distilled into a single page and wrapped in an assurance layer. It ships as a Claude/Cowork plugin (`insight-engine`, currently **v0.1.10**) with four skills: `analyse`, `verify`, `render`, and `track`.
+It is the lightweight successor to the **SAF** (Series of Analytical Frameworks), a 234-framework analytical corpus that has now been frozen. The Insight Engine keeps almost none of the SAF's machinery and all of its hard-won judgement, distilled into a single page and wrapped in an assurance layer. It ships as a Claude/Cowork plugin (`insight-engine`, currently **v0.1.11**) with four skills: `analyse`, `verify`, `render`, and `track`.
 
 Its one-line description is also its design thesis: **the large language model provides the insight; the engine makes that insight verified, defensible, and audience-ready.** The engine does not try to be smarter than the model. It tries to make the model's output *trustworthy* and *honest about its own limits* — and to force the human to own the parts that are theirs to own.
 
@@ -48,6 +50,26 @@ The engine is best understood as a stack of conceptual layers, held together by 
 
 Sitting in front of the whole stack is a **fail-safe proportionality triage** (added in v0.1.6): a pre-flight check that decides whether the full machinery should run at all, or whether the problem is unambiguously trivial enough for a short, proportionate answer. Its default is depth; down-scoping is the rare, guarded exception.
 
+### 3.1 The layer map — steps, approaches, and lineages
+
+The `analyse` skill runs the pipeline as numbered steps; the architecture describes the same machinery as layers. The correspondence is deliberate but not one-to-one: one step spans two layers, the gate belongs to the operator rather than to any layer, and two layers live in separate skills. The table below is the complete map. The reasoning behind each lineage, written for the general reader, is in the companion [Foundations](Foundations.md) document.
+
+| Layer | Step in `analyse` | Approach in use | Documented lineage |
+|---|---|---|---|
+| Proportionality triage | Pre-flight | Fail-safe right-sizing; default to depth; down-scope only on unambiguous triviality | Satisficing (Simon); boundary conditions consistent with Klein; earned on T-AB-004 |
+| Scoping (elicitation point; no layer) | Step 0 | TOSCA problem framing; on skip, the engine writes its own problem statement as a marked assumption | Garrette, Phelps & Sibony, *Cracked It!* |
+| L0 — the model | Beneath Step 1 | The substrate supplies the insight; the engine imposes procedure | Kahneman (procedures over self-correction) |
+| L1 — the provocation page | Step 1 | Fixed one-page probe set, identical wording every run | Distilled from the 234-framework SAF corpus; page form per Gawande |
+| L2 — verification | Step 2 (standalone: `verify`) | Three-bucket router; `[V]`/`[N]` grading with `[V1]`-`[V3]` tiers; disconfirmation search; attribution ceiling; checkable per-claim references (v0.1.11) | ICD-203 analytic standards; Cook & Woods and Fischhoff (attribution ceiling) |
+| L2.5 — the systems pass | Step 2.5 (conditional) | Graded causal map; loops graded exists-vs-dominates; tipping conditions, never dates; investigate-don't-predict | Systems-thinking tradition; discipline earned on T-SM-001/002/004 |
+| L3 — deep-core routing | Step 3 | Fact/value separation into an OPEN list the model may not resolve | ICD-203 standard 3; Rittel & Webber characteristics 3, 9, 10 |
+| The grade-lock spine (§4; invariant) | Step 4 | Grades locked; joint assumption-resilience check | Internal design; ICD-203 standard 8 |
+| The gate (operator-owned; no layer) | Step 5 | Forced one-at-a-time judgement positions; standpoint opener; conditional intervention-level question | Cognitive-forcing class; forcing earned on T-L2-006; opener per *The Blind Spot* |
+| L4 — assembly | Step 6 | Decision brief; wicked-call guard; coverage-retention re-scan; power-problem line; plain-language legend | Rittel & Webber ("navigated, not solved"); Hayes and Bransford & Stein (the legend and staging) |
+| Follow-ons (no layer) | Step 7 | Offers the L5/L6 skills | — |
+| L5 — rendering | The `render` skill | Grade-locked audience re-voicing | *Cracked It!* ("Sell"); ICD-203 standard 5 |
+| L6 — the living workspace | The `track` skill | Persistent dossier; explicit dated re-grading | ICD-203 standard 7 |
+
 ## 4. The grade-lock spine (the invariant)
 
 Grade-lock is the single most important idea in the engine and the through-line of every other feature. It has three parts:
@@ -85,6 +107,8 @@ The assurance layer with teeth. It turns "the model believes X" into "X is corro
 - **The coverage-retention re-scan.** Concentrating on the load-bearing few narrows attention onto exactly those claims. Before finishing, the engine re-scans once for material issues that the focus deprioritised. "Sharpening the spotlight darkens its edges; this is the counter-sweep."
 
 A standing heuristic runs through all of L2: **weight a self-damaging admission above a self-serving claim**, and correct the analysis's own confidently-wrong facts — a strong model asserts some, and this is where they get caught.
+
+**Checkable references (v0.1.11).** Every graded claim in the deliverable carries a reference the reader can validate without help: web-verified evidence names its source with a URL; party-held or in-document evidence names the document plus the section or page. This is a discipline clarification of the existing per-claim source requirement, not a new capability.
 
 ### 5.3.1 The systems-investigation pass (Step 2.5 — conditional; v0.1.7)
 Some wicked problems are not merely hard to verify — they are *dynamic*: driven by feedback loops, accumulating stocks, delays between cause and effect, and the possibility of tipping into a different regime. For these, and only these, the engine runs a **systems-investigation pass** after verification (Step 2.5), building a graded causal map. It is conditional, and its discipline is the whole point.
@@ -184,6 +208,7 @@ The engine's shape is the residue of a controlled-testing program with a consist
 | v0.1.8 | Wording and operator-experience release (S1-S5 + P3 of the 2026-07-01 Optimisation Review): canonical purpose statement and reach-not-control vocabulary; boundary statement + power-problem routing line; TOSCA scoping; gate staged one question at a time with an explain route; plain-language legend on every deliverable; gate one-liners (operator standpoint, satisficing stop-record, intervention level); self-stated problem statement on skipped scoping; provocation-page version stamp v1.0 |
 | v0.1.9 | The attribution ceiling, shipped as a grading rule in `verify` and `analyse` (Steps 2 and 6): an official account's finding that a named person or group erred is an attribution — the fact of the finding may grade [V1]; the blame itself never grades as established fact and routes to the operator. Evidenced across the T-IM incident-mode test programme (zero attribution errors in 18 blind rater-checks where the rule was enforced, against repeated slips without it). The incident mode itself (a Step 2.6 knowledge-at-the-time reconstruction) is NOT shipped — finally declined after the full gate programme: benefit registered a fail at the Fable 5 frontier; the safety and proportionality gates PASSED on Opus 4.8; the East Kent benefit replication against this v0.1.9 baseline then scored below baseline (C minus B = -1.0; 0/3 rater preference) — the attribution ceiling itself proved to be the mode's active ingredient, and once shipped here, the residual reconstruction cost more attention than it added. The spec remains on file for ad-hoc use. v0.1.9 is the final shipped state of this programme. |
 | v0.1.10 | The gate's closing question (the satisficing stop-record) removed, on the operator's decision after two live interactive runs: its informational content duplicates the decision brief's built-in re-open and what-would-flip-it conditions, and real use produced comprehension friction without added content. The gate now closes after the final judgement question. The standpoint opener and the conditional intervention-level question remain — both changed analysis content in the same runs (the opener caught an operator anchored on a debunked headline figure). First change driven entirely by the v0.1.8 watch rule operating on real use. |
+| v0.1.11 | Checkable per-claim references: every graded claim in the deliverable now states a reference the reader can validate without help — web-verified evidence as the named source with its URL; party-held or in-document evidence as the document name plus section or page. A two-line discipline clarification in `verify` and `analyse` Step 6 (wording class; no gate required under §8's own rules), prompted by an operator question about reader validation. Shipped alongside two docs-only additions: the §3.1 layer-step-approach-lineage map and the Foundations probe-by-probe commentary on the provocation page. `render`, `track`, and the provocation page are byte-identical to v0.1.10. |
 
 ## 9. Positioning against the field
 
@@ -213,4 +238,4 @@ The shortest honest statement of the road ahead: stop building, start using. Han
 
 ---
 
-*Reference document for `insight-engine` v0.1.10, compiled 24 June 2026 (revised 25 June 2026 to add the ICD-203 alignment, §9.1; revised 2 July 2026 for the v0.1.8 release) from the engine's design and its controlled-testing record. The engine's own grade discipline applies to its self-description: the architecture and version history are recorded fact `[V1]`; the "feature-complete" judgement rests on a small, synthetic-rater test base and is held as a calibrated conclusion, not a proof.*
+*Reference document for `insight-engine` v0.1.11, compiled 24 June 2026 (revised 25 June 2026 to add the ICD-203 alignment, §9.1; revised 2 July 2026 for the v0.1.8 release) from the engine's design and its controlled-testing record. The engine's own grade discipline applies to its self-description: the architecture and version history are recorded fact `[V1]`; the "feature-complete" judgement rests on a small, synthetic-rater test base and is held as a calibrated conclusion, not a proof.*
