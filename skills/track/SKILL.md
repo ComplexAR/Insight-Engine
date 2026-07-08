@@ -10,14 +10,14 @@ Maintain a living investigation dossier for a long-running inquiry across sessio
 ## The dossier (one markdown file in the operator's folder, persisted across sessions)
 One file per investigation, named `track-<slug>-<date>.md`, kept in the operator's folder so it survives sessions. Sections:
 - **Question** — what conclusion is being kept live, in one line.
-- **Spine** — every claim with its `[V]`/`[N]` grade and source tier (`[V1]`/`[V2]`/`[V3]`).
+- **Spine** — every claim with its `[V]`/`[N]` grade and source tier (`[V1]`/`[V2]`/`[V3]`), plus two currency fields: `last-verified: <date>` and a volatility class — **FIXED** (a settled historical fact), **SLOW** (changes on the scale of years), or **VOLATILE** (current status that can change week to week) — set at OPEN and itself revisable with a dated log line (it is metadata, not a grade — do not grade-lock it by accident).
 - **Dominant unknown** — the one fact that would most change the conclusion now.
 - **Open (deep core)** — the framing / legitimacy / opportunity-cost / value questions, with the operator's recorded positions (carried from the `analyse` gate) or marked unresolved.
 - **Pending (party-held)** — each item with the exact document or evidence that would settle it.
 - **Watch-list (update triggers)** — the facts, documents, or events that would change the call; this is what an update is checked against.
 - **The call** — the current decision-brief call + calibration, re-derived whenever the spine moves.
 - **Sources.**
-- **Update log** — dated entries.
+- **Update log** — dated entries. Each records either a grade change (before -> after, with the evidence that moved it) or a **checked-and-held** result: **HELD-FIRM** (the check found nothing to change the grade) or **HELD-ERODED** (a *cited* new observation was found that is insufficient to change the grade — e.g. a corroborating source retracted while the primary holds; a bare "less sure" with no citable observation is not allowed, and two HELD-ERODED entries on one claim force a full re-grade review). Every entry — change or held — names in one line what was searched and what would have counted as disconfirmation: a "held" without a named falsifier is not a check.
 
 ## Mode 1 — OPEN (start a tracked investigation): ASK FIRST
 Before creating the dossier, put these to the operator with AskUserQuestion (skippable; proceed on stated assumptions if declined):
@@ -31,16 +31,16 @@ Then write the dossier file, seeded from the answers, and confirm its location.
 Begin by asking the operator **what has arrived** — a new document, a web development, a settled party-held item, an event — and accept uploads. Then:
 1. Identify which claims the new information bears on.
 2. Re-verify those claims (run the `verify` skill — router, source-tiering, and a disconfirmation pass on the load-bearing few): web-verifiable items against current sources; a newly-arrived party-held document against the pending list.
-3. Update grades EXPLICITLY — never silently. Record before -> after in the log and state what evidence changed it.
+3. Update grades EXPLICITLY — never silently: record before -> after in the log and state what evidence changed it. Where re-verification does NOT change a grade, still record a **checked-and-held** entry (HELD-FIRM, or HELD-ERODED with its cited observation), naming what was searched and what would have counted as disconfirmation — so the log distinguishes "re-checked and survived" from "never revisited", and update the claim's `last-verified` date.
 4. Re-surface the dominant unknown (it may have moved) and clear any pending item the new evidence settles.
 5. **Re-derive the call** — if the spine moved, recompute the decision brief (call · calibration · dominant unknown · what-to-verify-first · what-flips-it) and say whether the call flipped.
 6. Append a dated log entry: what arrived, what changed, what is still open.
 
 ## Mode 3 — STATUS (where does it stand?): READ, don't re-verify
-Report the current state from the dossier without new verification (unless asked): the question, the spine with grades, the current dominant unknown, what is still pending (party-held), the open deep-core with the operator's positions, the current call, and what changed since the last update. Offer to run an UPDATE if the operator has new material.
+Report the current state from the dossier without new verification (unless asked): the question, the spine with grades and — for each claim — its `last-verified` date and volatility class (flag any VOLATILE claim whose `last-verified` date is stale), the current dominant unknown, what is still pending (party-held), the open deep-core with the operator's positions, the current call, and what changed since the last update. Offer to run an UPDATE if the operator has new material.
 
 ## Hard invariants
-- **Grade-lock carries.** A finding's grade changes only on new evidence, recorded in the log — never by re-expression.
+- **Grade-lock carries — changing versus challenging.** A finding's grade changes only on new evidence, recorded in the log — never by re-expression. *Challenging* a grade (re-verifying it, searching for disconfirmation) needs no new evidence and may happen at any time — it is a search, not a write, and is recorded as a checked-and-held entry. Grade-lock constrains the write path; a challenge that turns up cited new evidence flows through the normal change path. (Because a flip still requires a cited new source, repeated challenging cannot by itself move a grade — grade-lock is also the multiplicity safeguard.)
 - **Every change is dated and explicit.** No silent edits to the spine; the log is the audit trail.
 - **The dominant unknown is always current.** Re-point it on every update.
 - **Stay THIN.** One operator-owned file; if it needs heavy machinery, re-scope.

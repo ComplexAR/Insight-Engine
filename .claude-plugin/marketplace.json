@@ -5,13 +5,13 @@
   },
   "metadata": {
     "description": "The Insight Engine — verified, defensible investigation of complex, contested and wicked problems.",
-    "version": "0.1.11"
+    "version": "0.1.12"
   },
   "plugins": [
     {
       "name": "insight-engine",
       "source": "./",
-      "version": "0.1.11",
+      "version": "0.1.12",
       "description": "Verified, defensible investigation of high-stakes, complex, contested, and wicked problems: proportionality triage, provocation page, source-tiered web verification with disconfirmation, a conditional systems-investigation pass, deep-core routing, a forced judgement gate, an assumption-resilience check, a grade-locked decision brief, audience rendering, and a living investigation workspace."
     }
   ]

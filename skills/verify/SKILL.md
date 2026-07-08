@@ -13,15 +13,15 @@ Verify the load-bearing claims of an analysis or claim-set against current exter
 
 ## Tier every `[V]` by source strength (a `[V]` is not binary)
 A claim is only as strong as what backs it. Tag every `[V]`:
-- **`[V1]` primary** — the authoritative source itself: the statute or regulation text, the official statistic or regulator publication, a peer-reviewed study, a court ruling, the primary dataset or standard.
+- **`[V1]` primary** — the authoritative source itself: the statute or regulation text, the official statistic or regulator publication, a peer-reviewed study, a court ruling, the primary dataset or standard. Primary means the source is *proximate* — produced at first hand — not that its content is trustworthy. An interested party's own primary material (its incident report, its internal review, its testimony) is still primary, and on a claim where that party has a stake it does not on that basis earn `[V1]`: grade the contested claim on its *independent* corroboration, not on the document's primacy.
 - **`[V2]` secondary** — reputable reporting or interpretation resting on primaries: an established news organisation, a professional body, a textbook, a well-regarded analyst.
-- **`[V3]` contested / weak** — corroborated only by weaker or interested sources (a single blog, a content aggregator, advocacy or a party's own materials), OR credible sources disagree (true-but-disputed). Name the weakness.
+- **`[V3]` contested / weak** — *independent* corroboration exists but it is weak (a single blog, a content aggregator, advocacy), OR credible sources disagree (true-but-disputed). Name the weakness. A claim resting only on an interested or self-reporting party's own materials, with nothing independent behind it, is `[N]`, not `[V3]`: `[V3]` requires at least one source independent of the interested party; interested-only support is `[N]`.
 Prefer a primary; when you can only reach `[V2]`/`[V3]`, say what primary source would lift it. The tier is part of the grade — it travels with the claim and is never dropped.
 
 ## Disconfirm the load-bearing few (red-team your own `[V]`s)
 A single confirming search is how a wrong fact survives. For every claim the conclusion materially rests on, run a second search aimed at its NEGATION — "X is false / disputed / overstated / counter-evidence to X":
 - Credible disconfirmation of comparable strength exists -> downgrade to **`[V3]` contested** (or `[N]` if the disconfirmation is strong) and record the dispute. A self-damaging or disconfirming finding from a credible source outweighs a self-serving confirmation.
-- A genuine negation search finds nothing credible -> the claim is strengthened; mark it **survived disconfirmation** — a real signal for a defensibility reader.
+- A genuine negation search finds nothing credible -> the claim is strengthened; mark it **survived disconfirmation**, but only where the field searched holds at least two *independent* roots. If the corroborating material traces to a single origin (one report, one leak, one party's account echoed by others), an empty negation search shows only that one root exists — mark it **unopposed — single-root record**, not survived. Survival across independent roots is the real signal for a defensibility reader.
 Proportionate: red-team the load-bearing few, not every trivial fact.
 
 ## Coverage-retention (do not let focus narrow the field)

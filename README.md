@@ -30,12 +30,12 @@ It does not convene real stakeholders (simulated perspectives are labelled as su
 ### Claude Cowork (desktop app) — install from file
 The desktop app installs plugins from a file rather than from a GitHub marketplace:
 
-1. Download **`dist/insight-engine-0.1.11.plugin`** from this repo (or from the latest [Release](../../releases)).
+1. Download **`dist/insight-engine-0.1.12.plugin`** from this repo (or from the latest [Release](../../releases)).
 2. In Cowork, open **Customize → Skills → Upload from file** and choose the `.plugin`.
 
 ## Version
 
-**0.1.11.** For how releases are cut, see [PUBLISHING.md](PUBLISHING.md).
+**0.1.12.** For how releases are cut, see [PUBLISHING.md](PUBLISHING.md).
 
 ## License
 
