@@ -10,7 +10,7 @@ Maintain a living investigation dossier for a long-running inquiry across sessio
 ## The dossier (one markdown file in the operator's folder, persisted across sessions)
 One file per investigation, named `track-<slug>-<date>.md`, kept in the operator's folder so it survives sessions. Sections:
 - **Question** — what conclusion is being kept live, in one line.
-- **Spine** — every claim with its `[V]`/`[N]` grade and source tier (`[V1]`/`[V2]`/`[V3]`), plus two currency fields: `last-verified: <date>` and a volatility class — **FIXED** (a settled historical fact), **SLOW** (changes on the scale of years), or **VOLATILE** (current status that can change week to week) — set at OPEN and itself revisable with a dated log line (it is metadata, not a grade — do not grade-lock it by accident).
+- **Spine** — every claim with its `[V]`/`[N]` grade and source tier (`[V1]`/`[V2]`/`[V3]`), plus two currency fields: `last-verified: <date>` and a volatility class — **FIXED** (a settled historical fact), **SLOW** (changes on the scale of years), or **VOLATILE** (current status that can change week to week) — set at OPEN and itself revisable with a dated log line (it is metadata, not a grade — do not grade-lock it by accident); and, where a claim underpins another claim or the call, a one-line `supports: [the call | claim X]` tag, so that a later grade change makes its dependents explicit.
 - **Dominant unknown** — the one fact that would most change the conclusion now.
 - **Open (deep core)** — the framing / legitimacy / opportunity-cost / value questions, with the operator's recorded positions (carried from the `analyse` gate) or marked unresolved.
 - **Pending (party-held)** — each item with the exact document or evidence that would settle it.
@@ -23,7 +23,7 @@ One file per investigation, named `track-<slug>-<date>.md`, kept in the operator
 Before creating the dossier, put these to the operator with AskUserQuestion (skippable; proceed on stated assumptions if declined):
 1. **What are we tracking?** — the investigation question / the conclusion to keep live.
 2. **Starting spine** — carry the grade-locked spine from an existing `analyse` run (point at the file or synthesis), or start fresh from a problem statement.
-3. **Watch-list** — what new facts, documents, or events would change the call? These become the update triggers. Accept any party-held items the operator already holds.
+3. **Watch-list** — what new facts, documents, or events would change the call? These become the update triggers. Test each candidate for diagnosticity: would it actually discriminate between the call holding and the call flipping? Drop any trigger that would fire either way — a trigger consistent with every outcome is noise, not a tripwire. Accept any party-held items the operator already holds.
 4. **Cadence** — re-check on demand only, or on a schedule? If a schedule, offer to set a recurring re-verification of the web-verifiable claims (the `schedule` capability) and state plainly what it will check and when.
 Then write the dossier file, seeded from the answers, and confirm its location.
 

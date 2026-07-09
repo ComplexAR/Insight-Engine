@@ -35,7 +35,7 @@ What happens, in order:
 2. **Scoping (optional)** — up to five short questions: the trouble and why now; whose problem it is and who will read the answer; what a good outcome and a serious cost look like; what is fixed and in scope; any documents only you hold (the draft contract). Skip any or all — skipped items become stated assumptions, and if you skip scoping entirely the engine states its own one-line problem statement (trouble, owner, core question) as an assumption before proceeding.
 3. **Findings arrive graded** — for example: the vendor's "guaranteed 99.9% uptime" rests on its own marketing `[N]`; a 30% discount is roughly the market norm for 5-year exclusivity `[V2]`, so it is payment for the lock-in, not a favour; exit costs sit in the contract you hold — *party-held*: the draft's termination schedule would settle it.
 4. **The gate** — before the brief is finalised, the engine asks you, one question at a time, things like: *"This framing treats the decision as sign / don't sign. Is renegotiating scope or term a live option?"* (example answer: "Yes — a 3-year non-exclusive at 20% is acceptable"), with *"I don't know — explain this"* and *defer* always available. Your one-line positions go on the record at the top of the brief.
-5. **The decision brief** — the call (provisional if values dominate), calibration, the dominant unknown (here: the termination schedule), what to verify first (read that schedule), what would flip the call — then sources and the plain-language legend.
+5. **The decision brief** — the call (provisional if values dominate), the confidence basis, the dominant unknown (here: the termination schedule), what to verify first (read that schedule), what would flip the call — then sources and the plain-language legend.
 
 Nothing in the run predicts the future or makes the value calls for you; that part is deliberately yours.
 
@@ -51,7 +51,7 @@ flowchart TD
     L2 --> L25["L2.5 · Systems pass — conditional<br/>feedback-driven problems only · graded causal map:<br/>loops · tipping conditions · leverage · investigate, don't predict"]
     L25 --> L3["L3 · Deep-core routing<br/>framing · legitimacy · opportunity-cost · value → the un-verifiable OPEN list"]
     L3 --> GATE["★ Forced judgement gate — YOU<br/>you record a one-line position on each deep-core question, or defer"]
-    GATE --> L4["L4 · Assembly — the decision brief<br/>call · calibration · dominant unknown · what-to-verify-first · what-would-flip-it"]
+    GATE --> L4["L4 · Assembly — the decision brief<br/>call · confidence basis · dominant unknown · what-to-verify-first · what-would-flip-it"]
     L4 --> L5["L5 · Rendering<br/>audience re-voicing: adversarial · advocate · board · counsel · regulator · family · any"]
     L5 --> L6["L6 · Workspace<br/>living dossier across sessions: OPEN · UPDATE · STATUS"]
     L0["L0 · Strong model — the substrate that provides the insight"] -.->|substrate| L1
@@ -84,7 +84,7 @@ flowchart TD
     S25 --> S3["STEP 3 · Deep-core routing<br/>set aside the questions no evidence can settle: framing · legitimacy · opportunity-cost · value"]
     S3 --> S4["STEP 4 · Grade-lock + resilience check<br/>fix every grade; stress-test whether the call survives its assumptions moving together"]
     S4 --> G["★ STEP 5 · THE FORCED GATE — YOU<br/>take a one-line position on each deep-core question, or explicitly defer.<br/>The brief does not finalise until you do."]
-    G --> S6["STEP 6 · Assemble → the decision brief<br/>your positions · graded findings · call · calibration · dominant unknown · verify-first · flip-it · sources"]
+    G --> S6["STEP 6 · Assemble → the decision brief<br/>your positions · graded findings · call · confidence basis · dominant unknown · verify-first · flip-it · sources"]
     S6 --> S7["STEP 7 · Offer follow-ons — /render · /track"]
     classDef gate fill:#fdf1df,stroke:#e8a33d,stroke-width:2px;
     classDef cond fill:#fff7ec,stroke:#eac489,stroke-width:2px;
@@ -125,12 +125,12 @@ The gate opens by asking for your own standpoint in one line. Where the systems 
 
 ### The grade markers
 
-Every load-bearing claim is marked. `[V]` = independently corroborated; `[N]` = rests on an interested or self-reporting party. A `[V]` always carries a strength tier: `[V1]` primary (the regulation, the official statistic, the study), `[V2]` secondary (reputable reporting on top of primaries), `[V3]` weak or contested. The `[V3]` and `[N]` items are where the analysis is exposed — that is where to push. One further rule protects you: an official finding of personal fault (a coroner's or inquiry's "X failed") is reported as that body's recorded judgement, never as established fact — blame is always yours to judge at the gate. Every full-pass deliverable also ends with a fixed plain-language legend restating these markers in one sentence each — you never need this guide open to read a brief.
+Every load-bearing claim is marked. `[V]` = independently corroborated; `[N]` = rests on an interested or self-reporting party. A `[V]` always carries a strength tier: `[V1]` primary (the regulation, the official statistic, the study), `[V2]` secondary (reputable reporting on top of primaries), `[V3]` weak or contested — the tiers marking *proximity of the source, not trust in it*: an interested party's own document does not earn `[V1]` on a claim it has a stake in, and a claim resting only on that party's own account is `[N]`, not `[V3]`. The `[V3]` and `[N]` items are where the analysis is exposed — that is where to push. One further rule protects you: an official finding of personal fault (a coroner's or inquiry's "X failed") is reported as that body's recorded judgement, never as established fact — blame is always yours to judge at the gate. Every full-pass deliverable also ends with a fixed plain-language legend restating these markers in one sentence each — you never need this guide open to read a brief.
 
 ### The decision brief (always five parts)
 
 - **The call** — the actual recommendation.
-- **Calibration** — how sure, and the conditions under which it changes (it will name the weakest grade the call leans on).
+- **Confidence basis** — confidence in the fact-chain and the conditions under which it changes (it names the weakest grade the call leans on), plus, separately, the action contingency: what must hold true after acting for the call to succeed. Evidence-quality transparency, not a track-record calibration.
 - **The dominant unknown** — the one fact that would most change the conclusion. Chase this first.
 - **What to verify first** — the cheapest next step that most reduces risk.
 - **What would flip the call** — including any assumptions that, moved together, the call could not survive.
@@ -182,9 +182,9 @@ A wicked problem is usually all three colliding, which is why one crisp verdict 
 |---|---|
 | `[V]` / `[N]` | A claim is **[V]** (independently corroborated) or **[N]** (rests on an interested or self-reporting party). |
 | `[V1]` / `[V2]` / `[V3]` | Source-strength tiers on a [V] — how strong the corroborating source itself is. The tier is part of the grade: it travels with the claim and is never dropped. |
-| `[V1]` — primary | The strongest tier: the claim is confirmed against the authoritative source itself — the text of the regulation or statute, the court ruling, the official statistic or regulator publication, the peer-reviewed study, the primary dataset or standard. Nothing stands between the claim and its evidence. |
+| `[V1]` — primary | The strongest tier: the claim is confirmed against the authoritative source itself — the text of the regulation or statute, the court ruling, the official statistic or regulator publication, the peer-reviewed study, the primary dataset or standard. Nothing stands between the claim and its evidence. Note: *primary* means the source is proximate, not that its content is trustworthy — an interested party's own primary material does not by itself earn `[V1]` on a claim that party has a stake in; grade that claim on independent corroboration. |
 | `[V2]` — secondary | Confirmed against reputable reporting or interpretation resting on primary sources — an established news organisation, a professional body, a textbook, a well-regarded analyst. Reliable, but one step removed; where it can, the engine names the primary source that would lift the claim to `[V1]`. |
-| `[V3]` — weak or contested | The weakest [V]: the claim is corroborated only by weaker or interested sources (a single blog, a content aggregator, advocacy material, a party's own publications) — or credible sources genuinely disagree, so it is true-but-disputed. The specific weakness is named and travels with the claim. A `[V3]` the call leans on is where the analysis is most exposed: treat it as the first thing to verify further. |
+| `[V3]` — weak or contested | The weakest [V]: the claim has only weak but *independent* corroboration (a single blog, a content aggregator, advocacy material) — or credible sources genuinely disagree, so it is true-but-disputed. A claim resting only on an interested party's own materials, with nothing independent behind it, is `[N]`, not `[V3]`. The specific weakness is named and travels with the claim. A `[V3]` the call leans on is where the analysis is most exposed: treat it as the first thing to verify further. |
 | Dominant unknown | The single fact that, if known, would most change the conclusion. |
 | Deep core | The questions no evidence can settle — framing, legitimacy, opportunity cost, value. Yours to judge. |
 | The gate | The forced step where you take a position on each deep-core question before the brief finalises. |
