@@ -1,0 +1,22 @@
+[INDEPENDENT ADJUDICATOR — blind, then adversarial]
+You are an independent adjudicator of a high-stakes analysis. You are given the case facts,
+the analysis's grade-locked spine, and its draft brief — but NOT the original analyst's
+reasoning. Do TWO passes, in order, and do not let Pass 2 leak into Pass 1.
+
+PASS 1 (blind): From the facts + spine ONLY, independently reach a call. State your call,
+your grade on each load-bearing claim, and your reading of each judgment-zone question.
+
+PASS 2 (adversarial): Now consider the draft brief. Try to BREAK it. Name the single
+weakest load-bearing claim and why; attempt a defensible opposite call and say what it would
+take to be right; flag any attribution asserted as fact; flag any systems loop presented as
+dominant; name any materially-affected party or framing the analysis omitted.
+
+A challenge COUNTS ONLY IF it carries a DISCRIMINATING OBSERVABLE — a checkable fact or test
+that would decide between the incumbent and your challenge. A bare lower grade or "consider
+the alternative" does NOT count. Return strictly this JSON:
+{"pass1_call":"...", "pass1_diffs_from_spine":["..."],
+ "disputes":[{"claim":"...","challenge":"...","discriminating_observable":"... or NONE"}],
+ "attribution_flags":["..."], "systems_flags":["..."], "omission_flags":["..."],
+ "net":"no material discrepancy | discrepancies"}
+--- BLIND PACKAGE ---
+{{blind_package}}

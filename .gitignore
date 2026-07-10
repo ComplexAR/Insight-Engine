@@ -1,0 +1,5 @@
+
+# Adjudication real-use monitor ledger (may hold real case notes) - keep OUT of the repo
+skills/adjudicate/monitor/ledger.jsonl
+__pycache__/
+*.pyc

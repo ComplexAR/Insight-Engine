@@ -1,0 +1,14 @@
+{
+  "$schema": "RUM ledger record v1 (one line per adjudicated REAL high-stakes analyse run)",
+  "ts": "auto-set on append (ISO timestamp)",
+  "problem_slug": "short label for the real problem (no confidential detail)",
+  "stakes_tier": "high | legal",
+  "adjudicator_rung": "A-crosslab | B-fable | C-panel | D-self  (which independence rung actually ran)",
+  "items_raised": "int — total observable-backed items the adjudicator raised",
+  "items_decision_relevant_after_rank": "int (<=3) — surfaced to you after the decision-relevance ranking",
+  "operator_verdict": "real-catch-flipped | real-catch-refined | useful-not-decision-relevant | false-alarm | nothing",
+  "would_have_flipped_call": "bool — would this have reversed or materially changed your real decision?",
+  "operator_agreed": "bool — do you, the decision-owner, agree it was a real catch?",
+  "discriminating_observable": "the checkable fact/test behind a flip (REQUIRED if would_have_flipped_call=true)",
+  "notes": "one line; what it caught / why it mattered (no confidential detail)"
+}
