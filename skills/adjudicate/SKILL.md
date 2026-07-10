@@ -23,13 +23,13 @@ Before offering anything, run the gate and **declare the result either way** ("a
 - **G3 Residual judgment** — a live, decision-relevant, *contestable* judgment still remains (contested attribution, which loop dominates, a value/framing call, a weakly-graded load-bearing claim). If the disciplined pass already settled everything, adjudication is redundant.
 - **G4 In-boundary sufficiency (for choosing A vs B/C)** — cross-lab's only marginal value over the cheaper in-house rungs is **lineage decorrelation** (Opus and Fable share Anthropic training → partially correlated blind spots). Reach for A only when the residual point is where shared blind spots bite, or when an in-boundary pass converged without resolving it.
 
-**Offer default:** when the gate passes, offer the check on a first-time high-stakes user **and on every subsequent high-stakes/wicked run** — *unless* a standing opt-out is set (see §2). Showing the offer is not running it; the layer stays off-by-default.
+**Offer default:** when the gate passes, offer the check on a first-time high-stakes user **and on every subsequent high-stakes/wicked run** — *unless* a standing opt-out is set (see §2). The standing opt-out is **code-backed, not remembered**: before offering, consult it with `python prefs/prefs.py should-offer --rung <A|B|C>` (exit code 0 = offer, 1 = suppressed) — do not rely on session memory. Showing the offer is not running it; the layer stays off-by-default.
 
-## 2 — Opt-out (always refusable)
+## 2 — Opt-out (always refusable, code-backed)
 
 - **Per-run decline** — one word skips it; no reason needed, and **do not re-ask within the same analysis**.
 - **Scope** — the operator may decline cross-lab (A) only (keeping B/C available to opt into), or the whole adjudication layer.
-- **Standing opt-out** — "don't offer this again" is recorded in the user-level Insight Engine preferences file and honoured on every future run (never offered again, at the chosen scope); a matching **re-enable** restores it.
+- **Standing opt-out (persisted by code, not memory)** — when the operator says "don't offer this again", record it with `python prefs/prefs.py opt-out --scope <crosslab|all>` (add `--note "…"` if they give a reason). It is written to the user-level preferences file (`~/.insight-engine/preferences.json`; see `prefs/README.md` + `prefs/preferences.schema.json`) and read back by the §1 gate on every future run, so it is honoured mechanically, at the chosen scope. `crosslab` suppresses only rung A; `all` suppresses the whole offer. A matching **re-enable** restores it: `python prefs/prefs.py re-enable`.
 - **No dark patterns** — a decline is respected and is **not** written into the deliverable as a caveat, footnote, or "reduced defensibility" note; do not escalate or nudge. Re-offering at a *later, separate* high-stakes analysis is a fresh decision, not nagging, and is itself governed by the standing opt-out.
 
 ## 3 — How the pass runs (any rung)
@@ -80,4 +80,4 @@ The bundled harness is under `harness/` (see `harness/PREFLIGHT.md` and `harness
 - **`privileged → never`** cross-lab egress; off by default; redacted package; zero-retention reminder.
 - **Never auto-flip a call**; the human decides.
 - **Always refusable** (§2) — no friction, no defensibility penalty for opting out.
-- Record the model actually used; keep the monitor `ledger.jsonl` out of version control.
+- Record the model actually used; keep the monitor `ledger.jsonl` out of version control. The preferences file lives in the user's home (`~/.insight-engine/`), outside the plugin, so it survives upgrades and is never committed.

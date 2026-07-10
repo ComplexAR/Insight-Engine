@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/ComplexAR/Insight-Engine/skills/adjudicate/prefs/preferences.schema.json",
+  "title": "Insight Engine user preferences",
+  "description": "User-level, cross-session preferences for the Insight Engine. Lives OUTSIDE the plugin (default ~/.insight-engine/preferences.json) so it survives plugin upgrades and is never version-controlled. Currently carries only the adjudication standing opt-out; add future keys under new top-level properties.",
+  "type": "object",
+  "required": ["schema_version", "adjudication"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "description": "Bump only with a documented migration in prefs.py."
+    },
+    "adjudication": {
+      "type": "object",
+      "required": ["standing_opt_out"],
+      "additionalProperties": false,
+      "properties": {
+        "standing_opt_out": {
+          "type": "object",
+          "required": ["scope"],
+          "additionalProperties": false,
+          "description": "Whether, and at what scope, the operator has permanently declined the L4.5 adjudication offer. Honoured on every future qualifying run until re-enabled.",
+          "properties": {
+            "scope": {
+              "enum": ["none", "crosslab", "all"],
+              "description": "none = offer normally (default). crosslab = suppress ONLY the cross-lab rung A offer; still offer the in-boundary rungs (B Fable / C Opus panel). all = suppress the entire adjudication offer."
+            },
+            "set_on": {
+              "type": ["string", "null"],
+              "description": "ISO date (YYYY-MM-DD) the current scope was set; null when scope is none."
+            },
+            "note": {
+              "type": ["string", "null"],
+              "description": "Optional free-text reason recorded by the operator; never surfaced in any deliverable."
+            }
+          }
+        }
+      }
+    }
+  }
+}
