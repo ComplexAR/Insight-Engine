@@ -1,6 +1,6 @@
 # Adjudication preferences — code-backed standing opt-out
 
-This folder makes the L4.5 **standing opt-out** mechanical rather than something the
+This folder makes the Step 10 **standing opt-out** mechanical rather than something the
 model has to remember. The operator's choice is persisted to a small JSON file and
 read back on every future run, so "recorded and honoured on every future run" is
 guaranteed by code.

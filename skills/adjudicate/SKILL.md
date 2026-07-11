@@ -1,9 +1,9 @@
 ---
 name: adjudicate
-description: Insight Engine independent-adjudication layer (L4.5) — an OPT-IN, off-by-default second pass on a finished high-stakes analysis. Triggers only when the operator asks for an independent check, adjudication, red-team, or second opinion on a completed Insight Engine analysis, or accepts the offer that `analyse` surfaces on a high-stakes or wicked problem. Runs a blind-then-adversarial adjudicator down an independence ladder — A a different-lab model (cross-lab, e.g. GPT-5.6 Sol / interim GPT-5.5), B a different in-house model (Fable 5), C a panel of blind Opus instances, D a self-adversarial reset — declares which rung it reached, folds discrepancies back under grade-lock without ever flipping the call itself, and logs the run to the real-use monitor. Every rung is opt-in and costs credits/setup; nothing runs automatically.
+description: Insight Engine independent-adjudication layer (Step 10) — an OPT-IN, off-by-default second pass on a finished high-stakes analysis. Triggers only when the operator asks for an independent check, adjudication, red-team, or second opinion on a completed Insight Engine analysis, or accepts the offer that `analyse` surfaces on a high-stakes or wicked problem. Runs a blind-then-adversarial adjudicator down an independence ladder — A a different-lab model (cross-lab, e.g. GPT-5.6 Sol / interim GPT-5.5), B a different in-house model (Fable 5), C a panel of blind Opus instances, D a self-adversarial reset — declares which rung it reached, folds discrepancies back under grade-lock without ever flipping the call itself, and logs the run to the real-use monitor. Every rung is opt-in and costs credits/setup; nothing runs automatically.
 ---
 
-# Insight Engine — adjudicate (L4.5)
+# Insight Engine — adjudicate (Step 10)
 
 An independent second pass on a **finished** analysis. It re-derives the call blind, then tries to break it, and hands back discrepancies that fold in under grade-lock — **you always own the final call; the adjudicator never changes it.**
 

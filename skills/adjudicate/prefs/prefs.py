@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-User-level preferences for the Insight Engine adjudication layer (L4.5).
+User-level preferences for the Insight Engine adjudication layer (Step 10).
 
 Makes the STANDING OPT-OUT code-backed instead of model-remembered: the skill
 persists the operator's choice here and reads it back on every future run, so

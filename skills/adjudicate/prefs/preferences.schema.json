@@ -20,7 +20,7 @@
           "type": "object",
           "required": ["scope"],
           "additionalProperties": false,
-          "description": "Whether, and at what scope, the operator has permanently declined the L4.5 adjudication offer. Honoured on every future qualifying run until re-enabled.",
+          "description": "Whether, and at what scope, the operator has permanently declined the Step 10 adjudication offer. Honoured on every future qualifying run until re-enabled.",
           "properties": {
             "scope": {
               "enum": ["none", "crosslab", "all"],
