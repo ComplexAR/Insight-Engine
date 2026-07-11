@@ -6,7 +6,7 @@ This repo is **both** a Claude Code plugin **and** a single-plugin marketplace. 
 
 - `.claude-plugin/plugin.json` — the plugin manifest (name, version, description, author, keywords). **The description must be ≤ 500 characters** (a longer one fails validation). `author` must be an object (`{ "name": "..." }`), and `keywords` must be an array — not strings.
 - `.claude-plugin/marketplace.json` — the marketplace manifest. Its `name` field (`insight-engine-marketplace`) is what users type after the `@` when installing. The plugin's `version` here should match the version in `plugin.json`.
-- `skills/*/SKILL.md` — the four skills (`analyse`, `verify`, `render`, `track`), plus `skills/analyse/references/provocation-page.md`.
+- `skills/*/SKILL.md` — the five skills (`analyse`, `verify`, `render`, `track`, `adjudicate`), plus `skills/analyse/references/provocation-page.md`. The `adjudicate` skill also ships `harness/`, `monitor/`, and `prefs/` subfolders.
 - `dist/insight-engine-<version>.plugin` — the built file for Cowork users.
 
 ## First-time setup
@@ -20,9 +20,9 @@ This repo is **both** a Claude Code plugin **and** a single-plugin marketplace. 
 2. **Bump the version** in BOTH `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` (keep them equal). The version is the update cache key: if you don't bump it, already-installed users will not see the change.
 3. Rebuild the Cowork `.plugin` from the repo root (the `-D` flag keeps directory entries out of the zip, which the Cowork uploader requires):
    ```
-   zip -D -X -9 -r dist/insight-engine-<version>.plugin .claude-plugin/plugin.json README.md skills
+   zip -D -X -9 -r dist/insight-engine-<version>.plugin .claude-plugin/plugin.json README.md LICENSE skills
    ```
-   (Note: this packages `plugin.json` but **not** `marketplace.json` — the `.plugin` is the plugin alone.)
+   (Note: this packages `plugin.json` but **not** `marketplace.json` — the `.plugin` is the plugin alone.) The recursive `skills` argument also sweeps in any runtime files, so before building **never package `skills/adjudicate/monitor/ledger.jsonl`** (the real-use run log) — delete or git-ignore it first. User adjudication preferences live outside the plugin at `~/.insight-engine/` and are never packaged.
 4. Commit, then tag and push:
    ```
    git add -A

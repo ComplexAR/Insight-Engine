@@ -1,6 +1,6 @@
 # The Insight Engine — Architecture, Build Philosophy, and Features
 
-*Reference document for `insight-engine` v0.1.13 · 24 June 2026 (revised 25 June 2026 to add the §9.1 ICD-203 alignment; revised 2 July 2026 for the v0.1.8 wording and operator-experience release — S1-S5 of the 2026-07-01 Optimisation Review; revised again 2 July 2026 for v0.1.9, the attribution ceiling; revised 3 July 2026 for v0.1.10; revised again 3 July 2026 to add the companion Foundations document; revised 3 July 2026 for v0.1.11 — checkable per-claim references — and the new §3.1 layer map; revised 8 July 2026 for v0.1.12 — the Phase-1 assurance bundle; revised 9 July 2026 for v0.1.13 — the Phase-1b wording completion).*
+*Reference document for `insight-engine` v0.1.16 · 24 June 2026 (revised 25 June 2026 to add the §9.1 ICD-203 alignment; revised 2 July 2026 for v0.1.8; revised 2 July 2026 for v0.1.9, the attribution ceiling; revised 3 July 2026 for v0.1.10 and v0.1.11 — checkable per-claim references — and the §3.1 layer map; revised 8 July 2026 for v0.1.12; revised 9 July 2026 for v0.1.13; revised 11 July 2026 for v0.1.14 — the opt-in independent-adjudication layer — v0.1.15 — the code-backed standing opt-out — and v0.1.16 — consecutive 1–12 step numbering with the render/track split).*
 
 > Markdown edition for reading on GitHub. A formatted `.docx` is in [`originals/`](originals/).
 >
@@ -11,7 +11,7 @@
 
 The Insight Engine is a tool for investigating high-stakes, complex, contested, or wicked problems — the kind where the danger is not that the answer is hard to compute but that the most important things sit where attention does not naturally go, where the evidence is mixed or interested, and where the decisive questions are value judgements no amount of analysis can settle. The engine surfaces the hidden contributors, conditions, and causal structure beneath a situation — sources of success and adaptation as well as failure. It offers understanding and a defensible next step, not control or prediction: wicked problems are navigated, not solved.
 
-It is the lightweight successor to the **SAF** (Series of Analytical Frameworks), a 234-framework analytical corpus that has now been frozen. The Insight Engine keeps almost none of the SAF's machinery and all of its hard-won judgement, distilled into a single page and wrapped in an assurance layer. It ships as a Claude/Cowork plugin (`insight-engine`, currently **v0.1.13**) with four skills: `analyse`, `verify`, `render`, and `track`.
+It is the lightweight successor to the **SAF** (Series of Analytical Frameworks), a 234-framework analytical corpus that has now been frozen. The Insight Engine keeps almost none of the SAF's machinery and all of its hard-won judgement, distilled into a single page and wrapped in an assurance layer. It ships as a Claude/Cowork plugin (`insight-engine`, currently **v0.1.16**) with five skills: `analyse`, `verify`, `render`, `track`, and `adjudicate`.
 
 Its one-line description is also its design thesis: **the large language model provides the insight; the engine makes that insight verified, defensible, and audience-ready.** The engine does not try to be smarter than the model. It tries to make the model's output *trustworthy* and *honest about its own limits* — and to force the human to own the parts that are theirs to own.
 
@@ -33,7 +33,7 @@ The engine is the product of a controlled experimental program, not a design com
 
 ## 3. The architecture at a glance
 
-The engine is best understood as a stack of conceptual layers, held together by an invariant spine and a human-in-the-loop owner. The `analyse` skill is the runtime orchestration of these layers; the other three skills expose individual layers (verify = L2; render = L5; track = L6) for standalone use.
+The engine is best understood as a stack of conceptual layers, held together by an invariant spine and a human-in-the-loop owner. The `analyse` skill is the runtime orchestration of these layers; the other four skills expose individual layers for standalone use (`verify` = L2; `render` = L5; `track` = L6; `adjudicate` = the Step 10 adjudication layer).
 
 | Layer | Name | Role |
 |---|---|---|
@@ -43,6 +43,7 @@ The engine is best understood as a stack of conceptual layers, held together by 
 | **L2.5** | Systems-investigation pass *(conditional)* | A graded causal map — loops, tipping conditions, leverage — for genuinely systemic problems only; investigate, don't predict |
 | **L3** | Deep-core routing | Separating the irreducibly un-verifiable questions from the verifiable ones |
 | **L4** | Assembly | The grade-locked decision brief |
+| **Adjudication** | Independent second pass *(opt-in, off by default)* | A blind-then-adversarial check of a finished analysis by the most independent model available (the `adjudicate` skill); folds under grade-lock; never flips the call |
 | **L5** | Rendering | Grade-locked re-expression for specific audiences |
 | **L6** | Workspace | A living investigation that accumulates across sessions |
 | **Spine** | Grade-lock | The invariant that runs through every layer: grades, the dominant unknown, and the non-droppable caveat core |
@@ -52,23 +53,23 @@ Sitting in front of the whole stack is a **fail-safe proportionality triage** (a
 
 ### 3.1 The layer map — steps, approaches, and lineages
 
-The `analyse` skill runs the pipeline as numbered steps; the architecture describes the same machinery as layers. The correspondence is deliberate but not one-to-one: one step spans two layers, the gate belongs to the operator rather than to any layer, and two layers live in separate skills. The table below is the complete map. The reasoning behind each lineage, written for the general reader, is in the companion [Foundations](Foundations.md) document.
+The `analyse` skill runs the pipeline as numbered steps; the architecture describes the same machinery as layers. The correspondence is deliberate but not one-to-one: one step spans two layers (Step 3 covers L0 and L1), the gate belongs to the operator rather than to any layer, and three layers live in separate skills that also appear in the pipeline as opt-in offer-steps — adjudication (Step 10), render (Step 11), and track (Step 12). The table below is the complete map. The reasoning behind each lineage, written for the general reader, is in the companion [Foundations](Foundations.md) document.
 
 | Layer | Step in `analyse` | Approach in use | Documented lineage |
 |---|---|---|---|
-| Proportionality triage | Pre-flight | Fail-safe right-sizing; default to depth; down-scope only on unambiguous triviality | Satisficing (Simon); boundary conditions consistent with Klein; earned on T-AB-004 |
-| Scoping (elicitation point; no layer) | Step 0 | TOSCA problem framing; on skip, the engine writes its own problem statement as a marked assumption | Garrette, Phelps & Sibony, *Cracked It!* |
-| L0 — the model | Beneath Step 1 | The substrate supplies the insight; the engine imposes procedure | Kahneman (procedures over self-correction) |
-| L1 — the provocation page | Step 1 | Fixed one-page probe set, identical wording every run | Distilled from the 234-framework SAF corpus; page form per Gawande |
-| L2 — verification | Step 2 (standalone: `verify`) | Three-bucket router; `[V]`/`[N]` grading with `[V1]`-`[V3]` tiers; disconfirmation search; attribution ceiling; checkable per-claim references (v0.1.11) | ICD-203 analytic standards; Cook & Woods and Fischhoff (attribution ceiling) |
-| L2.5 — the systems pass | Step 2.5 (conditional) | Graded causal map; loops graded exists-vs-dominates; tipping conditions, never dates; investigate-don't-predict | Systems-thinking tradition; discipline earned on T-SM-001/002/004 |
-| L3 — deep-core routing | Step 3 | Fact/value separation into an OPEN list the model may not resolve | ICD-203 standard 3; Rittel & Webber characteristics 3, 9, 10 |
-| The grade-lock spine (§4; invariant) | Step 4 | Grades locked; joint assumption-resilience check | Internal design; ICD-203 standard 8 |
-| The gate (operator-owned; no layer) | Step 5 | Forced one-at-a-time judgement positions; standpoint opener; conditional intervention-level question | Cognitive-forcing class; forcing earned on T-L2-006; opener per *The Blind Spot* |
-| L4 — assembly | Step 6 | Decision brief; wicked-call guard; coverage-retention re-scan; power-problem line; plain-language legend | Rittel & Webber ("navigated, not solved"); Hayes and Bransford & Stein (the legend and staging) |
-| Follow-ons (no layer) | Step 7 | Offers the L5/L6 skills | — |
-| L5 — rendering | The `render` skill | Grade-locked audience re-voicing | *Cracked It!* ("Sell"); ICD-203 standard 5 |
-| L6 — the living workspace | The `track` skill | Persistent dossier; explicit dated re-grading | ICD-203 standard 7 |
+| Proportionality triage | Step 1 | Fail-safe right-sizing; default to depth; down-scope only on unambiguous triviality | Satisficing (Simon); boundary conditions consistent with Klein; earned on T-AB-004 |
+| Scoping (elicitation point; no layer) | Step 2 | TOSCA problem framing; on skip, the engine writes its own problem statement as a marked assumption | Garrette, Phelps & Sibony, *Cracked It!* |
+| L0 — the model | Beneath Step 3 | The substrate supplies the insight; the engine imposes procedure | Kahneman (procedures over self-correction) |
+| L1 — the provocation page | Step 3 | Fixed one-page probe set, identical wording every run | Distilled from the 234-framework SAF corpus; page form per Gawande |
+| L2 — verification | Step 4 (standalone: `verify`) | Three-bucket router; `[V]`/`[N]` grading with `[V1]`-`[V3]` tiers; disconfirmation search; attribution ceiling; checkable per-claim references (v0.1.11) | ICD-203 analytic standards; Cook & Woods and Fischhoff (attribution ceiling) |
+| L2.5 — the systems pass | Step 5 (conditional) | Graded causal map; loops graded exists-vs-dominates; tipping conditions, never dates; investigate-don't-predict | Systems-thinking tradition; discipline earned on T-SM-001/002/004 |
+| L3 — deep-core routing | Step 6 | Fact/value separation into an OPEN list the model may not resolve | ICD-203 standard 3; Rittel & Webber characteristics 3, 9, 10 |
+| The grade-lock spine (§4; invariant) | Step 7 | Grades locked; joint assumption-resilience check | Internal design; ICD-203 standard 8 |
+| The gate (operator-owned; no layer) | Step 8 | Forced one-at-a-time judgement positions; standpoint opener; conditional intervention-level question | Cognitive-forcing class; forcing earned on T-L2-006; opener per *The Blind Spot* |
+| L4 — assembly | Step 9 | Decision brief; wicked-call guard; coverage-retention re-scan; power-problem line; plain-language legend | Rittel & Webber ("navigated, not solved"); Hayes and Bransford & Stein (the legend and staging) |
+| Adjudication (operator-owned offer; standalone `adjudicate`) | Step 10 | Opt-in, off by default; blind-then-adversarial second pass; independence ladder A–D; folds under grade-lock; never flips the call | Devil's advocacy and red-teaming; independent review; cross-lab decorrelation |
+| L5 — rendering | Step 11 offer (standalone: `render`) | Grade-locked audience re-voicing | *Cracked It!* ("Sell"); ICD-203 standard 5 |
+| L6 — the living workspace | Step 12 offer (standalone: `track`) | Persistent dossier; explicit dated re-grading | ICD-203 standard 7 |
 
 ## 4. The grade-lock spine (the invariant)
 
@@ -110,8 +111,8 @@ A standing heuristic runs through all of L2: **weight a self-damaging admission 
 
 **Checkable references (v0.1.11).** Every graded claim in the deliverable carries a reference the reader can validate without help: web-verified evidence names its source with a URL; party-held or in-document evidence names the document plus the section or page. This is a discipline clarification of the existing per-claim source requirement, not a new capability.
 
-### 5.3.1 The systems-investigation pass (Step 2.5 — conditional; v0.1.7)
-Some wicked problems are not merely hard to verify — they are *dynamic*: driven by feedback loops, accumulating stocks, delays between cause and effect, and the possibility of tipping into a different regime. For these, and only these, the engine runs a **systems-investigation pass** after verification (Step 2.5), building a graded causal map. It is conditional, and its discipline is the whole point.
+### 5.3.1 The systems-investigation pass (Step 5 — conditional; added v0.1.7, numbered Step 2.5 until v0.1.16)
+Some wicked problems are not merely hard to verify — they are *dynamic*: driven by feedback loops, accumulating stocks, delays between cause and effect, and the possibility of tipping into a different regime. For these, and only these, the engine runs a **systems-investigation pass** after verification (Step 5), building a graded causal map. It is conditional, and its discipline is the whole point.
 
 **It runs only when the problem is genuinely systemic** — when two or more of these are materially present: feedback / circular causation; accumulation (stocks); material delays; multiple interacting actors; a possible regime shift; self-fulfilling expectations. Otherwise it skips with one line ("no material feedback structure — systems pass not warranted"). Importance, emotion, or difficulty does not make a problem a system, and a spurious causal map is a failure, not thoroughness — a proportionality discipline that was tested directly (§8).
 
@@ -125,7 +126,7 @@ The pass feeds the rest of the pipeline rather than standing alone: loop *domina
 The material issues that are *not* externally verifiable — the framing of the decision itself; legitimacy and who is bound without a say; opportunity cost and unmodelled alternatives; value trade-offs — are separated into an explicit OPEN list. They are not resolved, not dropped, and never asserted as verified. They are the questions the operator must judge at the gate.
 
 ### 5.5 The assumption-resilience check
-After grades are locked, the engine stress-tests the *conclusion*, not just the claims: it names the two-to-four assumptions the call most rests on, varies them *together*, and records whether the conclusion survives. This is an **assumption-fragility** check — deliberately *not* system modelling; it does not simulate feedback loops or tipping points and must not claim to (the conditional Step 2.5 systems-investigation pass, §5.3.1, is where graded structure is mapped). Its result feeds the brief's confidence basis and its "what would flip the call."
+After grades are locked, the engine stress-tests the *conclusion*, not just the claims: it names the two-to-four assumptions the call most rests on, varies them *together*, and records whether the conclusion survives. This is an **assumption-fragility** check — deliberately *not* system modelling; it does not simulate feedback loops or tipping points and must not claim to (the conditional Step 5 systems-investigation pass, §5.3.1, is where graded structure is mapped). Its result feeds the brief's confidence basis and its "what would flip the call."
 
 ### 5.6 The forced judgement gate
 Before the brief is finalised, the engine **stops and puts the deep-core open questions to the operator as a gate.** The operator records a one-line position on each — or explicitly defers (a deferral is logged, not ignored). The brief does not finalise until the gate is cleared.
@@ -135,7 +136,7 @@ This is a gate, not a heading, for a tested reason: controlled testing showed th
 ### 5.7 L4 — Assembly and the decision brief
 The deliverable is assembled in a fixed order: the operator's recorded gate positions (leading the document); the verified findings, each with its grade, tier, and any disconfirmation result, with documented patterns separated from any interest- or grief-driven over-claims; then the **decision brief**, which always contains five parts:
 
-(a) **the call** — the actual recommendation; (b) **confidence basis** — confidence in the fact-chain and the conditions under which it changes, naming the weakest load-bearing grade the call leans on, plus the action contingency (what must hold after acting); (c) **the dominant unknown**; (d) **what to verify first** — the cheapest next step that most reduces risk; (e) **what would flip the call** — including any jointly-moved assumptions the resilience check found the call could not survive, and any tipping conditions from the Step 2.5 systems pass. The reliability caveat is held to the end.
+(a) **the call** — the actual recommendation; (b) **confidence basis** — confidence in the fact-chain and the conditions under which it changes, naming the weakest load-bearing grade the call leans on, plus the action contingency (what must hold after acting); (c) **the dominant unknown**; (d) **what to verify first** — the cheapest next step that most reduces risk; (e) **what would flip the call** — including any jointly-moved assumptions the resilience check found the call could not survive, and any tipping conditions from the Step 5 systems pass. The reliability caveat is held to the end.
 
 ### 5.8 The wicked-call guard
 A refinement to the call. If the problem is wicked — the deep core dominates and there is no verifiable solution — the call is rendered as a **provisional stance, not a verdict**: it states which value it trades against which ("this prioritises X at the expense of Y"), marks itself explicitly re-openable, names what would re-open it, and offers a hand-off to the living workspace. A crisp verdict on a wicked problem re-imports the false closure the analysis exists to avoid.
@@ -156,7 +157,19 @@ A finished, graded analysis can be re-expressed for a specific reader without ch
 ### 5.11 L6 — The living workspace
 For inquiries that accumulate over days or weeks, the engine maintains a living dossier (one operator-owned file, persisted across sessions) through three modes, each of which *asks* rather than guesses: **OPEN** (what are we tracking; carry a spine from an `analyse` run or start fresh; the watch-list of update triggers; cadence, optionally a scheduled re-verification); **UPDATE** (what arrived; re-verify the affected claims; re-grade explicitly with a before→after log; re-point the dominant unknown; re-derive the call); **STATUS** (read the current state without re-verifying). Grade-lock carries throughout: a grade changes only on new evidence, recorded in the log, never by re-expression. This layer is the newest and the least battle-tested (see §10).
 
-## 6. The four skills
+### 5.12 The adjudication layer (Step 10 — opt-in, off by default; v0.1.14)
+
+For the highest-stakes work — legal exposure, contested blame, a decision that binds people — a finished analysis can be put to an **independent second pass**: a separate model re-derives the conclusion and then attacks it, and its discrepancies are folded back under grade-lock. It is opt-in and off by default. The engine offers it, in one declinable line, only on a *completed* high-stakes or wicked analysis where a real, contestable judgement remains; nothing runs without an explicit yes, and every rung costs credits or setup.
+
+**What it does.** The adjudicator runs as a subagent with its own isolated context. It is handed the facts, the grade-locked spine, and the draft brief — but *not* the first model's reasoning, so it cannot anchor on it. It makes two passes: **blind** first (re-derive the analysis and see whether it reaches the same call), then **adversarial** (try to break the load-bearing claims and the call itself). It returns a ranked list of discrepancies; the few that are decision-relevant are surfaced, and the rest are logged to a real-use monitor.
+
+**The independence ladder.** The worth of the check rises with how decorrelated the adjudicator's blind spots are from the model that produced the analysis, so the engine uses the most independent adjudicator available, strongest first: **rung A** — a frontier model from a *different lab* (cross-lab; GPT-5.6 Sol, or GPT-5.5 while Sol is in limited preview), the strongest, because a different training lineage gives the most decorrelated blind spots, invoked by an API call the engine walks the operator through; **rung B** — a different in-house model (Fable 5), model and context independence with no external call; **rung C** — a panel of two or more blind Opus instances read for divergence, a same-model cross-check rather than true independent adjudication; **rung D** — a self-adversarial reset in the same session, the weakest. The engine **declares which rung it reached**, because same-model agreement is stability, not proof.
+
+**Grade-lock is preserved, and the call stays yours.** Discrepancies fold back under the grade-lock spine (§4); the adjudicator **never flips the call** — the operator keeps it. Cross-lab egress (rung A) is held off entirely for privileged or confidential matters, because the material leaves the boundary. A **standing opt-out** is honoured by code (v0.1.15): a `should-offer` check reads the operator's preferences (stored outside the plugin, at `~/.insight-engine/`), so once they decline standing, the engine stops offering — per scope, reversible, and with no dark patterns.
+
+**The honest claim.** Adjudication is presented as a rigour-and-defensibility check that sharpens a sound analysis; its ability to catch an error the disciplined first pass missed is **unproven** — in constructed-case testing the first pass already caught the constructible ones, and the one real cross-lab run to date flipped nothing. It is not a safety net. It ships opt-in precisely because its decision-flip benefit is not established; what it reliably adds is defensibility and a declared, decorrelated second look.
+
+## 6. The five skills
 
 | Skill | Layer(s) | What it does |
 |---|---|---|
@@ -164,17 +177,19 @@ For inquiries that accumulate over days or weeks, the engine maintains a living 
 | `verify` | L2, standalone | Router, source-tiering, disconfirmation, coverage-retention, dominant-unknown — to fact-check a claim-set or premise on its own |
 | `render` | L5, standalone | Grade-locked addressee rendering of a finished analysis |
 | `track` | L6, standalone | The living investigation workspace |
+| `adjudicate` | Adjudication (Step 10), standalone | Opt-in blind-then-adversarial independent second pass on a finished high-stakes analysis; declares the rung reached; never flips the call |
 
-The **`analyse` runtime sequence** is: the proportionality triage (pre-flight) → Step 0 optional scoping (offered, never blocking) → Step 1 the provocation pass → Step 2 verification → **Step 2.5 the conditional systems-investigation pass** → Step 3 deep-core routing → Step 4 grade-lock and the resilience check → **Step 5 the forced judgement gate** → Step 6 assembly (coverage-retention re-scan, then the gate positions, the graded findings, the decision brief, and sources) → Step 7 offer follow-ons (render, track). The gate is canonically Step 5 and has stayed there through every revision; the systems pass sits at Step 2.5 because it needs the verified grades from Step 2 and feeds the deep-core list at Step 3.
+The **`analyse` runtime sequence** is: **Step 1** the proportionality triage (pre-flight) → **Step 2** optional scoping (offered, never blocking) → **Step 3** the provocation pass → **Step 4** verification → **Step 5** the conditional systems-investigation pass → **Step 6** deep-core routing → **Step 7** grade-lock and the resilience check → **Step 8** the forced judgement gate → **Step 9** assembly (coverage-retention re-scan, then the gate positions, the graded findings, the decision brief, and sources) → **Step 10** the opt-in offer of independent adjudication (high-stakes/wicked only) → **Step 11** offer `render` → **Step 12** offer `track`. The gate is canonically Step 8 (it was Step 5 until the v0.1.16 renumber) and has held the same position in the flow through every revision; the systems pass runs at Step 5 because it needs the verified grades from Step 4 and feeds the deep-core list at Step 6.
 
 ## 7. The elicitation contract
 
-A distinguishing property of the engine is *where it stops and asks the operator*. There are four such points, deliberately placed:
+A distinguishing property of the engine is *where it stops and asks the operator*. There are five such points, deliberately placed:
 
 1. **The proportionality triage** (pre-flight) — implicit; it may offer a short answer and invite the full pass.
-2. **Step 0 scoping** — optional and skippable: the decision at stake, the intended audience, the value frame, scope boundaries, any party-held material.
-3. **The Step 5 forced gate** — mandatory: a recorded position on each deep-core question, or an explicit deferral.
-4. **The render audience prompt** — asks who the output is for when not specified; and `track`'s OPEN/UPDATE/STATUS contract asks what to track and what has changed.
+2. **Step 2 scoping** — optional and skippable: the decision at stake, the intended audience, the value frame, scope boundaries, any party-held material.
+3. **The Step 8 forced gate** — mandatory: a recorded position on each deep-core question, or an explicit deferral.
+4. **The Step 10 adjudication offer** — a one-word-declinable choice to run an independent second pass on a high-stakes result; gate-checked by code, so a standing opt-out is honoured and the offer is never a dark pattern.
+5. **The render audience prompt** — asks who the output is for when not specified; and `track`'s OPEN/UPDATE/STATUS contract asks what to track and what has changed.
 
 Everything else the engine produces on its own. The deliberate exception is *analytical depth*, which is generated rather than elicited — the engine does not ask the operator how deep to go; it judges that (via the triage) and defaults to depth.
 
@@ -192,8 +207,11 @@ The engine's shape is the residue of a controlled-testing program with a consist
 - **The proportionality guard passed its safety test** (T-AB-004): a fail-safe guard down-scoped none of three disguised-wicked traps while trimming genuinely-trivial inputs — the first post-v0.1.4 addition to earn its place on a passed test.
 - **The convergent meta-finding** (three to four independent results): on a strong model, the value is verification / grade-lock / disconfirmation + the forced gate, not incremental analytical prompt-moves. The directive that follows is to stop adding moves.
 - **The one capability that beat the null** (T-SM-001/002/003/004): a *systems-investigation pass* — an explicit, graded causal-map representation — is the first addition since v0.1.4 to add decision-relevant value over a strong baseline, replicated across two genres (an urban fiscal "doom-loop" and a critical-drug supply chain). It cleared a **forecast-baiting safety gate** (zero manufactured false confidence across three scenarios engineered to demand a forecast, against a discipline-stripped control that failed every one) and a **proportionality gate** (it skipped three genuinely non-systemic problems without inventing a map, while still firing on a disguised-systemic one). It breaks the null precisely because it is a *capability*, not a prompt-move — the standing distinction for any future addition.
+- **The one assurance capability shipped opt-in** (v0.1.14): an independent second pass — a blind-then-adversarial adjudicator on a decorrelated model — was added as an *assurance* move, not an analytical prompt-move. It ships off by default and honest about its limits: constructed-case testing found the disciplined first pass had already caught the constructible errors, and the first real cross-lab run flipped nothing. It earns its place as a defensibility-and-rigour check whose decision-flip benefit is explicitly unproven, not as a safety net.
 
 **Version history:**
+
+*Step numbers in rows up to v0.1.15 use the numbering current at that release; v0.1.16 renumbered the pipeline to a consecutive 1–12 (systems 2.5→5, gate 5→8, assembly 6→9) and split the follow-ons into render (11) and track (12).*
 
 | Version | Change |
 |---|---|
@@ -211,6 +229,9 @@ The engine's shape is the residue of a controlled-testing program with a consist
 | v0.1.11 | Checkable per-claim references: every graded claim in the deliverable now states a reference the reader can validate without help — web-verified evidence as the named source with its URL; party-held or in-document evidence as the document name plus section or page. A two-line discipline clarification in `verify` and `analyse` Step 6 (wording class; no gate required under §8's own rules), prompted by an operator question about reader validation. Shipped alongside two docs-only additions: the §3.1 layer-step-approach-lineage map and the Foundations probe-by-probe commentary on the provocation page. `render`, `track`, and the provocation page are byte-identical to v0.1.10. |
 | v0.1.12 | Phase-1 assurance bundle (wording/discipline, no gate). L2: primary=proximity, `[V3]`/`[N]` boundary, single-root disconfirmation honesty, party-response marker. L6: per-claim currency (last-verified + volatility class), checked-and-held logging with a named-falsifier rule, change-vs-challenge. L4: confidence-basis rename + action contingency, resilience coverage, render-lock on the call. Step 2.5: link-grade citation rule, missing-driver (omission) line, map render-lock. `verify`/`analyse`/`track` only; provocation page + `render` byte-identical; no grade semantics changed. |
 | v0.1.13 | Phase-1b wording completion (wording/discipline, no gate). L6: `supports:` dependency tag + watch-list diagnosticity. L4: first-person flip phrasing + unified hedge rule + gate-binding line (with skip path) + track-ingestible trigger list + length budget. Step 2.5: loop-under-supply + decreasing-language polarity audits, boundary disclosure, trigger telemetry. Docs propagation: Guide/Architecture/Foundations/manual aligned with the shipped tier repairs and the calibration -> confidence-basis rename. `verify` + `render` + provocation page byte-identical; no grade semantics changed. |
+| v0.1.14 | The opt-in independent-adjudication layer (the `adjudicate` skill plus a Step-10 offer in `analyse`): a completed-analysis-only necessity gate; a blind-then-adversarial subagent handed the facts, the grade-locked spine, and the brief — but not the first model's reasoning; an independence ladder (A a different-lab / cross-lab model → B a different in-house model → C a blind Opus panel → D a self-adversarial reset) with the rung declared; discrepancies folded back under grade-lock, never flipping the call; a cross-lab harness and a real-use monitor. Honest claim: it sharpens a sound analysis and adds defensibility, but its decision-flip benefit is unproven and it is not a safety net. |
+| v0.1.15 | Code-backed standing opt-out for the adjudication offer: a `should-offer` preferences check (`prefs/prefs.py`; preferences stored at `~/.insight-engine/`, outside the plugin) so that once the operator declines standing, the engine stops offering — per scope (cross-lab vs all), reversible, with no dark patterns. |
+| v0.1.16 | Consecutive 1–12 step numbering across `analyse` and the docs; the former combined "follow-ons" step split into render (Step 11) and track (Step 12); adjudication settled as Step 10; interim fractional step labels retired. Numbering, labelling, and documentation release — no change to pipeline behaviour. |
 
 ## 9. Positioning against the field
 
@@ -234,10 +255,11 @@ The alignment is credible *because* it is uneven: a tool claiming to satisfy all
 
 - **The living workspace (`track`) is untested at scale.** Its re-verification discipline is sound and it now has a real elicitation contract, but its behaviour accumulating over many updates has not been controlled-tested. This is the one genuine open corner.
 - **All controlled tests have been synthetic.** They used LLM raters as a proxy for human decision-makers — directionally informative, not human-subjects results. The engine's marginal value over a strong model used well is well-argued but not yet shown in sustained *real* use.
-- **The engine is feature-complete for analytical prompt-moves.** The convergent verdict of the test program is that further analytical *prompt-moves* do not pay on a strong model. The one post-verdict addition — the v0.1.7 systems-investigation pass — was admitted precisely because it is a *capability* (a representation the bare model does not structure on its own), not a prompt-move, and only after it cleared three gates and a replication. That is now the bar for any further addition. The remaining value is overwhelmingly in **real use** — and, secondarily, in stress-testing `track`.
+- **The engine is feature-complete for analytical prompt-moves.** The convergent verdict of the test program is that further analytical *prompt-moves* do not pay on a strong model. Two capabilities were added after that verdict, both deliberately outside the prompt-move class it closed: the v0.1.7 systems-investigation pass — a *representation* the bare model does not structure on its own, admitted only after it cleared three gates and a replication — and the v0.1.14 adjudication layer, an *assurance* capability (an independent second pass) shipped opt-in and off by default because its decision-flip benefit is unproven. That distinction — a genuine capability, earned or honestly bounded, never another prompt-move — is the bar for any further addition. The remaining value is overwhelmingly in **real use** — and, secondarily, in stress-testing `track`.
+- **Adjudication's decision-flip benefit is unproven.** The Step 10 independent second pass reliably adds defensibility and a decorrelated check, but whether it catches errors a disciplined first pass misses is not established on the current evidence — constructed cases were already caught by the first pass, and the one real cross-lab run flipped nothing. It is opt-in and off by default for exactly this reason.
 
 The shortest honest statement of the road ahead: stop building, start using. Hand a genuine problem to `/analyse`, let the gate make you take a position, and let real use — not another feature — be the next source of signal.
 
 ---
 
-*Reference document for `insight-engine` v0.1.13, compiled 24 June 2026 (revised 25 June 2026 to add the ICD-203 alignment, §9.1; revised 2 July 2026 for the v0.1.8 release) from the engine's design and its controlled-testing record. The engine's own grade discipline applies to its self-description: the architecture and version history are recorded fact `[V1]`; the "feature-complete" judgement rests on a small, synthetic-rater test base and is held as a calibrated conclusion, not a proof.*
+*Reference document for `insight-engine` v0.1.16, compiled 24 June 2026 (revised through 11 July 2026 for the v0.1.14 adjudication layer, the v0.1.15 standing opt-out, and the v0.1.16 1–12 renumber) from the engine's design and its controlled-testing record. The engine's own grade discipline applies to its self-description: the architecture and version history are recorded fact `[V1]`; the "feature-complete" judgement rests on a small, synthetic-rater test base and is held as a calibrated conclusion, not a proof.*

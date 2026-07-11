@@ -1,6 +1,6 @@
 # Insight Engine — User Operating Guide
 
-**`v0.1.11`** · A tool for investigating high-stakes, complex, contested, and wicked problems — the kind where the important things hide, the evidence is mixed or interested, and the deciding questions are value judgements. The engine surfaces the hidden contributors, conditions, and causal structure beneath a situation — sources of success and adaptation as well as failure — verifies every load-bearing claim against current sources, and routes what cannot be verified to your judgement. It offers understanding and a defensible next step, not control or prediction: wicked problems are navigated, not solved. **The large language model provides the insight; the engine makes it verified, defensible, and audience-ready.**
+**`v0.1.16`** · A tool for investigating high-stakes, complex, contested, and wicked problems — the kind where the important things hide, the evidence is mixed or interested, and the deciding questions are value judgements. The engine surfaces the hidden contributors, conditions, and causal structure beneath a situation — sources of success and adaptation as well as failure — verifies every load-bearing claim against current sources, and routes what cannot be verified to your judgement. It offers understanding and a defensible next step, not control or prediction: wicked problems are navigated, not solved. **The large language model provides the insight; the engine makes it verified, defensible, and audience-ready.**
 
 > This is the Markdown edition, for reading on GitHub. The original styled version (with the rich diagrams) is in [`originals/`](originals/) and on the [project site](https://complexar.github.io/Insight-Engine/).
 
@@ -14,12 +14,13 @@ It is not a search box or a chatbot. It is a discipline: **verify what can be ve
 
 ## 2. Quick start
 
-The engine is the `insight-engine` plugin. To update, re-install the latest `.plugin` from **Customize → Skills**. You drive it with four chat commands:
+The engine is the `insight-engine` plugin. To update, re-install the latest `.plugin` from **Customize → Skills**. You drive it with five chat commands:
 
 - **`/analyse`** — The main one. Hand it a problem in your own words, or attach a document and say "analyse this."
 - **`/verify`** — Fact-check a set of claims or a premise before you rely on it.
 - **`/render`** — Re-voice a finished analysis for a specific reader.
 - **`/track`** — Keep an investigation live across sessions as new facts arrive.
+- **`/adjudicate`** — Put a finished high-stakes analysis to an opt-in independent second pass (blind, then adversarial) on the most decorrelated model available. It never changes the call.
 
 **Simplest use:** type `/analyse` followed by your problem, answer the gate when it asks, and read the brief.
 
@@ -52,7 +53,8 @@ flowchart TD
     L25 --> L3["L3 · Deep-core routing<br/>framing · legitimacy · opportunity-cost · value → the un-verifiable OPEN list"]
     L3 --> GATE["★ Forced judgement gate — YOU<br/>you record a one-line position on each deep-core question, or defer"]
     GATE --> L4["L4 · Assembly — the decision brief<br/>call · confidence basis · dominant unknown · what-to-verify-first · what-would-flip-it"]
-    L4 --> L5["L5 · Rendering<br/>audience re-voicing: adversarial · advocate · board · counsel · regulator · family · any"]
+    L4 --> ADJ["Adjudication (Step 10) · opt-in, off by default<br/>independent second pass: blind → adversarial · never flips the call · YOU opt in"]
+    ADJ --> L5["L5 · Rendering<br/>audience re-voicing: adversarial · advocate · board · counsel · regulator · family · any"]
     L5 --> L6["L6 · Workspace<br/>living dossier across sessions: OPEN · UPDATE · STATUS"]
     L0["L0 · Strong model — the substrate that provides the insight"] -.->|substrate| L1
     SPINE["GRADE-LOCK SPINE — the invariant through every layer<br/>V1 primary · V2 secondary · V3 weak/contested · N interested party<br/>the single dominant unknown · the non-droppable caveat core<br/>grades are locked: set once, never changed downstream — only re-expressed"]
@@ -62,10 +64,11 @@ flowchart TD
     classDef green fill:#e9f5ee,stroke:#a9d4bd;
     class GATE gate;
     class L25 cond;
+    class ADJ cond;
     class L2 green;
 ```
 
-**The four skills (the interface):** `/analyse` orchestrates the whole pipeline (triage → L1–L6 with the gate); `/verify` is L2 standalone; `/render` is L5 standalone; `/track` is L6 standalone.
+**The five skills (the interface):** `/analyse` orchestrates the whole pipeline (triage → L1–L6 with the gate); `/verify` is L2 standalone; `/render` is L5 standalone; `/track` is L6 standalone; `/adjudicate` is the opt-in Step 10 adjudication layer standalone.
 
 In short: **L0** the model is the substrate; **L1–L6** are the processing layers; the **spine** is the epistemic backbone that never bends; the **gate** is where you act; the **triage** decides how much machinery to run.
 
@@ -75,30 +78,33 @@ Here is what actually happens when you hand it a problem. Most of the pipeline r
 
 ```mermaid
 flowchart TD
-    U["You · /analyse your problem"] --> T{"⚑ Proportionality triage<br/>trivial, self-contained, reversible,<br/>no third parties or legal exposure?"}
+    U["You · /analyse your problem"] --> T{"⚑ STEP 1 · Proportionality triage<br/>trivial, self-contained, reversible,<br/>no third parties or legal exposure?"}
     T -->|"YES — rare"| SH["A short, proportionate answer<br/>+ an offer to run the full pass"]
-    T -->|"NO / any doubt → full depth (the default)"| S0["STEP 0 · Optional scoping<br/>a few skippable questions"]
-    S0 --> S1["STEP 1 · Provocation pass<br/>surface what's material but sits where attention doesn't go; mark each claim V or N"]
-    S1 --> S2["STEP 2 · Verification<br/>route each claim · tier it V1/V2/V3 · search the negation of the load-bearing few · re-scan"]
-    S2 --> S25["STEP 2.5 · Systems-investigation pass — conditional<br/>only if genuinely systemic (feedback · stocks · delays · tipping):<br/>a graded causal map of loops, tipping conditions, leverage · investigate, don't predict"]
-    S25 --> S3["STEP 3 · Deep-core routing<br/>set aside the questions no evidence can settle: framing · legitimacy · opportunity-cost · value"]
-    S3 --> S4["STEP 4 · Grade-lock + resilience check<br/>fix every grade; stress-test whether the call survives its assumptions moving together"]
-    S4 --> G["★ STEP 5 · THE FORCED GATE — YOU<br/>take a one-line position on each deep-core question, or explicitly defer.<br/>The brief does not finalise until you do."]
-    G --> S6["STEP 6 · Assemble → the decision brief<br/>your positions · graded findings · call · confidence basis · dominant unknown · verify-first · flip-it · sources"]
-    S6 --> S7["STEP 7 · Offer follow-ons — /render · /track"]
+    T -->|"NO / any doubt → full depth (the default)"| S0["STEP 2 · Optional scoping<br/>a few skippable questions"]
+    S0 --> S1["STEP 3 · Provocation pass<br/>surface what's material but sits where attention doesn't go; mark each claim V or N"]
+    S1 --> S2["STEP 4 · Verification<br/>route each claim · tier it V1/V2/V3 · search the negation of the load-bearing few · re-scan"]
+    S2 --> S25["STEP 5 · Systems-investigation pass — conditional<br/>only if genuinely systemic (feedback · stocks · delays · tipping):<br/>a graded causal map of loops, tipping conditions, leverage · investigate, don't predict"]
+    S25 --> S3["STEP 6 · Deep-core routing<br/>set aside the questions no evidence can settle: framing · legitimacy · opportunity-cost · value"]
+    S3 --> S4["STEP 7 · Grade-lock + resilience check<br/>fix every grade; stress-test whether the call survives its assumptions moving together"]
+    S4 --> G["★ STEP 8 · THE FORCED GATE — YOU<br/>take a one-line position on each deep-core question, or explicitly defer.<br/>The brief does not finalise until you do."]
+    G --> S6["STEP 9 · Assemble → the decision brief<br/>your positions · graded findings · call · confidence basis · dominant unknown · verify-first · flip-it · sources"]
+    S6 --> S10["STEP 10 · Offer independent adjudication<br/>opt-in, off by default · high-stakes only · blind → adversarial · never flips the call"]
+    S10 --> S11["STEP 11 · Offer /render"]
+    S11 --> S12["STEP 12 · Offer /track"]
     classDef gate fill:#fdf1df,stroke:#e8a33d,stroke-width:2px;
     classDef cond fill:#fff7ec,stroke:#eac489,stroke-width:2px;
     classDef green fill:#e9f5ee,stroke:#a9d4bd;
     class G gate;
     class T cond;
     class S25 cond;
+    class S10 cond;
     class S2 green;
     class S4 green;
 ```
 
-From Step 4 onward the **grade-lock spine** holds: grades never change — they are only re-expressed.
+From Step 7 onward the **grade-lock spine** holds: grades never change — they are only re-expressed.
 
-**Step 2.5 is new in v0.1.7 and conditional.** When a problem is genuinely *systemic* — driven by feedback loops, accumulating pressures, delays, or a possible tipping point — the engine adds a **systems-investigation pass**: a graded causal map of the loops, the *conditions* under which the system could tip (never a date or a probability), and the highest-leverage places to intervene. It investigates the structure and routes the "will it / when" judgement to you; it never forecasts. On a static, one-shot problem it skips this step and says so.
+**Step 5 (added in v0.1.7, numbered Step 2.5 until v0.1.16) is conditional.** When a problem is genuinely *systemic* — driven by feedback loops, accumulating pressures, delays, or a possible tipping point — the engine adds a **systems-investigation pass**: a graded causal map of the loops, the *conditions* under which the system could tip (never a date or a probability), and the highest-leverage places to intervene. It investigates the structure and routes the "will it / when" judgement to you; it never forecasts. On a static, one-shot problem it skips this step and says so.
 
 ## 5. Using `/analyse`
 
@@ -149,12 +155,13 @@ Findings in a brief may carry an optional tag borrowed from systems engineering 
 
 A wicked problem is usually all three colliding, which is why one crisp verdict cannot fit every finding. Tags are reporting vocabulary only — they change no grade and add no pipeline step.
 
-## 8. The other three skills
+## 8. The other four skills
 
 - **`/verify`** — Hand it a set of claims or a premise. It routes each (web-checkable / your-document / value-judgement), grades and tiers them, searches for counter-evidence, and tells you which are exposed. Use it to check something before you rely on it.
 - **`/render`** — Takes a finished analysis and re-voices it for a reader. It will ask who — or you name them: a board, counsel, a regulator, a journalist, the family, an adversary. The grades never change; only the register does.
 - **`/track`** — For inquiries that evolve. **OPEN** starts a dossier; **UPDATE** folds in new facts and re-verifies; **STATUS** reads back where it stands. (Newest skill — sound, but the least battle-tested.)
-- **Chaining them** — A natural flow: `/analyse` a problem → `/render` it for each stakeholder → `/track` it as the situation develops. `/verify` can be used at any point to re-check a claim.
+- **`/adjudicate`** — Put a finished high-stakes analysis to an independent second pass: a different model (ideally from a different lab) re-derives it blind, then attacks it, and its disagreements fold back in — it never changes a claim, a grade, or the call. It is opt-in and off by default; the engine offers it in one line you can decline, it costs credits or set-up, "don't offer again" is remembered by the plugin, and the cross-lab pass is never run on confidential material. Honest note: it adds defensibility and a decorrelated second look; whether it catches an error the first pass missed is unproven.
+- **Chaining them** — A natural flow: `/analyse` a problem → (optionally `/adjudicate` a high-stakes result) → `/render` it for each stakeholder → `/track` it as the situation develops. `/verify` can be used at any point to re-check a claim.
 
 ## 9. Tips for good results
 
@@ -191,11 +198,13 @@ A wicked problem is usually all three colliding, which is why one crisp verdict 
 | Grade-lock | Once set, a claim's grade never changes downstream — only its wording does. What makes the output defensible. |
 | Disconfirmation | For load-bearing claims, a second search aimed at *disproving* them — the counter to confirmation bias. |
 | Coverage-retention | A re-scan for material issues that focusing on the load-bearing few may have dropped. |
-| Systems-investigation pass | A conditional step (v0.1.7) for genuinely systemic problems: a graded causal map of feedback loops, tipping *conditions*, and leverage points — investigating structure, never predicting whether or when the system tips. |
+| Systems-investigation pass | A conditional step (Step 5; added v0.1.7) for genuinely systemic problems: a graded causal map of feedback loops, tipping *conditions*, and leverage points — investigating structure, never predicting whether or when the system tips. |
 | Proportionality triage | The fail-safe pre-flight that right-sizes the analysis — short answer for the unambiguously trivial, full depth otherwise. |
 | Provocation page | The fixed one-page method applied verbatim every run — the engine's analytical L1. |
 | Wicked problem | One with no verifiable solution, where the deep core dominates. The call comes as a provisional stance, not a verdict. |
+| Adjudication (Step 10) | An opt-in, off-by-default independent second pass on a finished high-stakes analysis: a separate, ideally different-lab model re-derives it blind, then adversarially; disagreements fold back under grade-lock; it never changes the call. Its decision-flip benefit is unproven; what it adds is defensibility and a decorrelated check. |
+| Independence ladder / rung | The order of adjudicators, strongest first — A a different-lab model · B a different in-house model · C a panel of same-model instances · D a self-adversarial reset — chosen by what is set up; the engine declares which rung it reached. |
 
 ---
 
-**Insight Engine v0.1.11** — User Operating Guide. The large language model provides the insight; the engine makes it verified, defensible, and audience-ready. For the full design specification, layer-by-layer detail, and the controlled-testing record behind each feature, see the companion [Architecture](Architecture.md) document.
+**Insight Engine v0.1.16** — User Operating Guide. The large language model provides the insight; the engine makes it verified, defensible, and audience-ready. For the full design specification, layer-by-layer detail, and the controlled-testing record behind each feature, see the companion [Architecture](Architecture.md) document.

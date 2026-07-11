@@ -6,12 +6,13 @@ A light plugin for investigating high-stakes, complex, contested, and wicked pro
 
 Built one controlled test at a time, keeping only what beats a strong plain pass. Every load-bearing claim is graded `[V]` (independently corroborated) or `[N]` (rests on an interested or self-reporting party), with strength tiers `[V1]`/`[V2]`/`[V3]`; once a grade is set it is never changed downstream — only re-expressed.
 
-## The four commands
+## The five commands
 
-- **`/analyse`** — the main workflow: a fail-safe proportionality triage → a fixed "provocation page" pass → source-tiered web verification with a disconfirmation search → a **conditional systems-investigation pass** for feedback-driven problems (a graded causal map of loops, tipping *conditions*, and leverage — investigate, don't predict) → deep-core routing → grade-lock + an assumption-resilience check → a **forced judgement gate** you clear → a five-part decision brief.
+- **`/analyse`** — the main workflow: a fail-safe proportionality triage → a fixed "provocation page" pass → source-tiered web verification with a disconfirmation search → a **conditional systems-investigation pass** for feedback-driven problems (a graded causal map of loops, tipping *conditions*, and leverage — investigate, don't predict) → deep-core routing → grade-lock + an assumption-resilience check → a **forced judgement gate** you clear → a five-part decision brief → an **opt-in offer of independent adjudication** for the highest-stakes results (never automatic; never flips the call) → offers to render and track.
 - **`/verify`** — fact-check the load-bearing claims of an analysis against current sources; catch confidently-wrong facts; route what can't be verified online to the right place.
 - **`/render`** — re-voice a finished analysis for a specific reader (board, counsel, regulator, family, adversary, or any named standpoint) without changing a claim or a grade.
 - **`/track`** — keep an investigation live across sessions as new facts arrive.
+- **`/adjudicate`** — run an opt-in independent second pass — blind, then adversarial — on a finished high-stakes analysis, on the most decorrelated model available; it declares the rung it reached and never changes a claim, a grade, or the call.
 
 ## What it deliberately does not do
 
@@ -30,13 +31,13 @@ It does not convene real stakeholders (simulated perspectives are labelled as su
 ### Claude Cowork (desktop app) — install from file
 The desktop app installs plugins from a file rather than from a GitHub marketplace:
 
-1. Download **`dist/insight-engine-0.1.14.plugin`** from this repo (or from the latest [Release](../../releases)).
+1. Download **`dist/insight-engine-0.1.16.plugin`** from this repo (or from the latest [Release](../../releases)).
 2. In Cowork, open **Customize → Skills → Upload from file** and choose the `.plugin`.
 
 ## Version
 
-**0.1.14.** For how releases are cut, see [PUBLISHING.md](PUBLISHING.md).
+**0.1.16.** For how releases are cut, see [PUBLISHING.md](PUBLISHING.md).
 
 ## License
 
-No license is set yet. Add a `LICENSE` file (for example MIT) before sharing widely, so others know the terms on which they can use it.
+MIT — see [LICENSE](LICENSE).

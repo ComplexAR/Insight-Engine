@@ -73,7 +73,7 @@
 <div class="doc">
 
   <h1>Insight Engine</h1>
-  <div class="tagline">User Operating Manual &nbsp;<span class="ver">v0.1.11</span></div>
+  <div class="tagline">User Operating Manual &nbsp;<span class="ver">v0.1.16</span></div>
   <p class="lead">A tool for investigating high-stakes, complex, contested, and wicked problems &mdash; the kind where the important things hide, the evidence is mixed or interested, and the deciding questions are value judgements. The engine surfaces the hidden contributors, conditions, and causal structure beneath a situation &mdash; sources of success and adaptation as well as failure &mdash; verifies every load-bearing claim against current sources, and routes what cannot be verified to your judgement. It offers understanding and a defensible next step, not control or prediction: wicked problems are navigated, not solved. <b>The large language model provides the insight; the engine makes it verified, defensible, and audience-ready.</b></p>
 
   <h2>1. What it&rsquo;s for (and when not)</h2>
@@ -82,7 +82,7 @@
   <div class="callout">You don&rsquo;t need it for genuinely trivial things. It will notice triviality and right-size itself to a short answer &mdash; but you get the most from it on problems that actually have hidden depth.</div>
 
   <h2>2. Quick start</h2>
-  <p>The engine is the <code>insight-engine</code> plugin. To update, re-install the latest <code>.plugin</code> from Customize &rarr; Skills. You drive it with four chat commands:</p>
+  <p>The engine is the <code>insight-engine</code> plugin. To update, re-install the latest <code>.plugin</code> from Customize &rarr; Skills. You drive it with five chat commands:</p>
   <div class="grid2">
     <div class="card"><h3><span class="cmd">/analyse</span></h3><p style="margin:0">The main one. Hand it a problem in your own words, or attach a document and say &ldquo;analyse this.&rdquo;</p></div>
     <div class="card"><h3><span class="cmd">/verify</span></h3><p style="margin:0">Fact-check a set of claims or a premise before you rely on it.</p></div>
@@ -138,12 +138,13 @@
       </div>
       <div class="model">L0 &middot; Strong model &mdash; provides the insight (the substrate the engine sits on)</div>
     </div>
-    <div class="skills-title">THE FOUR SKILLS (THE INTERFACE)</div>
+    <div class="skills-title">THE FIVE SKILLS (THE INTERFACE)</div>
     <div class="skills">
       <div class="skill"><b>/analyse</b><div class="sf">orchestrates the whole pipeline &mdash; triage &rarr; L1&ndash;L6 with the gate</div></div>
       <div class="skill"><b>/verify</b><div class="sf">L2 standalone &mdash; fact-check a claim-set or premise</div></div>
       <div class="skill"><b>/render</b><div class="sf">L5 standalone &mdash; re-voice for an audience</div></div>
       <div class="skill"><b>/track</b><div class="sf">L6 standalone &mdash; a living investigation</div></div>
+      <div class="skill"><b>/adjudicate</b><div class="sf">Step 10 standalone &mdash; opt-in independent second pass; never flips the call</div></div>
     </div>
   </div>
   <p style="font-size:13px;color:#5b6776">In short: <b>L0</b> the model is the substrate; <b>L1&ndash;L6</b> are the processing layers; the <b>spine</b> is the epistemic backbone that never bends; the <b>gate</b> is where you act; the <b>triage</b> decides how much machinery to run.</p>
@@ -157,31 +158,35 @@
     <div class="flow">
       <div class="node start">You &middot; <code>/analyse "&lt;your problem&gt;"</code></div>
       <div class="arr">&#9660;</div>
-      <div class="node decision"><b>&#9873; Proportionality triage</b><div class="nsub">Unambiguously trivial, self-contained, reversible, no third parties or legal exposure?</div>
+      <div class="node decision"><span class="step">STEP 1</span><br><b>&#9873; Proportionality triage</b><div class="nsub">Unambiguously trivial, self-contained, reversible, no third parties or legal exposure?</div>
         <div class="branch"><b>YES (rare)</b> &rarr; a short, proportionate answer &mdash; and an offer to run the full pass</div></div>
       <div class="arr"><span class="arr-label">NO / any doubt &rarr; full depth (the default)</span><br>&#9660;</div>
-      <div class="node"><span class="step">STEP 0</span><br><b>Optional scoping</b><div class="nsub">a few skippable questions &mdash; the decision, the audience, the value frame, any documents you hold</div></div>
+      <div class="node"><span class="step">STEP 2</span><br><b>Optional scoping</b><div class="nsub">a few skippable questions &mdash; the decision, the audience, the value frame, any documents you hold</div></div>
       <div class="arr">&#9660;</div>
-      <div class="node"><span class="step">STEP 1</span><br><b>Provocation pass</b><div class="nsub">surface what&rsquo;s material but sits where attention doesn&rsquo;t go; mark each claim [V] or [N]</div></div>
+      <div class="node"><span class="step">STEP 3</span><br><b>Provocation pass</b><div class="nsub">surface what&rsquo;s material but sits where attention doesn&rsquo;t go; mark each claim [V] or [N]</div></div>
       <div class="arr">&#9660;</div>
-      <div class="node green"><span class="step">STEP 2</span><br><b>Verification</b><div class="nsub">route each claim &middot; tier it [V1]/[V2]/[V3] &middot; search the negation of the load-bearing few &middot; re-scan for what focus dropped</div></div>
+      <div class="node green"><span class="step">STEP 4</span><br><b>Verification</b><div class="nsub">route each claim &middot; tier it [V1]/[V2]/[V3] &middot; search the negation of the load-bearing few &middot; re-scan for what focus dropped</div></div>
       <div class="arr">&#9660;</div>
-      <div class="node decision"><span class="step">STEP 2.5 &middot; conditional</span><br><b>Systems-investigation pass</b><div class="nsub">only if the problem is genuinely systemic (feedback &middot; stocks &middot; delays &middot; tipping) &mdash; a graded causal map of loops, tipping <em>conditions</em>, and leverage; <b>investigate, don&rsquo;t predict</b>. Otherwise skipped.</div></div>
+      <div class="node decision"><span class="step">STEP 5 &middot; conditional</span><br><b>Systems-investigation pass</b><div class="nsub">only if the problem is genuinely systemic (feedback &middot; stocks &middot; delays &middot; tipping) &mdash; a graded causal map of loops, tipping <em>conditions</em>, and leverage; <b>investigate, don&rsquo;t predict</b>. Otherwise skipped.</div></div>
       <div class="arr">&#9660;</div>
-      <div class="node"><span class="step">STEP 3</span><br><b>Deep-core routing</b><div class="nsub">set aside the questions no evidence can settle: framing &middot; legitimacy &middot; opportunity-cost &middot; value</div></div>
+      <div class="node"><span class="step">STEP 6</span><br><b>Deep-core routing</b><div class="nsub">set aside the questions no evidence can settle: framing &middot; legitimacy &middot; opportunity-cost &middot; value</div></div>
       <div class="arr">&#9660;</div>
-      <div class="node green"><span class="step">STEP 4</span><br><b>Grade-lock + resilience check</b><div class="nsub">fix every grade; stress-test whether the call survives its load-bearing assumptions moving together</div></div>
+      <div class="node green"><span class="step">STEP 7</span><br><b>Grade-lock + resilience check</b><div class="nsub">fix every grade; stress-test whether the call survives its load-bearing assumptions moving together</div></div>
       <div class="arr">&#9660;</div>
-      <div class="node gate"><span class="step">STEP 5</span><br><b>&#9733; THE FORCED GATE <span class="you">YOU</span></b><div class="nsub">you take a one-line position on each deep-core question &mdash; or explicitly defer.<br><b>The brief does not finalise until you do.</b></div></div>
+      <div class="node gate"><span class="step">STEP 8</span><br><b>&#9733; THE FORCED GATE <span class="you">YOU</span></b><div class="nsub">you take a one-line position on each deep-core question &mdash; or explicitly defer.<br><b>The brief does not finalise until you do.</b></div></div>
       <div class="arr">&#9660;</div>
-      <div class="node"><span class="step">STEP 6</span><br><b>Assemble &rarr; the decision brief</b><div class="nsub">your positions &middot; graded findings &middot; <b>call &middot; calibration &middot; dominant unknown &middot; what-to-verify-first &middot; what-would-flip-it</b> &middot; sources</div></div>
+      <div class="node"><span class="step">STEP 9</span><br><b>Assemble &rarr; the decision brief</b><div class="nsub">your positions &middot; graded findings &middot; <b>call &middot; calibration &middot; dominant unknown &middot; what-to-verify-first &middot; what-would-flip-it</b> &middot; sources</div></div>
       <div class="arr">&#9660;</div>
-      <div class="node"><span class="step">STEP 7</span><br><b>Offer follow-ons</b><div class="nsub"><code>/render</code> &mdash; re-voice it for a reader &nbsp;&middot;&nbsp; <code>/track</code> &mdash; keep it live</div></div>
+      <div class="node decision"><span class="step">STEP 10 &middot; opt-in</span><br><b>Offer independent adjudication</b><div class="nsub">off by default &middot; high-stakes only &mdash; a different model re-derives it blind, then adversarially; it never flips the call. YOU opt in.</div></div>
+      <div class="arr">&#9660;</div>
+      <div class="node"><span class="step">STEP 11</span><br><b>Offer <code>/render</code></b><div class="nsub">re-voice the finished analysis for a reader</div></div>
+      <div class="arr">&#9660;</div>
+      <div class="node"><span class="step">STEP 12</span><br><b>Offer <code>/track</code></b><div class="nsub">keep the investigation live as facts arrive</div></div>
     </div>
-    <div class="flow-note">From Step 4 onward the <b>grade-lock spine</b> holds: grades never change &mdash; they are only re-expressed.</div>
+    <div class="flow-note">From Step 7 onward the <b>grade-lock spine</b> holds: grades never change &mdash; they are only re-expressed.</div>
   </div>
 
-  <p style="font-size:13px;color:#5b6776"><b>Step 2.5 is new in v0.1.7 and conditional.</b> When a problem is genuinely <em>systemic</em> &mdash; driven by feedback loops, accumulating pressures, delays, or a possible tipping point &mdash; the engine adds a <b>systems-investigation pass</b>: a graded causal map of the loops, the <em>conditions</em> under which the system could tip (never a date or a probability), and the highest-leverage places to intervene. It investigates the structure and routes the &ldquo;will it / when&rdquo; judgement to you; it never forecasts. On a static, one-shot problem it skips this step and says so.</p>
+  <p style="font-size:13px;color:#5b6776"><b>Step 5 (added in v0.1.7, numbered Step 2.5 until v0.1.16) is conditional.</b> When a problem is genuinely <em>systemic</em> &mdash; driven by feedback loops, accumulating pressures, delays, or a possible tipping point &mdash; the engine adds a <b>systems-investigation pass</b>: a graded causal map of the loops, the <em>conditions</em> under which the system could tip (never a date or a probability), and the highest-leverage places to intervene. It investigates the structure and routes the &ldquo;will it / when&rdquo; judgement to you; it never forecasts. On a static, one-shot problem it skips this step and says so.</p>
 
   <h2>5. Using <span class="cmd">/analyse</span></h2>
   <p><b>What to type:</b> <span class="cmd">/analyse</span> and your problem in plain words, the specific questions you want answered, or a document to analyse &mdash; it will answer your questions inside the graded analysis. The more raw the problem (rather than a pre-digested summary), the more the engine can surface what you might have framed out.</p>
@@ -217,12 +222,13 @@
   <h3>Optional finding tags (hard / soft / messy)</h3>
   <p>Findings may carry an optional tag borrowed from systems engineering (Madhavan, 2024): <b>hard</b> &mdash; bounded and optimisable (<i>solve</i>); <b>soft</b> &mdash; behavioural or political, no optimum, only a defensible accommodation (<i>resolve</i>, by satisficing); <b>messy</b> &mdash; conflicting values or beliefs (<i>dissolve</i>, by reframing until the problem cannot arise in that form). A wicked problem is usually all three colliding &mdash; one crisp verdict cannot fit every finding. Tags are reporting vocabulary only: they change no grade and add no step.</p>
 
-  <h2>8. The other three skills</h2>
+  <h2>8. The other four skills</h2>
   <div class="grid2">
     <div class="card"><h3><span class="cmd">/verify</span></h3><p style="margin:0">Hand it a set of claims or a premise. It routes each (web-checkable / your-document / value-judgement), grades and tiers them, searches for counter-evidence, and tells you which are exposed. Use it to check something before you rely on it.</p></div>
     <div class="card"><h3><span class="cmd">/render</span></h3><p style="margin:0">Takes a finished analysis and re-voices it for a reader. It will ask who &mdash; or you name them: a board, counsel, a regulator, a journalist, the family, an adversary. The grades never change; only the register does.</p></div>
     <div class="card"><h3><span class="cmd">/track</span></h3><p style="margin:0">For inquiries that evolve. <b>OPEN</b> starts a dossier; <b>UPDATE</b> folds in new facts and re-verifies; <b>STATUS</b> reads back where it stands. (Newest skill &mdash; sound, but the least battle-tested.)</p></div>
-    <div class="card"><h3>Chaining them</h3><p style="margin:0">A natural flow: <span class="cmd">/analyse</span> a problem &rarr; <span class="cmd">/render</span> it for each stakeholder &rarr; <span class="cmd">/track</span> it as the situation develops. <span class="cmd">/verify</span> can be used at any point to re-check a claim.</p></div>
+    <div class="card"><h3><span class="cmd">/adjudicate</span></h3><p style="margin:0">Put a finished high-stakes analysis to an independent second pass: a different model (ideally from a different lab) re-derives it blind, then attacks it &mdash; disagreements fold back in, and it never changes a claim, a grade, or the call. Opt-in and off by default; one word declines it, &ldquo;don&rsquo;t offer again&rdquo; is remembered, and the cross-lab pass never runs on confidential material.</p></div>
+    <div class="card"><h3>Chaining them</h3><p style="margin:0">A natural flow: <span class="cmd">/analyse</span> a problem &rarr; (optionally <span class="cmd">/adjudicate</span> a high-stakes result) &rarr; <span class="cmd">/render</span> it for each stakeholder &rarr; <span class="cmd">/track</span> it as the situation develops. <span class="cmd">/verify</span> can be used at any point to re-check a claim.</p></div>
   </div>
 
   <h2>9. Tips for good results</h2>
@@ -267,7 +273,7 @@
   </table>
 
   <div class="foot">
-    <b>Insight Engine v0.1.11</b> &mdash; User Operating Manual. The large language model provides the insight; the engine makes it verified, defensible, and audience-ready. For the full design specification, layer-by-layer detail, and the controlled-testing record behind each feature, see the companion <i>Insight Engine Architecture</i> document.
+    <b>Insight Engine v0.1.16</b> &mdash; User Operating Manual. The large language model provides the insight; the engine makes it verified, defensible, and audience-ready. For the full design specification, layer-by-layer detail, and the controlled-testing record behind each feature, see the companion <i>Insight Engine Architecture</i> document.
   </div>
 
 </div>
