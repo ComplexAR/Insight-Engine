@@ -17,8 +17,10 @@ import os, json, urllib.request, urllib.error
 # preview and not yet enabled on this account (OpenAI's own error says: use gpt-5.5 for now).
 # gpt-5.5 is still a different-lab frontier model, so cross-lab independence holds. Override
 # anytime with the CROSSLAB_MODEL env var; the model actually used is recorded in each
-# report's _adjudicator_model field. Set CROSSLAB_MODEL=gpt-5.6-sol once Sol is enabled.
-DEFAULT_MODEL = os.environ.get("CROSSLAB_MODEL", "gpt-5.5")
+# report's _adjudicator_model field. Sol verified live on this account 2026-07-12 (a live
+# smoke returned a clean parse tagged _adjudicator_model=gpt-5.6-sol); falls back to gpt-5.5
+# (also a different-lab frontier model, so cross-lab independence holds) if Sol is unavailable.
+DEFAULT_MODEL = os.environ.get("CROSSLAB_MODEL", "gpt-5.6-sol")
 OPENAI_URL    = "https://api.openai.com/v1/responses"
 
 class EgressBlocked(Exception): pass

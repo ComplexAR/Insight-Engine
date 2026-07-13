@@ -42,3 +42,27 @@ is tested; the data is yours to accrue.
   `CROSSLAB_FLIP_THRESHOLD=1`. Fires: ≥1 operator-agreed observable-backed rung-A flip → *cross-lab earned its
   place*; 0 flips at ≥12 rung-A runs → *cross-lab decision-flip benefit negligible in practice*; else accruing.
   Independent of the blended (all-rung) read-out, which is unchanged.
+- **AMENDMENT-2 (2026-07-13, pre-registered):** a **per-class, per-rung retirement rule** — the mechanism that
+  decides, from the ledger rather than by argument, whether adjudication has become redundant for a given class
+  of problem as analyser models strengthen. It answers the standing question "does a stronger analyser make this
+  layer redundant?" empirically and reversibly, and never retires the layer wholesale. Requires one new ledger
+  field, `class` (a short operator-set problem-class tag, e.g. `legal-exposure`, `contested-blame`,
+  `financial-materiality`); runs without it fall into an `unclassified` bucket that is never auto-retired.
+  - **Retire (redundant) for a class + rung** when, over the last **`RETIRE_N = 20`** adjudications in that class:
+    (a) **zero** `real-catch-*` verdicts; **and** (b) `useful-not-decision-relevant` items that actually changed a
+    caveat or grade occur in **under ~10%** of runs; **and** (c) those useful items merely duplicate what the
+    `analyse` first pass had already flagged. Action: **demote the offer for that class to on-request only** —
+    keep a **1-in-10 periodic audit run** so retirement stays a live hypothesis, not a permanent fact.
+  - **Keep (warranted)** when, inside the window: any `real-catch-refined`, or an operator-agreed
+    `real-catch-flipped` naming a discriminating observable; or `useful-not-decision-relevant` items that
+    materially altered a caveat or grade; or the class itself shifts (new instrument, jurisdiction, or
+    counterparty type) — **reset the window** on a class shift.
+  - **Monoculture watch (instrument-health, not yield):** track rung-A **blind-pass divergence rate** over time.
+    If cross-lab divergence trends toward zero across classes **while** ground-truth errors still surface
+    elsewhere, that signals decorrelation collapse — treat rung A's silence as **loss of signal, not safety**,
+    and do not read it as "models got good enough."
+  - **Honesty bounds on this rule (do not soften):** convergence/agreement is evidence of low *yield* (the right
+    variable for a cost decision), **not** proof the calls were correct. And because catches are tail events,
+    `RETIRE_N = 20` bounds the catch rate only loosely — zero catches in 20 runs is consistent with a true rate
+    up to ~14%. This rule therefore decides **economic redundancy, not tail safety**; retirement is per-class,
+    reversible, and audited, never a claim that the class is now error-free.
