@@ -65,7 +65,7 @@ The operator runs the paid call; **you never handle the key.** Walk it **one ste
 2. **Consent recap** (if `rung_consent=on`; `should-ask consent`): privilege status, egress **content** per `egress_mode`, retention terms for this lab, spend.
 3. **Egress** (`should-ask egress`): redacted (default, spine + contested claims) / full brief / ask-per-run. Raw source documents are never sent at any value.
 4. **Outbound-package preview** (if `show_outbound_package=on`; `should-ask package`): show the EXACT package (grade-locked spine + contested claims + draft brief; never raw source docs) for **confirm / edit / cancel** before anything leaves. Repeat per counterparty when M>1.
-5. **Setup + smoke:** `cd harness/`; the operator sets the key in their own shell (never in chat; Windows PowerShell `$env:OPENAI_API_KEY = Read-Host "Paste key"`); `python preflight.py` (expect READY), then `python preflight.py --live` (cheap smoke). To target a model, set the `CROSSLAB_MODEL` env var - the harness reads only this, so when a standing `crosslab_model` is saved, set `CROSSLAB_MODEL` to that value before the run.
+5. **Setup + smoke:** `cd harness/`; the operator sets the key in their own shell (never in chat; Windows PowerShell `$env:OPENAI_API_KEY = Read-Host "Paste key"`); `python preflight.py` (expect READY), then `python preflight.py --live` (cheap smoke). To target a model, set the standing `crosslab_model` (the harness reads it as a fallback) or override just this run with the `CROSSLAB_MODEL` env var (env wins).
 6. **Run:** `python run_crosslab.py --live` on the finished analysis's blind package -> 7.
 
 **Branch on the harness's stable tag** (the tag begins the message; match by *line contains*, never by provider wording). Never auto-retry a paid `--live`; never auto-descend a rung - each is a fresh yes.
@@ -73,7 +73,7 @@ The operator runs the paid call; **you never handle the key.** Walk it **one ste
 - `CROSSLAB-BLOCKED [privileged]` -> governance block; offer the typed override (if `block_override=allowed`) or B/C/D.
 - `CROSSLAB-BLOCKED [egress-off]` -> harness fail-safe; set `egress_mode` to redacted/full.
 - `CROSSLAB-FAILED [auth 401]` -> re-set/regenerate the key, check billing; retry.
-- `CROSSLAB-FAILED [model-unavailable 404]` -> set `CROSSLAB_MODEL` to another frontier model (e.g. gpt-5.5 - cross-lab independence still holds) this run only, or request access. A standing `set crosslab_model ...` (on explicit confirm) records the preference, but the harness reads `CROSSLAB_MODEL`, so set that env var for the actual run.
+- `CROSSLAB-FAILED [model-unavailable 404]` -> set `CROSSLAB_MODEL` to another frontier model (e.g. gpt-5.5 - cross-lab independence still holds) this run only, or request access. Retarget with a standing `set crosslab_model ...` (on explicit confirm; the harness reads it as a fallback) or with `CROSSLAB_MODEL` for just this run (env wins).
 - `CROSSLAB-FAILED [quota 429]` -> check billing/limits, wait; retry.
 - `CROSSLAB-FAILED [network]` -> check connection/proxy/firewall; retry.
 - `CROSSLAB-FAILED [api NNN]` -> a 4xx about the body likely means the Responses-API schema moved; adjust the request dict in `harness/crosslab.py` and re-smoke.

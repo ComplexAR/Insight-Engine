@@ -6,8 +6,24 @@
   default); overriding that block is a deliberate act: --privileged --override-privileged.
 The `adjudicate` skill replaces SAMPLE with the finished analysis's blind package
 (facts + grade-locked spine + draft brief; NO reasoning; redacted).
+Model resolves as: CROSSLAB_MODEL env (per-run override) -> the standing crosslab_model preference -> the built-in default.
 """
 import sys, json, os, argparse
+
+# Resolve the cross-lab model: an explicit CROSSLAB_MODEL env wins (per-run override); else fall
+# back to the standing crosslab_model preference; else crosslab.py's built-in default. Set the env
+# BEFORE importing crosslab so its DEFAULT_MODEL (read at import) picks it up - keeps crosslab.py
+# pure (it never imports prefs).
+if not os.environ.get("CROSSLAB_MODEL"):
+    try:
+        sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "prefs"))
+        import prefs as _prefs
+        _m = _prefs.get_value("crosslab_model")
+        if _m:
+            os.environ["CROSSLAB_MODEL"] = _m
+    except Exception:
+        pass
+
 from crosslab import CrossLabAdjudicator, MockAdjudicator, EgressBlocked
 
 PROMPT = open(os.path.join(os.path.dirname(__file__), "prompts", "adjudicate.txt"), encoding="utf-8").read()
@@ -31,7 +47,7 @@ if a.override_privileged and not a.privileged:
     print("note: --override-privileged has no effect without --privileged; there is nothing to override.")
 
 adj = CrossLabAdjudicator(egress_policy="redacted") if a.live else MockAdjudicator(egress_policy="redacted")
-print(f"[{'LIVE ' + adj.model if a.live else 'MOCK'}]  egress={adj.egress_policy}  privileged={a.privileged}  override={a.override_privileged}")
+print(f"[{('LIVE ' if a.live else 'MOCK ') + adj.model}]  egress={adj.egress_policy}  privileged={a.privileged}  override={a.override_privileged}")
 try:
     rep = adj.dispatch(SAMPLE, PROMPT, privileged=a.privileged, override_privileged=a.override_privileged)
     print(json.dumps(rep, indent=2))

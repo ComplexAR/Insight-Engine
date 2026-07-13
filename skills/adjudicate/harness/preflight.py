@@ -4,6 +4,21 @@
   LIVE SMOKE:         OPENAI_API_KEY=sk-... python3 preflight.py --live   # tiny ~free call: endpoint + API shape + JSON parse
 Run the smoke BEFORE spending on a full adjudication."""
 import os, sys, json
+
+# Resolve the cross-lab model: an explicit CROSSLAB_MODEL env wins (per-run override); else fall
+# back to the standing crosslab_model preference; else crosslab.py's built-in default. Set the env
+# BEFORE importing crosslab so its DEFAULT_MODEL (read at import) picks it up - keeps crosslab.py
+# pure (it never imports prefs).
+if not os.environ.get("CROSSLAB_MODEL"):
+    try:
+        sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "prefs"))
+        import prefs as _prefs
+        _m = _prefs.get_value("crosslab_model")
+        if _m:
+            os.environ["CROSSLAB_MODEL"] = _m
+    except Exception:
+        pass
+
 from crosslab import CrossLabAdjudicator, MockAdjudicator, EgressBlocked
 
 def offline():
@@ -46,6 +61,7 @@ def offline():
         _cl.urllib.request.urlopen=_saved
         if _hadkey is None: os.environ.pop("OPENAI_API_KEY",None)
         else: os.environ["OPENAI_API_KEY"]=_hadkey
+    print(f"  cross-lab model .............. {CrossLabAdjudicator().model}")
     key=bool(os.environ.get("OPENAI_API_KEY"))
     print(f"  OPENAI_API_KEY set ............ {'yes' if key else 'NO — set it before --live'}")
     print("  =>", "READY for --live" if (ok and key) else ("offline OK; set OPENAI_API_KEY for --live" if ok else "OFFLINE CHECKS FAILED"))

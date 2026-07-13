@@ -22,6 +22,7 @@ MockAdjudicator(...)   # identical interface + gates, canned report, no network/
 - Key read from the environment only, **never logged**; **zero-retention** terms arranged with the provider out of band.
 - Minimise: send the spine + contested claims, not raw privileged source documents.
 - **Failures are stable-tagged** for the skill to branch on (the tag begins the message): `CROSSLAB-BLOCKED [no-key|privileged|egress-off]` and `CROSSLAB-FAILED [auth 401|model-unavailable 404|quota 429|network|api NNN]` (HTTP-code classified, provider-agnostic).
+- **Model resolution** (done by the runners, not the adapter): `CROSSLAB_MODEL` env (per-run override) -> the standing `crosslab_model` preference (`prefs/`) -> the built-in default. `crosslab.py` stays pure and reads only `CROSSLAB_MODEL`.
 
 **Run:**
 - MOCK (offline, proven here): `python3 run_crosslab.py`
