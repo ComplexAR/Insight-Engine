@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-# Self-contained generator for Insight-Engine-Explainer.pptx (25 slides, Anthropic palette).
+# Self-contained generator for Insight-Engine-Explainer.pptx (27 slides, Anthropic palette).
 # Requires: pip install python-pptx --break-system-packages
 # Run: python3 Insight-Engine-Explainer-BUILD.py  -> writes the .pptx next to this script.
 # This is the consolidated final build (was build_deck_v2 -> patch_v3..v8 in an ephemeral scratchpad).
 
 #!/usr/bin/env python3
-"""Build the Insight Engine chaptered explainer deck (v2, 25 slides)."""
+"""Build the Insight Engine chaptered explainer deck (v2, 27 slides)."""
 import os
 from pptx import Presentation
 from pptx.util import Inches, Pt, Emu
@@ -102,7 +102,7 @@ s=slide()
 tb(s,0.90,1.30,11.5,0.7,"Insight Engine",30,CORAL,bold=True)
 tb(s,0.88,2.15,11.6,1.4,"Analysis defended with assurance.",54,INK,bold=True)
 tb(s,0.92,4.15,10.9,1.7,[[("Insight",22,True,BODY),(" supplied by a Large Language Model;",22,False,BODY)],[("Engine",22,True,BODY),(" makes that insight verified, defensible, and audience-ready.",22,False,BODY)]],22,BODY,sp=6)
-tb(s,0.92,6.5,11.2,0.4,"An open plugin for Claude Code & Cowork   ·   v0.1.16",16,MUTE)
+tb(s,0.92,6.5,11.2,0.4,"An open plugin for Claude Code & Cowork   ·   v0.1.17",16,MUTE)
 note(s,"This is the Insight Engine — a tool for analysis you can actually defend. The idea behind it fits in one sentence: the language model supplies the insight; the engine makes that insight verified, graded, and honest about its own limits. It doesn't try to think better than the model. It makes the model show its work — and checks that work against the world.")
 
 # ---------- S1b THE MAP (overview) ----------
@@ -375,12 +375,12 @@ tb(s,1.0,2.75,5.4,2.6,[("• a separate subagent, its own isolated context",15,F
 card(s,6.85,1.85,5.78,3.55)
 tb(s,7.15,2.08,5.2,0.5,"Which independent adjudicator (strongest first)",18,CORAL,bold=True)
 tb(s,7.15,2.66,5.2,2.7,[
-    [("A · different-LAB model (GPT-5.6 Sol; interim GPT-5.5) — strongest; runs ALONGSIDE the Anthropic model, never alone. Invoked by an API call — the engine guides the set-up interactively. ",13,False,INK),("Built + live-verified as a harness; opt-in, off by default; data leaves the boundary, off for privileged/confidential matters.",13,False,DAMBER,F,True)],
+    [("A · different-LAB model (configurable — GPT-5.6 Sol, Gemini, or Grok) — strongest; runs ALONGSIDE the Anthropic model, never alone. Invoked by an API call — the engine guides the set-up interactively. ",13,False,INK),("Built + live-verified as a harness; opt-in, off by default; data leaves the boundary, so privileged/confidential is blocked by default — overridable only by a deliberate, logged act.",13,False,DAMBER,F,True)],
     ("B · a different in-house model (Fable 5)",13,False,INK),
     ("C · a panel of 2+ blind Opus instances — divergence is the signal",13,False,INK),
     ("D · a self-adversarial reset (weakest)",13,False,INK)],13,INK,sp=7)
 banner(s,[("Always a check on the Anthropic model's finished analysis — the adjudicator never flips the call.  ",15,True,WHITE),("Declare the rung reached; same-model agreement is stability, not proof.",15,True,GOLD)],y=5.6,h=1.15)
-note(s,"So how is that second pass actually invoked? As a subagent — a separate agent with its own isolated context, handed the facts and the grade-locked spine from the Anthropic model's analysis, but not that model's reasoning, so it can't anchor on it. Be clear on one thing: adjudication always uses two or more models. The different-lab model never runs on its own — it checks the work of the Anthropic frontier model that produced the analysis. It runs blind first — re-derive, and see if it reaches the same call — then adversarial: try to break the load-bearing claims and the call. It hands back a list of discrepancies, which fold in under grade-lock; you still own the final call. The rung it runs on depends on what is set up, strongest first. Strongest is a different-lab model — GPT-5.6 Sol, or GPT-5.5 while Sol is in limited preview — because a different training lineage gives the most decorrelated blind spots; it is built and live-verified, opt-in and off by default, and held off entirely for confidential or legal matters. Next best is a different in-house model like Fable 5. If neither is set up, run a panel of two or more blind Opus instances and read where they diverge — a same-model cross-check, not independent adjudication. Weakest of all, a self-adversarial reset. Every rung is opt-in and costs credits or setup, so nothing runs on its own. Whichever rung it lands on, the engine should say so — because same-model agreement is stability, not proof.")
+note(s,"So how is that second pass actually invoked? As a subagent — a separate agent with its own isolated context, handed the facts and the grade-locked spine from the Anthropic model's analysis, but not that model's reasoning, so it can't anchor on it. Be clear on one thing: adjudication always uses two or more models. The different-lab model never runs on its own — it checks the work of the Anthropic frontier model that produced the analysis. It runs blind first — re-derive, and see if it reaches the same call — then adversarial: try to break the load-bearing claims and the call. It hands back a list of discrepancies, which fold in under grade-lock; you still own the final call. The rung it runs on depends on what is set up, strongest first. Strongest is a different-lab model — GPT-5.6 Sol, or GPT-5.5 while Sol is in limited preview — because a different training lineage gives the most decorrelated blind spots; it is built and live-verified, opt-in and off by default, and blocked by default for confidential or legal matters — overridable only by a deliberate, logged act. Next best is a different in-house model like Fable 5. If neither is set up, run a panel of two or more blind Opus instances and read where they diverge — a same-model cross-check, not independent adjudication. Weakest of all, a self-adversarial reset. Every rung is opt-in and costs credits or setup, so nothing runs on its own. Whichever rung it lands on, the engine should say so — because same-model agreement is stability, not proof.")
 
 # ---------- S14 WHERE THE SECOND PASS EARNS ITS KEEP ----------
 s=slide()
@@ -395,6 +395,26 @@ tb(s,8.60,2.2,3.75,0.5,"Adds little on",18,BODY,bold=True)
 tb(s,8.60,2.9,3.75,2.0,"the [V1] facts already confirmed against a primary source — those are settled.",17,BODY)
 banner(s,["It reliably sharpens the contested judgments — safely, without reversing a sound call.","Rank its objections to the few that change the decision."],y=5.50,h=1.30)
 note(s,"That second pass doesn't redo the whole analysis — it goes where judgment, not fact, decides the answer: the claims graded weak or uncorroborated, the disconfirmation verdicts, any allocation of blame, the value questions at the gate, which loop dominates. There it reliably sharpens — catching where a dominance claim isn't yet established, where an exonerating metric is itself confounded, where an argument contradicts itself — and it does so without reversing a sound call. One caveat from testing: it is verbose, so rank its objections and surface only the few that would actually change the decision.")
+
+# ---------- S13.5 YOU CONTROL IT (governance + retirement) ----------
+s=slide()
+label(s,"STEP 10 · ADJUDICATION · YOU CONTROL IT")
+headline(s,"Every gate is yours to set — and it retires itself.")
+card(s,0.70,1.95,5.95,3.35)
+tb(s,1.0,2.2,5.4,0.5,"Switchable — nothing is locked",18,BLUE,bold=True)
+tb(s,1.0,2.9,5.4,2.3,[("• offer or not; which rung; panel size N, labs M, runs R",14,False,INK),
+    ("• the privilege / egress gate is asked before anything leaves the boundary",14,False,INK),
+    ("• a block lifts only by a deliberate, logged act — never silently",14,False,INK),
+    ("• the exact redacted package is shown to confirm / edit / cancel",14,False,INK),
+    ("• every setting standing or per-run; personal-use, nothing centrally locked",14,False,INK)],14,INK,sp=6)
+card(s,6.85,1.95,5.78,3.35,fill=GTINT,border=GREEN)
+tb(s,7.15,2.2,5.2,0.5,"It earns its place — or it retires",18,GREEN,bold=True)
+tb(s,7.15,2.9,5.2,2.3,[("• every real run is logged to a use-monitor",14,False,INK),
+    ("• a pre-registered, per-class rule reads the ledger",14,False,INK),
+    ("• no decision-relevant catches for a class over time — recommend on-request (reversible, audited)",14,False,INK),
+    ("• decides economic redundancy from real use, not by argument",14,False,INK)],14,INK,sp=6)
+banner(s,[("You own even the boundary decision — ",15,True,WHITE),("and the layer steps back where it no longer adds decision value.",15,True,GOLD)],y=5.6,h=1.15)
+note(s,"One more thing about that second pass before we step back to the model itself: you are in control of all of it, and it is honest about when it is not needed. Every part is switchable, and nothing is locked — whether it is offered at all, which rung runs, how many Opus instances, how many different labs, how many runs each. All yours to set, standing or per run. The governance is asked-first: before anything leaves Anthropic's boundary, the engine asks whether the matter is privileged or confidential, and shows you the exact redacted package to confirm, edit, or cancel. A privileged block is the default, and it lifts only by a deliberate, logged act — never silently. This is a personal-use tool: you own even the boundary decision. And the layer is honest about its own worth: every real run is logged to a use-monitor, and a pre-registered, per-class rule reads that ledger — if a whole class of problem shows no decision-relevant catches over enough runs, the rule recommends demoting adjudication to on-request for that class — reversible, and still spot-audited — deciding from real use rather than argument where it no longer adds decision value.")
 
 # ---------- S13 WHICH MODEL, AND WHEN ----------
 s=slide()
