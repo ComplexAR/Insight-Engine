@@ -1,39 +1,63 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/ComplexAR/Insight-Engine/skills/adjudicate/prefs/preferences.schema.json",
-  "title": "Insight Engine user preferences",
-  "description": "User-level, cross-session preferences for the Insight Engine. Lives OUTSIDE the plugin (default ~/.insight-engine/preferences.json) so it survives plugin upgrades and is never version-controlled. Currently carries only the adjudication standing opt-out; add future keys under new top-level properties.",
+  "title": "Insight Engine user preferences (v2)",
+  "description": "User-level, cross-session preferences for the Insight Engine adjudication layer. Lives OUTSIDE the plugin (default ~/.insight-engine/preferences.json) so it survives upgrades and is never version-controlled. DOCUMENTATION ONLY: prefs.py does not validate against this file at runtime; migration and coercion live in prefs.py _coerce(). v1 files (schema_version 1, only adjudication.standing_opt_out) are migrated in code: scope all -> offer=off, scope crosslab -> crosslab=off, scope none -> defaults.",
   "type": "object",
   "required": ["schema_version", "adjudication"],
   "additionalProperties": false,
   "properties": {
     "schema_version": {
-      "const": 1,
-      "description": "Bump only with a documented migration in prefs.py."
+      "const": 2,
+      "description": "Bumped from 1 to 2 for the switchable-settings block. v1 files are migrated in prefs.py, not rejected."
     },
     "adjudication": {
       "type": "object",
-      "required": ["standing_opt_out"],
+      "required": ["settings"],
       "additionalProperties": false,
       "properties": {
+        "settings": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "The 13 switchable settings. Every one is operator-changeable, standing and per-run; nothing is centrally locked. Ask-removing / egress-widening / breadth-raise / block-reopen changes require a deliberate --confirm in prefs.py.",
+          "properties": {
+            "offer":                 {"enum": ["on", "off"], "default": "on",  "description": "Whether the Step 10 offer appears at all (off = old opt-out scope 'all')."},
+            "crosslab":              {"enum": ["on", "off"], "default": "on",  "description": "Whether cross-lab rung A appears (off = old opt-out scope 'crosslab'; A removed, B/C still offered)."},
+            "default_rung":          {"enum": ["ask", "A", "B", "C", "D"], "default": "ask", "description": "ask = show the rung menu each run; a fixed value skips the menu with a saved-setting notice."},
+            "privilege_ask":         {"enum": ["on", "off"], "default": "on",  "description": "on = every cross-lab run asks 'privileged?' first; off = standing pre-consent (an in-run privileged flag still blocks)."},
+            "egress_mode":           {"enum": ["redacted", "full", "ask"], "default": "redacted", "description": "Outbound content: redacted spine / full brief / choose per run. Raw source documents are never sent at any value."},
+            "show_outbound_package": {"enum": ["on", "off"], "default": "on",  "description": "on = show the exact package for confirm/edit/cancel before any send."},
+            "block_override":        {"enum": ["allowed", "disabled"], "default": "allowed", "description": "Whether a fired governance block can be overridden by the deliberate typed act; disabled = self-binding until switched back (re-enabling needs --confirm)."},
+            "rung_consent":          {"enum": ["on", "off"], "default": "on",  "description": "on = each rung's consent recap (spend/egress/retention/caveat) before dispatch."},
+            "crosslab_model":        {"type": "string", "minLength": 1, "default": "gpt-5.6-sol", "description": "Which cross-lab model rung A targets (exported as CROSSLAB_MODEL). Not enum-validated (labs change); verified on the next preflight."},
+            "log_overrides":         {"enum": ["on", "off"], "default": "on",  "description": "Record governance-block overrides in the local monitor; never in the deliverable, never version-controlled. off leaves overrides with no record anywhere."},
+            "panel_size":            {"type": "integer", "minimum": 2, "maximum": 5, "default": 2, "description": "Rung-C Opus instances (N). N is the depth axis; runs_per_model is NOT multiplied on top. Above 3 is mostly cost."},
+            "crosslab_breadth":      {"type": "integer", "minimum": 1, "maximum": 3, "default": 1, "description": "Distinct cross-lab models on rung A (M). Each added lab is a new counterparty; a raise needs --confirm."},
+            "runs_per_model":        {"enum": ["auto", "1", "2", "3"], "default": "auto", "description": "Repeat runs per model (R). auto = M==1 -> R=2 (stability filter), M>=2 -> R=1 each."}
+          }
+        },
+        "meta": {
+          "type": "object",
+          "description": "Per-key provenance: set_on / confirmed / consequence / note. Also the seam an enterprise edition would extend with locked_by.",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "set_on":      {"type": ["string", "null"]},
+              "confirmed":   {"type": ["boolean", "null"]},
+              "consequence": {"type": ["string", "null"]},
+              "note":        {"type": ["string", "null"]}
+            }
+          }
+        },
         "standing_opt_out": {
           "type": "object",
-          "required": ["scope"],
           "additionalProperties": false,
-          "description": "Whether, and at what scope, the operator has permanently declined the Step 10 adjudication offer. Honoured on every future qualifying run until re-enabled.",
+          "description": "DERIVED mirror (recomputed on every save) so older v1 plugins still honour an opt-out. Non-authoritative: settings.offer/crosslab are the source of truth. offer=off -> scope all; else crosslab=off -> scope crosslab; else none.",
           "properties": {
-            "scope": {
-              "enum": ["none", "crosslab", "all"],
-              "description": "none = offer normally (default). crosslab = suppress ONLY the cross-lab rung A offer; still offer the in-boundary rungs (B Fable / C Opus panel). all = suppress the entire adjudication offer."
-            },
-            "set_on": {
-              "type": ["string", "null"],
-              "description": "ISO date (YYYY-MM-DD) the current scope was set; null when scope is none."
-            },
-            "note": {
-              "type": ["string", "null"],
-              "description": "Optional free-text reason recorded by the operator; never surfaced in any deliverable."
-            }
+            "scope":  {"enum": ["none", "crosslab", "all"]},
+            "set_on": {"type": ["string", "null"]},
+            "note":   {"type": ["string", "null"]}
           }
         }
       }
