@@ -1,5 +1,5 @@
 {
-  "$schema": "RUM ledger record v1 (one line per adjudicated REAL high-stakes analyse run)",
+  "$schema": "RUM ledger record v2 (one line per adjudicated REAL high-stakes analyse run). v2 adds optional AMENDMENT-2 fields; records without them remain valid and load as before.",
   "ts": "auto-set on append (ISO timestamp)",
   "problem_slug": "short label for the real problem (no confidential detail)",
   "stakes_tier": "high | legal",
@@ -10,5 +10,11 @@
   "would_have_flipped_call": "bool — would this have reversed or materially changed your real decision?",
   "operator_agreed": "bool — do you, the decision-owner, agree it was a real catch?",
   "discriminating_observable": "the checkable fact/test behind a flip (REQUIRED if would_have_flipped_call=true)",
-  "notes": "one line; what it caught / why it mattered (no confidential detail)"
+  "notes": "one line; what it caught / why it mattered (no confidential detail)",
+  "class": "AMENDMENT-2 (optional): short problem-class tag for the per-class retirement rule; absent -> 'unclassified' (never auto-retired)",
+  "panel_n": "AMENDMENT-2 (optional): int - rung-C Opus instances dispatched (N)",
+  "labs": "AMENDMENT-2 (optional): int - distinct cross-lab models used (rung-A breadth M)",
+  "runs_per_model": "AMENDMENT-2 (optional): repeat runs per model (R)",
+  "blind_divergence": "AMENDMENT-2 (optional): bool - did the rung-A blind pass reach a different call? (monoculture watch)",
+  "record_type": "AMENDMENT-2 (optional): 'override' marks a governance-block override record; excluded from ALL rollups and read-outs"
 }
