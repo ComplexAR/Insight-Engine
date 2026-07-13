@@ -2,10 +2,12 @@
 """Dry-run / live-run the cross-lab adjudicator.
   MOCK (default, offline, no key):   python run_crosslab.py
   LIVE (your env, your key, paid):   OPENAI_API_KEY=sk-... python run_crosslab.py --live
+  If the matter is privileged/confidential, add --privileged (cross-lab is then blocked by
+  default); overriding that block is a deliberate act: --privileged --override-privileged.
 The `adjudicate` skill replaces SAMPLE with the finished analysis's blind package
 (facts + grade-locked spine + draft brief; NO reasoning; redacted).
 """
-import sys, json, os
+import sys, json, os, argparse
 from crosslab import CrossLabAdjudicator, MockAdjudicator, EgressBlocked
 
 PROMPT = open(os.path.join(os.path.dirname(__file__), "prompts", "adjudicate.txt"), encoding="utf-8").read()
@@ -17,11 +19,21 @@ SAMPLE = {  # TEMPLATE - replace with the finished analysis's blind package
                   "what_would_flip_it": "<the condition under which the call reverses>"},
   "supports_pass1": True}
 
-live = "--live" in sys.argv
-adj = CrossLabAdjudicator(egress_policy="redacted") if live else MockAdjudicator(egress_policy="redacted")
-print(f"[{'LIVE ' + adj.model if live else 'MOCK'}]  egress={adj.egress_policy}")
+ap = argparse.ArgumentParser(description="Dry-run / live-run the cross-lab adjudicator (rung A).")
+ap.add_argument("--live", action="store_true", help="make the real paid call (needs OPENAI_API_KEY)")
+ap.add_argument("--privileged", action="store_true",
+                help="flag this matter privileged/confidential (blocks cross-lab by default)")
+ap.add_argument("--override-privileged", dest="override_privileged", action="store_true",
+                help="deliberately override a privileged block (no effect without --privileged)")
+a = ap.parse_args()
+
+if a.override_privileged and not a.privileged:
+    print("note: --override-privileged has no effect without --privileged; there is nothing to override.")
+
+adj = CrossLabAdjudicator(egress_policy="redacted") if a.live else MockAdjudicator(egress_policy="redacted")
+print(f"[{'LIVE ' + adj.model if a.live else 'MOCK'}]  egress={adj.egress_policy}  privileged={a.privileged}  override={a.override_privileged}")
 try:
-    rep = adj.dispatch(SAMPLE, PROMPT, privileged=False)
+    rep = adj.dispatch(SAMPLE, PROMPT, privileged=a.privileged, override_privileged=a.override_privileged)
     print(json.dumps(rep, indent=2))
 except (EgressBlocked, RuntimeError) as e:
     print("dispatch error:", e)

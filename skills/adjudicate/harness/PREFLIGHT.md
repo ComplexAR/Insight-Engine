@@ -4,7 +4,7 @@ Do these in order before (and during) the first live GPT-5.6 Sol adjudication.
 
 1. **Verify the API shape.** Open `crosslab.py`; confirm the request body `{model, reasoning:{effort}, input}`
    and the endpoint match **current** OpenAI Responses-API docs. It's one dict — adjust if the schema moved.
-2. **Governance.** Decide the matter is NOT privileged/confidential (else do not run cross-lab). Set the egress
+2. **Governance.** If the matter is privileged/confidential, cross-lab is blocked by default; overriding it is a deliberate act (`run_crosslab.py --privileged --override-privileged`), logged to the monitor. Set the egress
    policy to `redacted` (send spine + contested claims, not raw docs) and arrange **zero-retention** terms with OpenAI.
 3. **Key.** `export OPENAI_API_KEY=sk-...` in your shell (never commit it; it is read from env, never logged).
 4. **Offline pre-flight:** `python3 preflight.py`  → expect all OK + "READY for --live".

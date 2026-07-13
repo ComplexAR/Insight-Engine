@@ -4,7 +4,7 @@ Cross-lab adjudicator adapter (rung A) - the external-lab independent second pas
 Calls an external-lab frontier model (default OpenAI GPT-5.6 Sol) via its API, key from ENV,
 egress-governed, stdlib only (urllib). A MockAdjudicator mirrors the interface for offline tests.
 
-GOVERNANCE (build-spec 4a): off by default; `privileged -> never`; minimise the package;
+GOVERNANCE (build-spec 4a): off by default; `privileged -> blocked by default (operator-overridable, logged)`; minimise the package;
 zero-retention terms must be arranged with the provider out of band. The key is read from the
 environment and NEVER logged.
 
@@ -55,13 +55,23 @@ class CrossLabAdjudicator:
         self.model, self.egress_policy, self.effort, self.timeout = model, egress_policy, effort, timeout
     def _key(self):
         k = os.environ.get("OPENAI_API_KEY")
-        if not k: raise RuntimeError("OPENAI_API_KEY is not set in the environment")
+        if not k: raise RuntimeError(
+            "CROSSLAB-BLOCKED [no-key] OPENAI_API_KEY is not set in this shell. Cross-lab needs your own "
+            "OpenAI API key, set by you in your own terminal (never pasted into chat; a new window needs it "
+            "set again). Options: set the key and re-run, or use an in-boundary rung (B Fable / C Opus panel "
+            "/ D self-adversarial).")
         return k
-    def _gate(self, privileged):
-        if privileged:               raise EgressBlocked("privileged/confidential matter - cross-lab egress is NEVER permitted")
-        if self.egress_policy=="off": raise EgressBlocked("egress_policy=off - set 'redacted' or 'full' to use a cross-lab model")
-    def dispatch(self, blind_pkg, adjudicate_prompt, privileged=False):
-        self._gate(privileged)
+    def _gate(self, privileged, override_privileged=False):
+        if privileged and not override_privileged:
+            raise EgressBlocked(
+                "CROSSLAB-BLOCKED [privileged] privileged/confidential matter - cross-lab egress is blocked by "
+                "default. Overriding is a deliberate typed act (--override-privileged); otherwise use an "
+                "in-boundary rung (B/C/D).")
+        if self.egress_policy=="off":
+            raise EgressBlocked(
+                "CROSSLAB-BLOCKED [egress-off] egress_policy=off - set 'redacted' or 'full' to use a cross-lab model")
+    def dispatch(self, blind_pkg, adjudicate_prompt, privileged=False, override_privileged=False):
+        self._gate(privileged, override_privileged)
         body = {"model": self.model, "reasoning": {"effort": self.effort},
                 "input": build_blind_text(blind_pkg, adjudicate_prompt)}
         req = urllib.request.Request(OPENAI_URL, method="POST",
@@ -71,15 +81,31 @@ class CrossLabAdjudicator:
             with urllib.request.urlopen(req, timeout=self.timeout) as r:
                 raw = json.loads(r.read())
         except urllib.error.HTTPError as e:
-            raise RuntimeError(f"OpenAI API HTTP {e.code}: {e.read()[:300]!r}")
+            body = e.read()[:300]
+            if e.code == 401:
+                raise RuntimeError(f"CROSSLAB-FAILED [auth 401] OpenAI rejected the credentials. Likely: key "
+                    f"invalid/revoked, or set in a different terminal window. Fix: re-set or regenerate the key "
+                    f"and check billing, then re-run - or use an in-boundary rung. Raw: {body!r}")
+            if e.code == 404:
+                raise RuntimeError(f"CROSSLAB-FAILED [model-unavailable 404] OpenAI could not serve model "
+                    f"'{self.model}'. Likely not enabled on this account (Sol is preview-gated on some). Fix: set "
+                    f"CROSSLAB_MODEL to another frontier model (e.g. gpt-5.5 - cross-lab independence still holds) "
+                    f"and re-run, or request access - or use an in-boundary rung. Raw: {body!r}")
+            if e.code == 429:
+                raise RuntimeError(f"CROSSLAB-FAILED [quota 429] OpenAI rate or credit limit hit. Fix: check "
+                    f"billing/limits, wait, then re-run - or use an in-boundary rung. Raw: {body!r}")
+            raise RuntimeError(f"CROSSLAB-FAILED [api {e.code}] Unexpected OpenAI API error. If a 4xx about the "
+                f"request body, the Responses-API schema may have moved - adjust the request dict in crosslab.py "
+                f"against current OpenAI docs and re-run the smoke - or use an in-boundary rung. Raw: {body!r}")
         except urllib.error.URLError as e:
-            raise RuntimeError(f"network error reaching {OPENAI_URL}: {e}")
+            raise RuntimeError(f"CROSSLAB-FAILED [network] Could not reach {OPENAI_URL}: {e}. Check connection / "
+                f"proxy / firewall, then re-run - or use an in-boundary rung.")
         return _parse_report(_extract_text(raw), self.model)
 
 class MockAdjudicator(CrossLabAdjudicator):
     """Offline stand-in: same interface + gates, canned report; no network, no key, no spend."""
-    def dispatch(self, blind_pkg, adjudicate_prompt, privileged=False):
-        self._gate(privileged)
+    def dispatch(self, blind_pkg, adjudicate_prompt, privileged=False, override_privileged=False):
+        self._gate(privileged, override_privileged)
         canned = {"pass1_call": "(mock) independently reached a similar call",
                   "concur_with_analysis": True,
                   "disputes": [{"point": "dominance is load-bearing",

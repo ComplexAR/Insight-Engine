@@ -20,8 +20,32 @@ def offline():
         MockAdjudicator(egress_policy="full").dispatch({},"p",privileged=True); print("  privileged gate ............... FAIL"); ok=False
     except EgressBlocked: print("  privileged gate ............... OK (blocks egress)")
     try:
+        r=MockAdjudicator(egress_policy="redacted").dispatch({},"p",privileged=True,override_privileged=True)
+        assert r.get("_rung")=="A-crosslab"; print("  privileged OVERRIDE ........... OK (deliberate act dispatches)")
+    except Exception as e: print("  privileged override ........... FAIL", e); ok=False
+    try:
         MockAdjudicator(egress_policy="off").dispatch({},"p"); print("  egress-off gate ............... FAIL"); ok=False
     except EgressBlocked: print("  egress-off gate ............... OK (blocks)")
+    import crosslab as _cl, urllib.error as _ue, io as _io
+    _saved=_cl.urllib.request.urlopen; _hadkey=os.environ.get("OPENAI_API_KEY"); os.environ["OPENAI_API_KEY"]="sk-selftest"
+    def _raise_http(code):
+        def f(req, timeout=None): raise _ue.HTTPError(_cl.OPENAI_URL, code, "x", {}, _io.BytesIO(b"{}"))
+        return f
+    try:
+        _c=CrossLabAdjudicator(egress_policy="redacted"); _tagok=True
+        for _code,_tag in [(401,"[auth 401]"),(404,"[model-unavailable 404]"),(429,"[quota 429]"),(500,"[api 500]")]:
+            _cl.urllib.request.urlopen=_raise_http(_code)
+            try: _c.dispatch({"f":"x"},"p"); _tagok=False
+            except RuntimeError as _e: _tagok=_tagok and ("CROSSLAB-FAILED "+_tag) in str(_e)
+        def _raise_url(req, timeout=None): raise _ue.URLError("down")
+        _cl.urllib.request.urlopen=_raise_url
+        try: _c.dispatch({"f":"x"},"p"); _tagok=False
+        except RuntimeError as _e: _tagok=_tagok and "CROSSLAB-FAILED [network]" in str(_e)
+        print("  tagged-error mapping .......... "+("OK (401/404/429/api/network)" if _tagok else "FAIL")); ok=ok and _tagok
+    finally:
+        _cl.urllib.request.urlopen=_saved
+        if _hadkey is None: os.environ.pop("OPENAI_API_KEY",None)
+        else: os.environ["OPENAI_API_KEY"]=_hadkey
     key=bool(os.environ.get("OPENAI_API_KEY"))
     print(f"  OPENAI_API_KEY set ............ {'yes' if key else 'NO — set it before --live'}")
     print("  =>", "READY for --live" if (ok and key) else ("offline OK; set OPENAI_API_KEY for --live" if ok else "OFFLINE CHECKS FAILED"))

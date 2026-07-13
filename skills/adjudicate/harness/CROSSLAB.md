@@ -7,7 +7,7 @@ blind spots). It is the *dispatch* the layer needed; everything downstream (filt
 **Interface** (`crosslab.py`):
 ```
 CrossLabAdjudicator(model="gpt-5.6-sol", egress_policy="off", effort="high", timeout=120)
-    .dispatch(blind_pkg, adjudicate_prompt, privileged=False) -> discrepancy_report (dict)
+    .dispatch(blind_pkg, adjudicate_prompt, privileged=False, override_privileged=False) -> discrepancy_report (dict)
 MockAdjudicator(...)   # identical interface + gates, canned report, no network/key/spend
 ```
 - **Blind package** = facts + grade-locked spine + draft brief, **no reasoning**; `build_blind_text` injects it
@@ -17,10 +17,11 @@ MockAdjudicator(...)   # identical interface + gates, canned report, no network/
   tagged `_adjudicator_model` + `_rung="A-crosslab"`.
 
 **Governance (enforced in code, per build-spec §4a):**
-- `privileged=True` → `EgressBlocked` (external egress is **never** permitted for privileged/confidential matters).
+- `privileged=True` → `EgressBlocked` (**blocked by default**; overriding is a deliberate typed act via `run_crosslab.py --privileged --override-privileged`, logged, never auto-taken).
 - `egress_policy="off"` (default) → blocked; must be set `redacted` or `full` to run.
 - Key read from the environment only, **never logged**; **zero-retention** terms arranged with the provider out of band.
 - Minimise: send the spine + contested claims, not raw privileged source documents.
+- **Failures are stable-tagged** for the skill to branch on (the tag begins the message): `CROSSLAB-BLOCKED [no-key|privileged|egress-off]` and `CROSSLAB-FAILED [auth 401|model-unavailable 404|quota 429|network|api NNN]` (HTTP-code classified, provider-agnostic).
 
 **Run:**
 - MOCK (offline, proven here): `python3 run_crosslab.py`
