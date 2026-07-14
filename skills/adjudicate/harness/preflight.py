@@ -72,6 +72,28 @@ def offline():
         _goldok=(_cap.get('url')==_cl.OPENAI_URL and _cap.get('data')==json.dumps(_expbody).encode()
                  and _cap.get('auth')=="Bearer sk-selftest" and _cap.get('ctype')=="application/json")
         print("  golden request (openai) ...... "+("OK (url+headers+body byte-identical)" if _goldok else "FAIL")); ok=ok and _goldok
+        # per-provider adapters (A2): mock-parse + tagged-error map for google/xai
+        _prov_ok=True
+        _fixtures={
+            "openai": {"output":[{"content":[{"type":"output_text","text":"OK-openai"}]}]},
+            "google": {"candidates":[{"content":{"parts":[{"text":"OK-google"}]}}]},
+            "xai":    {"choices":[{"message":{"content":"OK-xai"}}]},
+        }
+        for _pv,_raw in _fixtures.items():
+            _txt=_cl.PROVIDERS[_pv]["extract_text"](_raw)
+            _rep=_cl._parse_report(json.dumps({"probe":_txt}),"m",_pv)
+            _prov_ok=_prov_ok and _txt=="OK-"+_pv and _rep.get("_adjudicator_provider")==_pv and _rep.get("_rung")=="A-crosslab"
+        print("  provider parse (openai/google/xai)  "+("OK" if _prov_ok else "FAIL")); ok=ok and _prov_ok
+        _perr_ok=True
+        for _pv,_kenv in [("google","GEMINI_API_KEY"),("xai","XAI_API_KEY")]:
+            os.environ[_kenv]="sk-selftest"
+            _ad=CrossLabAdjudicator(provider=_pv, egress_policy="redacted")
+            for _code,_tag in [(401,"[auth 401]"),(404,"[model-unavailable 404]"),(429,"[quota 429]"),(500,"[api 500]")]:
+                _cl.urllib.request.urlopen=_raise_http(_code)
+                try: _ad.dispatch({"f":"x"},"p"); _perr_ok=False
+                except RuntimeError as _e: _perr_ok=_perr_ok and ("CROSSLAB-FAILED "+_tag) in str(_e)
+            os.environ.pop(_kenv,None)
+        print("  provider errors (google/xai) ....... "+("OK" if _perr_ok else "FAIL")); ok=ok and _perr_ok
     finally:
         _cl.urllib.request.urlopen=_saved
         if _hadkey is None: os.environ.pop("OPENAI_API_KEY",None)

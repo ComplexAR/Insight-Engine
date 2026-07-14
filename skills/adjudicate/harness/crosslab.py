@@ -71,6 +71,57 @@ def _openai_classify(e, model, url):
             f"request body, the Responses-API schema may have moved - adjust the request dict in crosslab.py "
             f"against current OpenAI docs and re-run the smoke - or use an in-boundary rung. Raw: {body!r}")
 
+def _gemini_extract_text(raw):
+    try:
+        parts = raw["candidates"][0]["content"]["parts"]
+        t = "".join(p.get("text", "") for p in parts if isinstance(p, dict))
+        if t: return t
+    except Exception:
+        pass
+    return json.dumps(raw)
+
+def _gemini_classify(e, model, url):
+    body = e.read()[:300]
+    if e.code in (401, 403):
+        return (f"CROSSLAB-FAILED [auth {e.code}] Google rejected the credentials (check GEMINI_API_KEY, key "
+                f"permissions, billing). Fix: re-set or regenerate the key, then re-run - or use an in-boundary "
+                f"rung. Raw: {body!r}")
+    if e.code == 400 and b"API_KEY" in body:
+        return (f"CROSSLAB-FAILED [auth 400] Google reports an invalid API key (GEMINI_API_KEY). Fix: re-set or "
+                f"regenerate the key, then re-run - or use an in-boundary rung. Raw: {body!r}")
+    if e.code == 404:
+        return (f"CROSSLAB-FAILED [model-unavailable 404] Google could not serve model '{model}'. Fix: set "
+                f"CROSSLAB_MODEL to a current Gemini model (e.g. gemini-3.5-flash) and re-run - or use an "
+                f"in-boundary rung. Raw: {body!r}")
+    if e.code == 429:
+        return (f"CROSSLAB-FAILED [quota 429] Google rate or quota limit hit. Fix: check quota/billing, wait, "
+                f"then re-run - or use an in-boundary rung. Raw: {body!r}")
+    return (f"CROSSLAB-FAILED [api {e.code}] Unexpected Google Gemini API error. If a 4xx about the request "
+            f"body, the generateContent schema may have moved - adjust the google adapter in crosslab.py against "
+            f"current Gemini docs and re-run the smoke - or use an in-boundary rung. Raw: {body!r}")
+
+def _xai_extract_text(raw):
+    try:
+        return raw["choices"][0]["message"]["content"]
+    except Exception:
+        return json.dumps(raw)
+
+def _xai_classify(e, model, url):
+    body = e.read()[:300]
+    if e.code == 401:
+        return (f"CROSSLAB-FAILED [auth 401] xAI rejected the credentials (check XAI_API_KEY). Fix: re-set or "
+                f"regenerate the key and check billing, then re-run - or use an in-boundary rung. Raw: {body!r}")
+    if e.code == 404:
+        return (f"CROSSLAB-FAILED [model-unavailable 404] xAI could not serve model '{model}'. Fix: set "
+                f"CROSSLAB_MODEL to a current Grok model (e.g. grok-4.5) and re-run - or use an in-boundary "
+                f"rung. Raw: {body!r}")
+    if e.code == 429:
+        return (f"CROSSLAB-FAILED [quota 429] xAI rate or credit limit hit. Fix: check billing/limits, wait, "
+                f"then re-run - or use an in-boundary rung. Raw: {body!r}")
+    return (f"CROSSLAB-FAILED [api {e.code}] Unexpected xAI API error. If a 4xx about the request body, the "
+            f"chat-completions schema may have moved - adjust the xai adapter in crosslab.py against current "
+            f"xAI docs and re-run the smoke - or use an in-boundary rung. Raw: {body!r}")
+
 PROVIDERS = {
     "openai": {
         "key_env":        "OPENAI_API_KEY",
@@ -83,6 +134,30 @@ PROVIDERS = {
         "body":           lambda model, text, effort: {"model": model, "reasoning": {"effort": effort}, "input": text},
         "extract_text":   _openai_extract_text,
         "classify":       _openai_classify,
+    },
+    "google": {
+        "key_env":        "GEMINI_API_KEY",
+        "label":          "Google Gemini",
+        "default_model":  "gemini-3.5-flash",
+        "lineage":        "google",
+        "model_prefixes": ("gemini-",),
+        "endpoint":       lambda model, base_url: f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
+        "headers":        lambda key: {"x-goog-api-key": key, "Content-Type": "application/json"},
+        "body":           lambda model, text, effort: {"contents": [{"parts": [{"text": text}]}]},
+        "extract_text":   _gemini_extract_text,
+        "classify":       _gemini_classify,
+    },
+    "xai": {
+        "key_env":        "XAI_API_KEY",
+        "label":          "xAI Grok",
+        "default_model":  "grok-4.5",
+        "lineage":        "xai",
+        "model_prefixes": ("grok-",),
+        "endpoint":       lambda model, base_url: "https://api.x.ai/v1/chat/completions",
+        "headers":        lambda key: {"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+        "body":           lambda model, text, effort: {"model": model, "messages": [{"role": "user", "content": text}], "reasoning_effort": effort},
+        "extract_text":   _xai_extract_text,
+        "classify":       _xai_classify,
     },
 }
 
@@ -113,7 +188,7 @@ class CrossLabAdjudicator:
         if not k: raise RuntimeError(
             f"CROSSLAB-BLOCKED [no-key] {ke} is not set in this shell. Cross-lab needs your own "
             f"{label} API key, set by you in your own local terminal - PowerShell is easiest (its output copies cleanly back into chat): $env:{ke} = Read-Host 'Paste key'. Never paste the key into chat; a new window needs it "
-            "set again). Options: set the key and re-run, or use an in-boundary rung (B Fable / C Opus panel "
+            "set again. Options: set the key and re-run, or use an in-boundary rung (B Fable / C Opus panel "
             "/ D self-adversarial).")
         return k
     def _gate(self, privileged, override_privileged=False):
