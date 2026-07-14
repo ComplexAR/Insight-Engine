@@ -1,23 +1,19 @@
 #!/usr/bin/env python3
 """Pre-flight for the live cross-lab run.
   OFFLINE (run now):  python3 preflight.py         # imports, prompt, mock dispatch+parse, gates, key presence
-  LIVE SMOKE:         OPENAI_API_KEY=sk-... python3 preflight.py --live   # tiny ~free call: endpoint + API shape + JSON parse
+  LIVE SMOKE:         set the resolved provider's API key, then:  python preflight.py --live   # tiny call: endpoint + shape + JSON parse
 Run the smoke BEFORE spending on a full adjudication."""
 import os, sys, json
 
-# Resolve the cross-lab model: an explicit CROSSLAB_MODEL env wins (per-run override); else fall
-# back to the standing crosslab_model preference; else crosslab.py's built-in default. Set the env
-# BEFORE importing crosslab so its DEFAULT_MODEL (read at import) picks it up - keeps crosslab.py
-# pure (it never imports prefs).
-if not os.environ.get("CROSSLAB_MODEL"):
-    try:
-        sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "prefs"))
-        import prefs as _prefs
-        _m = _prefs.get_value("crosslab_model")
-        if _m and _m != "auto":                 # "auto" => let the adapter use its provider default_model
-            os.environ["CROSSLAB_MODEL"] = _m
-    except Exception:
-        pass
+# Resolve adjudication prefs -> CROSSLAB_* env (provider / model / base-url / key-env / lineage),
+# BEFORE importing crosslab so it reads them at import (keeps crosslab.py pure). A shell env var
+# always wins; else the standing preference; else the adapter's built-in default.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+try:
+    import crosslab_env
+    crosslab_env.resolve()
+except Exception:
+    pass
 
 from crosslab import CrossLabAdjudicator, MockAdjudicator, EgressBlocked
 
@@ -28,18 +24,18 @@ def offline():
         print(f"  adjudicate.txt loads .......... OK ({len(p)} chars)")
     except Exception as e: print("  adjudicate.txt ................ FAIL", e); ok=False
     try:
-        r=MockAdjudicator(egress_policy="redacted").dispatch({"facts":"x"},"P {{blind_package}}")
+        r=MockAdjudicator(provider="openai", egress_policy="redacted").dispatch({"facts":"x"},"P {{blind_package}}")
         assert r["_rung"]=="A-crosslab"; print("  mock dispatch + parse ......... OK")
     except Exception as e: print("  mock dispatch ................. FAIL", e); ok=False
     try:
-        MockAdjudicator(egress_policy="full").dispatch({},"p",privileged=True); print("  privileged gate ............... FAIL"); ok=False
+        MockAdjudicator(provider="openai", egress_policy="full").dispatch({},"p",privileged=True); print("  privileged gate ............... FAIL"); ok=False
     except EgressBlocked: print("  privileged gate ............... OK (blocks egress)")
     try:
-        r=MockAdjudicator(egress_policy="redacted").dispatch({},"p",privileged=True,override_privileged=True)
+        r=MockAdjudicator(provider="openai", egress_policy="redacted").dispatch({},"p",privileged=True,override_privileged=True)
         assert r.get("_rung")=="A-crosslab"; print("  privileged OVERRIDE ........... OK (deliberate act dispatches)")
     except Exception as e: print("  privileged override ........... FAIL", e); ok=False
     try:
-        MockAdjudicator(egress_policy="off").dispatch({},"p"); print("  egress-off gate ............... FAIL"); ok=False
+        MockAdjudicator(provider="openai", egress_policy="off").dispatch({},"p"); print("  egress-off gate ............... FAIL"); ok=False
     except EgressBlocked: print("  egress-off gate ............... OK (blocks)")
     import crosslab as _cl, urllib.error as _ue, io as _io
     _saved=_cl.urllib.request.urlopen; _hadkey=os.environ.get("OPENAI_API_KEY"); os.environ["OPENAI_API_KEY"]="sk-selftest"
@@ -47,7 +43,7 @@ def offline():
         def f(req, timeout=None): raise _ue.HTTPError(_cl.OPENAI_URL, code, "x", {}, _io.BytesIO(b"{}"))
         return f
     try:
-        _c=CrossLabAdjudicator(egress_policy="redacted"); _tagok=True
+        _c=CrossLabAdjudicator(provider="openai", egress_policy="redacted"); _tagok=True
         for _code,_tag in [(401,"[auth 401]"),(404,"[model-unavailable 404]"),(429,"[quota 429]"),(500,"[api 500]")]:
             _cl.urllib.request.urlopen=_raise_http(_code)
             try: _c.dispatch({"f":"x"},"p"); _tagok=False
@@ -65,7 +61,7 @@ def offline():
             _cap['ctype']=req.get_header("Content-type") or ""
             raise _ue.URLError("captured")
         _cl.urllib.request.urlopen=_capture
-        _gc=CrossLabAdjudicator(egress_policy="redacted")
+        _gc=CrossLabAdjudicator(provider="openai", egress_policy="redacted")
         try: _gc.dispatch({"f":"x"},"P {{blind_package}}")
         except RuntimeError: pass
         _expbody={"model":_gc.model,"reasoning":{"effort":"high"},"input":_cl.build_blind_text({"f":"x"},"P {{blind_package}}")}
@@ -131,19 +127,29 @@ def offline():
         except _cl.EgressBlocked as _e: _other_ok=_other_ok and "[same-lineage]" in str(_e)
         os.environ.pop("CROSSLAB_OTHER_API_KEY",None); os.environ.pop("CROSSLAB_OTHER_LINEAGE",None)
         print("  other OpenAI-compat mode (A4)  "+("OK" if _other_ok else "FAIL")); ok=ok and _other_ok
+        # provider routing + mismatch (A6)
+        import crosslab_env as _ce
+        _route_ok=(_ce.infer_provider("gpt-5.6-sol")=="openai" and _ce.infer_provider("gemini-3.5-flash")=="google"
+                   and _ce.infer_provider("grok-4.5")=="xai" and _ce.infer_provider("mystery-1") is None)
+        os.environ["GEMINI_API_KEY"]="sk-selftest"
+        try: CrossLabAdjudicator(provider="google", model="gpt-5.6-sol", egress_policy="redacted").dispatch({"f":"x"},"p"); _route_ok=False
+        except _cl.EgressBlocked as _e: _route_ok=_route_ok and "[provider-model-mismatch]" in str(_e)
+        os.environ.pop("GEMINI_API_KEY",None)
+        print("  provider routing + mismatch (A6)  "+("OK" if _route_ok else "FAIL")); ok=ok and _route_ok
     finally:
         _cl.urllib.request.urlopen=_saved
         if _hadkey is None: os.environ.pop("OPENAI_API_KEY",None)
         else: os.environ["OPENAI_API_KEY"]=_hadkey
-    print(f"  cross-lab model .............. {CrossLabAdjudicator().model}")
-    key=bool(os.environ.get("OPENAI_API_KEY"))
-    print(f"  OPENAI_API_KEY set ............ {'yes' if key else 'NO — set it before --live'}")
-    print("  =>", "READY for --live" if (ok and key) else ("offline OK; set OPENAI_API_KEY for --live" if ok else "OFFLINE CHECKS FAILED"))
+    _adj=CrossLabAdjudicator(); _ke=_adj.key_env
+    print(f"  cross-lab provider/model ..... {_adj.provider} / {_adj.model}")
+    key=bool(os.environ.get(_ke))
+    print(f"  {_ke} set ............ {'yes' if key else 'NO — set it before --live'}")
+    print("  =>", "READY for --live" if (ok and key) else ("offline OK; set "+_ke+" for --live" if ok else "OFFLINE CHECKS FAILED"))
     return ok
 
 def live_smoke():
-    print("[live smoke — minimal, low-token, low-effort]")
     adj=CrossLabAdjudicator(egress_policy="redacted", effort="low")
+    print(f"[live smoke — {adj.provider}/{adj.model} — minimal, low-token, low-effort]")
     prompt='Reply with ONLY this JSON, nothing else: {"ok": true, "saw_task": true}\n{{blind_package}}'
     try:
         r=adj.dispatch({"smoke":"ping"}, prompt, privileged=False)
@@ -152,10 +158,11 @@ def live_smoke():
         print("  =>", "endpoint + API shape + JSON parse OK" if good else "parsed, but shape unexpected — inspect above / adjust crosslab.py body")
     except Exception as e:
         print("  live smoke FAILED:", e)
-        print("  => on an HTTP 4xx about the request body, adjust the body in crosslab.py to match CURRENT OpenAI Responses-API docs.")
+        print("  => on an HTTP 4xx about the request body, adjust that provider's adapter body in crosslab.py to match its CURRENT API docs.")
 
 if __name__=="__main__":
     if "--live" in sys.argv:
-        if not os.environ.get("OPENAI_API_KEY"): print("set OPENAI_API_KEY first."); sys.exit(1)
+        _ke=CrossLabAdjudicator().key_env
+        if not os.environ.get(_ke): print("set %s first." % _ke); sys.exit(1)
         live_smoke()
     else: offline()

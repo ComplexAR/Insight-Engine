@@ -225,6 +225,15 @@ PROVIDERS = {
     },
 }
 
+def _infer_provider(model):
+    """Which predefined provider a model name looks like (by adapter model_prefixes), or None."""
+    m = (model or "").lower()
+    for pv, ad in PROVIDERS.items():
+        for pref in ad.get("model_prefixes", ()):
+            if m.startswith(pref):
+                return pv
+    return None
+
 def _parse_report(text, model, provider):
     s = text.strip()
     i, j = s.find("{"), s.rfind("}")          # tolerate ```json fences / prose
@@ -270,6 +279,13 @@ class CrossLabAdjudicator:
             if not os.environ.get("CROSSLAB_OTHER_LINEAGE"):
                 raise EgressBlocked("CROSSLAB-BLOCKED [lineage-undeclared] provider 'other' needs CROSSLAB_OTHER_LINEAGE set to the lab behind the endpoint, so the same-lineage guard can confirm it is NOT the analyser's (Anthropic) lineage. Set it (e.g. 'openai', 'mistral', 'deepseek'), or use a predefined provider.")
         _lineage_guard(self._adapter["lineage"], self.model, self.base_url, os.environ.get("CROSSLAB_OTHER_LINEAGE"))
+        if self.provider in ("openai", "google", "xai"):
+            inferred = _infer_provider(self.model)
+            if inferred and inferred != self.provider:
+                raise EgressBlocked(
+                    f"CROSSLAB-BLOCKED [provider-model-mismatch] provider '{self.provider}' but model "
+                    f"'{self.model}' looks like {inferred}. Set CROSSLAB_MODEL to a {self.provider} model, "
+                    f"or CROSSLAB_PROVIDER to {inferred}.")
         if privileged and not override_privileged:
             raise EgressBlocked(
                 "CROSSLAB-BLOCKED [privileged] privileged/confidential matter - cross-lab egress is blocked by "
