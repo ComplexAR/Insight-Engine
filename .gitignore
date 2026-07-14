@@ -3,3 +3,6 @@
 skills/adjudicate/monitor/ledger.jsonl
 __pycache__/
 *.pyc
+
+# Explainer deck build scratch (temporary; not part of the pipeline)
+Presentation/_build_tmp.py
