@@ -66,3 +66,8 @@ is tested; the data is yours to accrue.
     `RETIRE_N = 20` bounds the catch rate only loosely — zero catches in 20 runs is consistent with a true rate
     up to ~14%. This rule therefore decides **economic redundancy, not tail safety**; retirement is per-class,
     reversible, and audited, never a claim that the class is now error-free.
+- **AMENDMENT-3 (2026-07-14, pre-registered):** a **per-provider cross-lab split** — with multi-provider rung A,
+  the rung-A read-out is broken out by lab (`openai` / `google` / `xai` / `other:<name>`) via one new optional
+  ledger field, `provider`, so the ledger shows which provider's runs earn the cross-lab value. Read-out only:
+  no threshold, no auto-action, and it changes no pre-registered count or verdict; runs without a `provider`
+  count under `unspecified`.

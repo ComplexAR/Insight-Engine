@@ -13,6 +13,7 @@ After a genuine high-stakes `/analyse`, before you act on the brief:
    - `real-catch-refined` — a real, decision-relevant sharpening that did not flip the call.
    - `useful-not-decision-relevant` / `false-alarm` / `nothing` otherwise.
 5. **Log it:** `python monitor.py log --json '{"problem_slug":"...","stakes_tier":"high","adjudicator_rung":"B-fable","items_raised":8,"items_decision_relevant_after_rank":2,"operator_verdict":"real-catch-refined","would_have_flipped_call":false,"operator_agreed":true,"discriminating_observable":"","notes":"..."}'`
+   - For a **rung-A (cross-lab)** run, also record which lab: add `"provider":"openai"` (or `google` / `xai` / `other:<name>`) to the JSON, or use `python monitor.py add ... --provider openai`.
 
 Keep slugs/notes free of confidential detail. Review with `python monitor.py report` after each run;
 the pre-registered read-out fires at 20 runs.

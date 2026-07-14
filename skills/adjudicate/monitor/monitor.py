@@ -33,8 +33,14 @@ CROSSLAB_FLIP_THRESHOLD = 1  # >=1 operator-agreed, observable-backed flip on a 
 # ---- AMENDMENT-2 (dated 2026-07-13; pre-registered) ----
 # Per-class, per-rung retirement rule: does adjudication become redundant for a class of
 # problem as analyser models strengthen? Decided from the ledger, reversibly, never wholesale.
-# Optional ledger fields: class, panel_n, labs, runs_per_model, blind_divergence, record_type.
+# Optional ledger fields: class, panel_n, labs, runs_per_model, blind_divergence, provider, record_type.
 RETIRE_N = 20  # adjudications in a (class, rung) window before condition (a) may read out
+
+# ---- AMENDMENT-3 (dated 2026-07-14; pre-registered) ----
+# Per-provider cross-lab yield: with multi-provider rung A, split the rung-A read-out by lab
+# (openai / google / xai / other:<name>) so the ledger shows which provider's runs earn the value.
+# Optional ledger field: provider. Read-out only; no threshold, no auto-action; records without it
+# count under 'unspecified'. Changes no pre-registered count or verdict.
 
 def append(rec, path=None):
     rec["ts"]=datetime.datetime.now().isoformat(timespec="seconds")
@@ -90,6 +96,21 @@ def crosslab_readout(ro):
         return f"CROSS-LAB decision-flip benefit NEGLIGIBLE in practice — 0 flips in {st['n']} rung-A runs (>= K_MIN {CROSSLAB_K_MIN})."
     return f"cross-lab ACCRUING ({st['n']}/{CROSSLAB_K_MIN} rung-A runs)."
 
+def crosslab_provider_readout(recs):
+    """AMENDMENT-3 (2026-07-14): split the rung-A yield by lab, so the ledger shows which provider's
+    runs earn the cross-lab value. Records without a provider count under 'unspecified'. Read-out
+    only; no threshold, no auto-action; changes no pre-registered count."""
+    a=[r for r in recs if r.get("record_type")!="override" and r.get("adjudicator_rung")=="A-crosslab"]
+    if not a: return "  (no cross-lab rung-A runs logged yet)"
+    groups={}
+    for r in a: groups.setdefault(r.get("provider") or "unspecified",[]).append(r)
+    L=[]
+    for pv,rr in sorted(groups.items()):
+        rf=[r for r in rr if r.get("would_have_flipped_call") and r.get("operator_agreed") and r.get("discriminating_observable")]
+        rc=[r for r in rr if r.get("operator_verdict") in ("real-catch-flipped","real-catch-refined")]
+        L.append(f"  - {pv}: {len(rr)} run(s) · {len(rf)} flip(s) · {len(rc)} decision-relevant catch(es)")
+    return "\n".join(L)
+
 def retirement_readout(recs):
     """AMENDMENT-2 per-(class,rung) read-out. Condition (a) is mechanical; (b)/(c) are rendered as
     operator-confirm lines (no ledger field captures them). Never auto-demotes."""
@@ -135,6 +156,8 @@ def report(recs):
             L.append(f"  - {rg}: {st['n']} runs · {st['flips']} flip(s) · {st['catches']} decision-relevant catch(es)")
     L.append(f"\n**Read-out (pre-registered, K_MIN={K_MIN}, flip-threshold={FLIP_THRESHOLD}):** {readout(ro)}")
     L.append(f"**Cross-lab-specific read-out (AMENDMENT-1, 2026-07-09; K_MIN_A={CROSSLAB_K_MIN}, threshold={CROSSLAB_FLIP_THRESHOLD}):** {crosslab_readout(ro)}")
+    L.append(f"\n**Per-provider cross-lab split (AMENDMENT-3, 2026-07-14):**")
+    L.append(crosslab_provider_readout(recs))
     L.append(f"\n**Per-class retirement read-out (AMENDMENT-2, 2026-07-13; RETIRE_N={RETIRE_N}):**")
     L.append(retirement_readout(recs))
     if ro["flip_records"]:
@@ -178,11 +201,17 @@ def _selftest():
     check(isinstance(readout(ro),str) and isinstance(crosslab_readout(ro),str), "AMENDMENT-1 read-outs still compute")
     append(rec(blind_divergence=True),path=p)
     check("monoculture watch" in retirement_readout(load(p)), "blind_divergence -> monoculture line")
+    n0=rollup(load(p))["n"]
+    append(rec(provider="openai",verdict="real-catch-refined"),path=p)
+    check(rollup(load(p))["n"]==n0+1, "a record with a provider counts normally in the rollup")
+    append(rec(provider="google"),path=p)
+    pr=crosslab_provider_readout(load(p))
+    check("openai" in pr and "google" in pr, "AMENDMENT-3 per-provider split lists each lab")
     import subprocess
     env=dict(os.environ); env["INSIGHT_ENGINE_LEDGER"]=os.path.join(tf,"cli.jsonl")
     r=subprocess.run([sys.executable,os.path.abspath(__file__),"add","--slug","c","--rung","A-crosslab",
                       "--verdict","nothing","--class","cls","--panel-n","2","--labs","1",
-                      "--runs-per-model","auto","--blind-divergence","no"],capture_output=True,text=True,env=env)
+                      "--runs-per-model","auto","--blind-divergence","no","--provider","openai"],capture_output=True,text=True,env=env)
     check(r.returncode==0 and os.path.exists(env["INSIGHT_ENGINE_LEDGER"]), "CLI add accepts new flags (argparse dests resolve)")
     ov=subprocess.run([sys.executable,os.path.abspath(__file__),"override","--slug","c","--kind","privileged"],
                       capture_output=True,text=True,env=env)
@@ -203,6 +232,7 @@ if __name__=="__main__":
     ad.add_argument("--panel-n",type=int,default=None); ad.add_argument("--labs",type=int,default=None)
     ad.add_argument("--runs-per-model",dest="rpm",default=None)
     ad.add_argument("--blind-divergence",dest="bdiv",choices=["yes","no"],default=None,help="did the rung-A blind pass reach a different call?")
+    ad.add_argument("--provider",default=None,help="AMENDMENT-3: the rung-A lab (openai/google/xai/other:<name>)")
     ov=sub.add_parser("override"); ov.add_argument("--slug",required=True)
     ov.add_argument("--kind",required=True,help="e.g. privileged, egress-off"); ov.add_argument("--reason",default="")
     sub.add_parser("report")
@@ -217,6 +247,7 @@ if __name__=="__main__":
         if a.labs is not None: rec["labs"]=a.labs
         if a.rpm is not None: rec["runs_per_model"]=a.rpm
         if a.bdiv is not None: rec["blind_divergence"]=(a.bdiv=="yes")
+        if a.provider is not None: rec["provider"]=a.provider
         print("logged:", append(rec))
     elif a.cmd=="override":
         print("logged:", append(dict(record_type="override",problem_slug=a.slug,override_kind=a.kind,reason=a.reason)))

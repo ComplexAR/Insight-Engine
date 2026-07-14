@@ -1,5 +1,5 @@
 {
-  "$schema": "RUM ledger record v2 (one line per adjudicated REAL high-stakes analyse run). v2 adds optional AMENDMENT-2 fields; records without them remain valid and load as before.",
+  "$schema": "RUM ledger record v2 (one line per adjudicated REAL high-stakes analyse run). v2 adds optional AMENDMENT-2/3 fields; records without them remain valid and load as before.",
   "ts": "auto-set on append (ISO timestamp)",
   "problem_slug": "short label for the real problem (no confidential detail)",
   "stakes_tier": "high | legal",
@@ -16,5 +16,6 @@
   "labs": "AMENDMENT-2 (optional): int - distinct cross-lab models used (rung-A breadth M)",
   "runs_per_model": "AMENDMENT-2 (optional): repeat runs per model (R)",
   "blind_divergence": "AMENDMENT-2 (optional): bool - did the rung-A blind pass reach a different call? (monoculture watch)",
+  "provider": "AMENDMENT-3 (optional): the rung-A lab (openai / google / xai / other:<name>) for the per-provider split; absent -> 'unspecified'",
   "record_type": "AMENDMENT-2 (optional): 'override' marks a governance-block override record; excluded from ALL rollups and read-outs"
 }
