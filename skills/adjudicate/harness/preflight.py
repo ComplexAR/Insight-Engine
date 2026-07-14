@@ -57,6 +57,21 @@ def offline():
         try: _c.dispatch({"f":"x"},"p"); _tagok=False
         except RuntimeError as _e: _tagok=_tagok and "CROSSLAB-FAILED [network]" in str(_e)
         print("  tagged-error mapping .......... "+("OK (401/404/429/api/network)" if _tagok else "FAIL")); ok=ok and _tagok
+        # golden request (A1): capture the constructed request without sending; assert byte-identical shape
+        _cap={}
+        def _capture(req, timeout=None):
+            _cap['url']=req.full_url; _cap['data']=req.data
+            _cap['auth']=req.get_header("Authorization") or ""
+            _cap['ctype']=req.get_header("Content-type") or ""
+            raise _ue.URLError("captured")
+        _cl.urllib.request.urlopen=_capture
+        _gc=CrossLabAdjudicator(egress_policy="redacted")
+        try: _gc.dispatch({"f":"x"},"P {{blind_package}}")
+        except RuntimeError: pass
+        _expbody={"model":_gc.model,"reasoning":{"effort":"high"},"input":_cl.build_blind_text({"f":"x"},"P {{blind_package}}")}
+        _goldok=(_cap.get('url')==_cl.OPENAI_URL and _cap.get('data')==json.dumps(_expbody).encode()
+                 and _cap.get('auth')=="Bearer sk-selftest" and _cap.get('ctype')=="application/json")
+        print("  golden request (openai) ...... "+("OK (url+headers+body byte-identical)" if _goldok else "FAIL")); ok=ok and _goldok
     finally:
         _cl.urllib.request.urlopen=_saved
         if _hadkey is None: os.environ.pop("OPENAI_API_KEY",None)
