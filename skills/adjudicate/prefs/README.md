@@ -2,10 +2,10 @@
 
 This folder makes the Step 10 adjudication settings **mechanical rather than model-remembered**.
 The operator's choices are persisted to a small JSON file and read back on every future run.
-v3 extends the switchable settings block to **17 keys** (v2 introduced the block; v3 adds the
-multi-provider cross-lab keys) — every setting is operator-changeable, standing and per-run;
-nothing is centrally locked (personal-use philosophy). The old opt-out survives as two of the
-keys plus a derived mirror.
+v3 extends the switchable settings block to **19 keys** (v2 introduced the block; v3 adds the
+multi-provider cross-lab keys and the pluggable-adapter keys) — every setting is operator-changeable,
+standing and per-run; nothing is centrally locked (personal-use philosophy). The old opt-out
+survives as two of the keys plus a derived mirror.
 
 ## Where it lives
 
@@ -16,11 +16,11 @@ Override with the `INSIGHT_ENGINE_PREFS` environment variable (used by the self-
 Deliberately **outside** the plugin directory so it survives upgrades, and **never**
 version-controlled.
 
-## The 17 settings
+## The 19 settings
 
 Defaults are the cautious behaviour. A change that **removes a per-run ask, widens egress,
-re-opens a governance block, raises cross-lab breadth, switches the provider to `other`, or
-sets a cross-lab base URL** requires a deliberate `--confirm`
+re-opens a governance block, raises cross-lab breadth, switches the provider to `other`, sets a
+cross-lab base URL, enables adapter files, or approves an adapter** requires a deliberate `--confirm`
 (it prints the consequence and writes nothing otherwise). Spend-widening sizing changes
 (`panel_size`, `runs_per_model`) write with a cost note but need no confirm.
 
@@ -39,6 +39,8 @@ sets a cross-lab base URL** requires a deliberate `--confirm`
 | `crosslab_base_url` | https URL or empty | (empty) | for provider `other`: the https API root (harness appends `/chat/completions`); setting it needs `--confirm` |
 | `crosslab_other_key_env` | env-var name | CROSSLAB_OTHER_API_KEY | for `other`: the NAME of the env var holding the key (never the key value) |
 | `crosslab_other_lineage` | string | (empty) | for `other`: the lab behind the endpoint, so the same-lineage guard can confirm it is not Anthropic; required before an `other` run |
+| `crosslab_adapter_files` | on/off | off | whether pluggable adapter files may be loaded for `other`; on runs YOUR own Python in the egress path (needs `--confirm` + warning) |
+| `crosslab_other_adapter` | module name | (empty) | for `other` in adapter mode: the bare name of an adapter file in `~/.insight-engine/adapters/`; setting it needs `--confirm` and pins the file's SHA-256 |
 | `log_overrides` | on/off | on | record governance-block overrides in the monitor; never in the deliverable |
 | `panel_size` | int 2..5 | 2 | rung-C Opus instances (N); N is the depth axis (runs_per_model not multiplied on top) |
 | `crosslab_breadth` | int 1..3 | 1 | distinct cross-lab models on rung A (M); each added lab is a new counterparty |
@@ -46,6 +48,17 @@ sets a cross-lab base URL** requires a deliberate `--confirm`
 
 The **panel-sizing defaults are theory-grounded priors, to be revised on test evidence**
 (see the monitor's per-class retirement rule and the panel-sizing recommendation).
+
+## Pluggable adapter files (provider `other`, advanced)
+
+For a lab with no built-in adapter and no OpenAI-compatible endpoint, `other` can load an adapter
+file you write at `~/.insight-engine/adapters/<name>.py` — a module exporting a `PROVIDER` dict of the
+same shape as the built-in adapters (with a mandatory `lineage`). It is **off by default**; enabling
+`crosslab_adapter_files` and approving an adapter each need `--confirm`. The engine loads only a named
+file directly inside that directory (no path escape or symlink), validates its shape, pins its
+SHA-256 (a later change re-triggers approval), and runs every gate (privilege / egress / same-lineage)
+around it. But it runs your own code, so only enable an adapter you wrote or have read in full — the
+engine validates its shape and hash, not its behaviour.
 
 ## How the skill uses it (the exact commands)
 

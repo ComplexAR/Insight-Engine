@@ -16,7 +16,7 @@ prefs -> env before importing this module). Adapters target each lab's frontier 
 CAVEAT: each adapter's request/response shape targets that lab's API as understood at build time.
 VERIFY against current provider docs before the live run; each body is a single dict, easy to adjust.
 """
-import os, re, json, urllib.request, urllib.error, urllib.parse
+import os, re, json, hashlib, types, urllib.request, urllib.error, urllib.parse
 
 # --- resolution (env only; keeps crosslab.py pure - it never imports prefs) ---
 DEFAULT_PROVIDER = os.environ.get("CROSSLAB_PROVIDER", "openai")
@@ -234,6 +234,51 @@ def _infer_provider(model):
                 return pv
     return None
 
+# --- pluggable adapter files (2C part ii): operator-supplied Python, opt-in, default-off ---
+def _adapters_dir():
+    return os.path.join(os.path.expanduser("~"), ".insight-engine", "adapters")
+
+_ADAPTER_KEYS = ("key_env", "label", "default_model", "lineage", "model_prefixes",
+                 "endpoint", "headers", "body", "extract_text", "classify")
+
+def _validate_adapter(ad, name):
+    if not isinstance(ad, dict) or any(k not in ad for k in _ADAPTER_KEYS):
+        raise EgressBlocked(f"CROSSLAB-BLOCKED [adapter-shape] adapter '{name}' must export a PROVIDER dict with keys: {', '.join(_ADAPTER_KEYS)}.")
+    for k in ("endpoint", "headers", "body", "extract_text", "classify"):
+        if not callable(ad[k]):
+            raise EgressBlocked(f"CROSSLAB-BLOCKED [adapter-shape] adapter '{name}' PROVIDER['{k}'] must be callable.")
+    if not str(ad.get("lineage") or "").strip():
+        raise EgressBlocked(f"CROSSLAB-BLOCKED [adapter-shape] adapter '{name}' must declare a non-empty 'lineage' (fed to the same-lineage guard).")
+    if not re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", str(ad.get("key_env", ""))):
+        raise EgressBlocked(f"CROSSLAB-BLOCKED [adapter-shape] adapter '{name}' key_env must be a valid environment-variable name.")
+    if not isinstance(ad.get("default_model"), str) or not isinstance(ad.get("label"), str):
+        raise EgressBlocked(f"CROSSLAB-BLOCKED [adapter-shape] adapter '{name}' 'default_model' and 'label' must be strings.")
+
+def _load_adapter(name):
+    """Load ~/.insight-engine/adapters/<name>.py 's PROVIDER dict. Opt-in, path-contained, shape- and
+    hash-checked. It runs operator-supplied code, so all of _gate (privilege / egress / same-lineage)
+    still runs around it - an adapter supplies only the registry entry, it cannot skip the gates."""
+    if os.environ.get("CROSSLAB_ADAPTER_FILES") != "on":
+        raise EgressBlocked("CROSSLAB-BLOCKED [adapter-off] pluggable adapter files are disabled. Enable deliberately: prefs.py set crosslab_adapter_files on --confirm (read the warning) - an adapter runs your own code in the egress path. Or use a predefined provider / the OpenAI-compatible 'other' base_url.")
+    if os.sep in name or (os.altsep and os.altsep in name) or name.startswith(".") or not name:
+        raise EgressBlocked(f"CROSSLAB-BLOCKED [adapter-path] adapter name '{name}' must be a bare module name (no path separators, no leading dot).")
+    base = os.path.realpath(_adapters_dir())
+    path = os.path.realpath(os.path.join(base, name + ".py"))
+    if os.path.dirname(path) != base:
+        raise EgressBlocked(f"CROSSLAB-BLOCKED [adapter-path] adapter '{name}' resolves outside {base} (symlink escape refused).")
+    if not os.path.isfile(path):
+        raise EgressBlocked(f"CROSSLAB-BLOCKED [adapter-missing] no adapter file at {path}. Create it (a module exporting a PROVIDER dict), or use a predefined provider.")
+    src = open(path, "rb").read()
+    sha = hashlib.sha256(src).hexdigest()
+    approved = os.environ.get("CROSSLAB_ADAPTER_SHA")
+    if approved and approved != sha:
+        raise EgressBlocked(f"CROSSLAB-BLOCKED [adapter-changed] adapter '{name}' changed since you approved it. Re-approve deliberately: prefs.py set crosslab_other_adapter {name} --confirm.")
+    mod = types.ModuleType("cl_adapter_" + name); mod.__file__ = path
+    exec(compile(src, path, "exec"), mod.__dict__)   # execute the exact bytes we hashed
+    ad = getattr(mod, "PROVIDER", None)
+    _validate_adapter(ad, name)
+    return ad
+
 def _parse_report(text, model, provider):
     s = text.strip()
     i, j = s.find("{"), s.rfind("}")          # tolerate ```json fences / prose
@@ -271,13 +316,30 @@ class CrossLabAdjudicator:
             "/ D self-adversarial).")
         return k
     def _gate(self, privileged, override_privileged=False):
+        if privileged and not override_privileged:
+            raise EgressBlocked(
+                "CROSSLAB-BLOCKED [privileged] privileged/confidential matter - cross-lab egress is blocked by "
+                "default. Overriding is a deliberate typed act (--override-privileged); otherwise use an "
+                "in-boundary rung (B/C/D).")
+        if self.egress_policy == "off":
+            raise EgressBlocked(
+                "CROSSLAB-BLOCKED [egress-off] egress_policy=off - set 'redacted' or 'full' to use a cross-lab model")
         if self.provider == "other":
-            if not (self.base_url or "").startswith("https://"):
-                raise EgressBlocked("CROSSLAB-BLOCKED [no-base-url] provider 'other' needs CROSSLAB_BASE_URL as an https:// API root (e.g. https://api.example.com/v1). Set it, or use a predefined provider / an in-boundary rung.")
-            if not self.model:
-                raise EgressBlocked("CROSSLAB-BLOCKED [no-model] provider 'other' has no default model - set CROSSLAB_MODEL to the model the endpoint serves.")
-            if not os.environ.get("CROSSLAB_OTHER_LINEAGE"):
-                raise EgressBlocked("CROSSLAB-BLOCKED [lineage-undeclared] provider 'other' needs CROSSLAB_OTHER_LINEAGE set to the lab behind the endpoint, so the same-lineage guard can confirm it is NOT the analyser's (Anthropic) lineage. Set it (e.g. 'openai', 'mistral', 'deepseek'), or use a predefined provider.")
+            _an = os.environ.get("CROSSLAB_OTHER_ADAPTER") or ""
+            if _an:
+                self._adapter = _load_adapter(_an)   # opt-in; runs YOUR code; raises [adapter-*] on any problem
+                self.key_env = self._adapter["key_env"]; self.label = self._adapter["label"]
+                if not self.model:
+                    self.model = self._adapter.get("default_model") or ""
+                if not self.model:
+                    raise EgressBlocked("CROSSLAB-BLOCKED [no-model] the adapter declares no default model - set CROSSLAB_MODEL to the model to use.")
+            else:
+                if not (self.base_url or "").startswith("https://"):
+                    raise EgressBlocked("CROSSLAB-BLOCKED [no-base-url] provider 'other' needs CROSSLAB_BASE_URL as an https:// API root (e.g. https://api.example.com/v1). Set it, or use a predefined provider / an in-boundary rung.")
+                if not self.model:
+                    raise EgressBlocked("CROSSLAB-BLOCKED [no-model] provider 'other' has no default model - set CROSSLAB_MODEL to the model the endpoint serves.")
+                if not os.environ.get("CROSSLAB_OTHER_LINEAGE"):
+                    raise EgressBlocked("CROSSLAB-BLOCKED [lineage-undeclared] provider 'other' needs CROSSLAB_OTHER_LINEAGE set to the lab behind the endpoint, so the same-lineage guard can confirm it is NOT the analyser's (Anthropic) lineage. Set it (e.g. 'openai', 'mistral', 'deepseek'), or use a predefined provider.")
         _lineage_guard(self._adapter["lineage"], self.model, self.base_url, os.environ.get("CROSSLAB_OTHER_LINEAGE"))
         if self.provider in ("openai", "google", "xai"):
             inferred = _infer_provider(self.model)
@@ -286,14 +348,6 @@ class CrossLabAdjudicator:
                     f"CROSSLAB-BLOCKED [provider-model-mismatch] provider '{self.provider}' but model "
                     f"'{self.model}' looks like {inferred}. Set CROSSLAB_MODEL to a {self.provider} model, "
                     f"or CROSSLAB_PROVIDER to {inferred}.")
-        if privileged and not override_privileged:
-            raise EgressBlocked(
-                "CROSSLAB-BLOCKED [privileged] privileged/confidential matter - cross-lab egress is blocked by "
-                "default. Overriding is a deliberate typed act (--override-privileged); otherwise use an "
-                "in-boundary rung (B/C/D).")
-        if self.egress_policy=="off":
-            raise EgressBlocked(
-                "CROSSLAB-BLOCKED [egress-off] egress_policy=off - set 'redacted' or 'full' to use a cross-lab model")
     def _build_request(self, blind_pkg, adjudicate_prompt):
         a = self._adapter
         url  = a["endpoint"](self.model, self.base_url)
@@ -303,6 +357,9 @@ class CrossLabAdjudicator:
         self._gate(privileged, override_privileged)
         a = self._adapter
         url, body = self._build_request(blind_pkg, adjudicate_prompt)
+        _h = _host(url)
+        if _h and any(_h == a2 or _h.endswith("." + a2) for a2 in ANTHROPIC_HOSTS):
+            raise EgressBlocked(f"CROSSLAB-BLOCKED [same-lineage] the resolved endpoint host '{_h}' is Anthropic's - rung A must be a different lab. Use rung B (Fable) / C (Opus panel).")
         req = urllib.request.Request(url, method="POST",
               headers=a["headers"](self._key()), data=json.dumps(body).encode())
         try:

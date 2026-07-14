@@ -19,7 +19,7 @@
         "settings": {
           "type": "object",
           "additionalProperties": false,
-          "description": "The 17 switchable settings. Every one is operator-changeable, standing and per-run; nothing is centrally locked. Ask-removing / egress-widening / breadth-raise / block-reopen / provider-other / base-url changes require a deliberate --confirm in prefs.py.",
+          "description": "The 19 switchable settings. Every one is operator-changeable, standing and per-run; nothing is centrally locked. Ask-removing / egress-widening / breadth-raise / block-reopen / provider-other / base-url / adapter-files / adapter-approve changes require a deliberate --confirm in prefs.py.",
           "properties": {
             "offer":                 {"enum": ["on", "off"], "default": "on",  "description": "Whether the Step 10 offer appears at all (off = old opt-out scope 'all')."},
             "crosslab":              {"enum": ["on", "off"], "default": "on",  "description": "Whether cross-lab rung A appears (off = old opt-out scope 'crosslab'; A removed, B/C still offered)."},
@@ -34,6 +34,8 @@
             "crosslab_base_url":     {"type": "string", "default": "", "description": "For provider 'other': the https API root (e.g. https://api.example.com/v1); the harness appends /chat/completions. Empty otherwise. Setting it needs --confirm (it is an egress destination)."},
             "crosslab_other_key_env":{"type": "string", "default": "CROSSLAB_OTHER_API_KEY", "description": "For provider 'other': the NAME of the environment variable holding the key (never the key value). Must be a valid env-var name."},
             "crosslab_other_lineage":{"type": "string", "default": "", "description": "For provider 'other': the lab/lineage behind the endpoint (e.g. 'openai', 'mistral'), so the same-lineage guard can confirm it is not the Anthropic analyser. Required non-empty before an 'other' run."},
+            "crosslab_adapter_files":{"enum": ["on", "off"], "default": "off", "description": "Whether pluggable adapter files (~/.insight-engine/adapters/<name>.py) may be loaded for provider 'other'. Default off. Turning it on runs YOUR OWN Python inside the egress path, so it needs --confirm and prints a warning."},
+            "crosslab_other_adapter":{"type": "string", "default": "", "description": "For provider 'other' in adapter mode: the bare module name of an adapter file in ~/.insight-engine/adapters/. Setting it needs --confirm; the file's SHA-256 is pinned and any later change re-triggers confirmation."},
             "log_overrides":         {"enum": ["on", "off"], "default": "on",  "description": "Record governance-block overrides in the local monitor; never in the deliverable, never version-controlled. off leaves overrides with no record anywhere."},
             "panel_size":            {"type": "integer", "minimum": 2, "maximum": 5, "default": 2, "description": "Rung-C Opus instances (N). N is the depth axis; runs_per_model is NOT multiplied on top. Above 3 is mostly cost."},
             "crosslab_breadth":      {"type": "integer", "minimum": 1, "maximum": 3, "default": 1, "description": "Distinct cross-lab models on rung A (M). Each added lab is a new counterparty; a raise needs --confirm."},

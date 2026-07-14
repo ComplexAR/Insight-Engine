@@ -2,10 +2,11 @@
 """
 User-level preferences for the Insight Engine adjudication layer (Step 10).
 
-Schema v3: a 17-key switchable settings block (adjudication.settings) plus a
+Schema v3: a 19-key switchable settings block (adjudication.settings) plus a
 DERIVED standing_opt_out mirror so older plugins still honour an opt-out. v3 adds
 the multi-provider cross-lab keys (crosslab_provider / crosslab_base_url /
-crosslab_other_key_env / crosslab_other_lineage) and defaults crosslab_model to
+crosslab_other_key_env / crosslab_other_lineage, plus the pluggable-adapter keys
+crosslab_adapter_files / crosslab_other_adapter) and defaults crosslab_model to
 'auto' (= the resolved provider's own default model).
 Everything is operator-switchable, standing and per-run; nothing is centrally
 locked (personal-use philosophy). Defaults are the cautious behaviour; a change
@@ -31,13 +32,13 @@ stderr note. On doubt we offer; no rung ever runs without an explicit yes.
 
 Stdlib only. Pure ASCII.
 """
-import json, os, re, sys, argparse, datetime, tempfile
+import json, os, re, hashlib, sys, argparse, datetime, tempfile
 
 SCHEMA_VERSION = 3
 SCOPES = ["none", "crosslab", "all"]  # legacy opt-out scopes (mirror + aliases)
 ONOFF = ["on", "off"]
 
-# ---- the 17 switchable settings: type, allowed values / range, default ----
+# ---- the 19 switchable settings: type, allowed values / range, default ----
 KEYS = {
     "offer":                 {"type": "enum", "values": ONOFF,                       "default": "on"},
     "crosslab":              {"type": "enum", "values": ONOFF,                       "default": "on"},
@@ -52,13 +53,15 @@ KEYS = {
     "crosslab_base_url":     {"type": "url",                                         "default": ""},
     "crosslab_other_key_env":{"type": "envname",                                     "default": "CROSSLAB_OTHER_API_KEY"},
     "crosslab_other_lineage":{"type": "str0",                                        "default": ""},
+    "crosslab_adapter_files":{"type": "enum", "values": ONOFF,                       "default": "off"},
+    "crosslab_other_adapter":{"type": "str0",                                        "default": ""},
     "log_overrides":         {"type": "enum", "values": ONOFF,                       "default": "on"},
     "panel_size":            {"type": "int",  "min": 2, "max": 5,                    "default": 2},
     "crosslab_breadth":      {"type": "int",  "min": 1, "max": 3,                    "default": 1},
     "runs_per_model":        {"type": "enum", "values": ["auto", "1", "2", "3"],     "default": "auto"},
 }
 KEY_ORDER = list(KEYS.keys())
-META_FIELDS = ("set_on", "confirmed", "consequence", "note")
+META_FIELDS = ("set_on", "confirmed", "consequence", "note", "sha")
 
 
 def _default():
@@ -216,6 +219,12 @@ def get_value(key, path=None):
     return get_settings(path)[key]
 
 
+def get_adapter_sha(path=None):
+    """The SHA-256 pinned when crosslab_other_adapter was last approved (or None)."""
+    m = load(path)["adjudication"]["meta"].get("crosslab_other_adapter") or {}
+    return m.get("sha")
+
+
 def transition(key, old, new):
     """Is a change consequential? -> {needs_confirm, consequence}.
     Ask-removing / egress-widening / block-reopening changes need --confirm.
@@ -248,6 +257,10 @@ def transition(key, old, new):
         c = "Rung A will now target %s - a different organisation that holds your redacted package under its own retention terms." % new
     elif key == "crosslab_base_url" and new:
         needs = True; c = "This is the cross-lab egress destination for provider 'other'. Confirm you trust this endpoint with your redacted package."
+    elif key == "crosslab_adapter_files" and new == "on":
+        needs = True; c = "Pluggable adapter files run YOUR OWN Python inside the egress path, with your shell's privileges and your API keys readable from the environment. Only enable an adapter you wrote yourself or have read in full. The engine validates its shape and pins its hash; it cannot validate its behaviour."
+    elif key == "crosslab_other_adapter" and new:
+        needs = True; c = "Approves the adapter file '%s.py' in ~/.insight-engine/adapters/ and pins its current hash; any later change re-triggers this confirmation." % new
     return {"needs_confirm": needs, "consequence": c}
 
 
@@ -265,12 +278,19 @@ def set_value(key, raw, confirm=False, note=None, path=None):
     if tr["needs_confirm"] and not confirm:
         return {"status": "confirm-required", "consequence": tr["consequence"], "warn": warn}
     prefs["adjudication"]["settings"][key] = value
-    prefs["adjudication"]["meta"][key] = {
+    _meta = {
         "set_on": datetime.date.today().isoformat(),
         "confirmed": bool(confirm) if tr["needs_confirm"] else None,
         "consequence": tr["consequence"],
         "note": note,
     }
+    if key == "crosslab_other_adapter" and value:  # pin the approved adapter file's hash
+        try:
+            _ap = os.path.join(os.path.expanduser("~"), ".insight-engine", "adapters", value + ".py")
+            _meta["sha"] = hashlib.sha256(open(_ap, "rb").read()).hexdigest()
+        except Exception:
+            _meta["sha"] = None
+    prefs["adjudication"]["meta"][key] = _meta
     prefs["adjudication"]["standing_opt_out"] = _derive_mirror(prefs["adjudication"]["settings"], prefs["adjudication"].get("standing_opt_out"))
     save(prefs, path)
     return {"status": "ok", "value": value, "warn": warn, "consequence": tr["consequence"]}
@@ -411,7 +431,7 @@ def _selftest():
         print("  [%s] %s" % ("ok  " if cond else "FAIL", msg))
 
     s = get_settings(p)
-    check(all(s[k] == KEYS[k]["default"] for k in KEY_ORDER), "missing file -> all 17 defaults")
+    check(all(s[k] == KEYS[k]["default"] for k in KEY_ORDER), "missing file -> all 19 defaults")
     check(should_offer("A", p) and should_offer("B", p), "defaults -> offer all rungs")
 
     for scope, exp in (("all", ("off", "on")), ("crosslab", ("on", "off")), ("none", ("on", "on"))):
@@ -477,6 +497,12 @@ def _selftest():
     check(r["status"] == "ok", "valid env-var name -> ok, no confirm")
     r = set_value("crosslab_other_lineage", "mistral", path=p)
     check(r["status"] == "ok", "crosslab_other_lineage -> ok, no confirm")
+    r = set_value("crosslab_adapter_files", "on", path=p)
+    check(r["status"] == "confirm-required" and get_value("crosslab_adapter_files", p) == "off", "adapter_files on needs --confirm (runs your code)")
+    r = set_value("crosslab_adapter_files", "on", confirm=True, path=p)
+    check(r["status"] == "ok" and get_value("crosslab_adapter_files", p) == "on", "adapter_files on with --confirm -> applied")
+    r = set_value("crosslab_other_adapter", "myadapter", path=p)
+    check(r["status"] == "confirm-required", "crosslab_other_adapter needs --confirm (approves + pins hash)")
     v2 = os.path.join(tf, "v2.json")
     v2keys = ("offer", "crosslab", "default_rung", "privilege_ask", "egress_mode", "show_outbound_package",
               "block_override", "rung_consent", "log_overrides", "panel_size", "crosslab_breadth", "runs_per_model")

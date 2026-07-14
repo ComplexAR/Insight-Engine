@@ -54,3 +54,11 @@ def resolve():
     setenv("CROSSLAB_BASE_URL", s.get("crosslab_base_url"))
     setenv("CROSSLAB_OTHER_KEY_ENV", s.get("crosslab_other_key_env"))
     setenv("CROSSLAB_OTHER_LINEAGE", s.get("crosslab_other_lineage"))
+    setenv("CROSSLAB_ADAPTER_FILES", s.get("crosslab_adapter_files"))
+    setenv("CROSSLAB_OTHER_ADAPTER", s.get("crosslab_other_adapter"))
+    try:
+        _sha = _prefs.get_adapter_sha()
+        if _sha:
+            setenv("CROSSLAB_ADAPTER_SHA", _sha)
+    except Exception:
+        pass

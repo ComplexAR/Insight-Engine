@@ -136,6 +136,48 @@ def offline():
         except _cl.EgressBlocked as _e: _route_ok=_route_ok and "[provider-model-mismatch]" in str(_e)
         os.environ.pop("GEMINI_API_KEY",None)
         print("  provider routing + mismatch (A6)  "+("OK" if _route_ok else "FAIL")); ok=ok and _route_ok
+        # pluggable adapter files (A7): opt-in, path-contained, shape + lineage validated
+        import tempfile as _tf
+        _ad_ok=True
+        os.environ.pop("CROSSLAB_ADAPTER_FILES",None); os.environ["CROSSLAB_OTHER_ADAPTER"]="myadapter"
+        try: CrossLabAdjudicator(provider="other", model="m", egress_policy="redacted").dispatch({"f":"x"},"p"); _ad_ok=False
+        except _cl.EgressBlocked as _e: _ad_ok=_ad_ok and "[adapter-off]" in str(_e)
+        os.environ["CROSSLAB_ADAPTER_FILES"]="on"; os.environ["CROSSLAB_OTHER_ADAPTER"]="../evil"
+        try: CrossLabAdjudicator(provider="other", model="m", egress_policy="redacted").dispatch({"f":"x"},"p"); _ad_ok=False
+        except _cl.EgressBlocked as _e: _ad_ok=_ad_ok and "[adapter-path]" in str(_e)
+        try: _cl._validate_adapter({"key_env":"K"}, "x"); _ad_ok=False
+        except _cl.EgressBlocked as _e: _ad_ok=_ad_ok and "[adapter-shape]" in str(_e)
+        _dir=_tf.mkdtemp(); _sd=_cl._adapters_dir; _cl._adapters_dir=lambda: _dir
+        try:
+            _good=('PROVIDER={"key_env":"MYKEY","label":"My Lab","default_model":"m1","lineage":"mylab",'
+                   '"model_prefixes":(),"endpoint":lambda m,b:"https://api.mylab.test/v1/chat/completions",'
+                   '"headers":lambda k:{"Authorization":"Bearer "+k},'
+                   '"body":lambda m,t,e:{"model":m,"messages":[{"role":"user","content":t}]},'
+                   '"extract_text":lambda r:r["choices"][0]["message"]["content"],'
+                   '"classify":lambda e,m,u:"CROSSLAB-FAILED [api]"}\n')
+            open(os.path.join(_dir,"myadapter.py"),"w",encoding="utf-8").write(_good)
+            open(os.path.join(_dir,"evil2.py"),"w",encoding="utf-8").write(_good.replace('"lineage":"mylab"','"lineage":"anthropic"'))
+            os.environ["MYKEY"]="sk-selftest"; os.environ.pop("CROSSLAB_ADAPTER_SHA",None); os.environ["CROSSLAB_OTHER_ADAPTER"]="myadapter"
+            _oc2={}
+            def _cap3(req,timeout=None): _oc2['url']=req.full_url; raise _ue.URLError("cap")
+            _cl.urllib.request.urlopen=_cap3
+            try: CrossLabAdjudicator(provider="other", egress_policy="redacted").dispatch({"f":"x"},"p")
+            except RuntimeError: pass
+            _ad_ok=_ad_ok and _oc2.get('url')=="https://api.mylab.test/v1/chat/completions"
+            os.environ["CROSSLAB_OTHER_ADAPTER"]="nope"
+            try: CrossLabAdjudicator(provider="other", egress_policy="redacted").dispatch({"f":"x"},"p"); _ad_ok=False
+            except _cl.EgressBlocked as _e: _ad_ok=_ad_ok and "[adapter-missing]" in str(_e)
+            os.environ["CROSSLAB_OTHER_ADAPTER"]="myadapter"; os.environ["CROSSLAB_ADAPTER_SHA"]="deadbeef"
+            try: CrossLabAdjudicator(provider="other", egress_policy="redacted").dispatch({"f":"x"},"p"); _ad_ok=False
+            except _cl.EgressBlocked as _e: _ad_ok=_ad_ok and "[adapter-changed]" in str(_e)
+            os.environ.pop("CROSSLAB_ADAPTER_SHA",None)
+            os.environ["CROSSLAB_OTHER_ADAPTER"]="evil2"
+            try: CrossLabAdjudicator(provider="other", egress_policy="redacted").dispatch({"f":"x"},"p"); _ad_ok=False
+            except _cl.EgressBlocked as _e: _ad_ok=_ad_ok and "[same-lineage]" in str(_e)
+        finally:
+            _cl._adapters_dir=_sd
+            for _k in ("CROSSLAB_ADAPTER_FILES","CROSSLAB_OTHER_ADAPTER","CROSSLAB_ADAPTER_SHA","MYKEY"): os.environ.pop(_k,None)
+        print("  pluggable adapters (A7) ...... "+("OK" if _ad_ok else "FAIL")); ok=ok and _ad_ok
     finally:
         _cl.urllib.request.urlopen=_saved
         if _hadkey is None: os.environ.pop("OPENAI_API_KEY",None)
