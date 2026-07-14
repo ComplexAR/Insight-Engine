@@ -65,11 +65,11 @@ The operator runs the paid call; **you never handle the key.** Walk it **one ste
 2. **Consent recap** (if `rung_consent=on`; `should-ask consent`): privilege status, egress **content** per `egress_mode`, retention terms for this lab, spend.
 3. **Egress** (`should-ask egress`): redacted (default, spine + contested claims) / full brief / ask-per-run. Raw source documents are never sent at any value.
 4. **Outbound-package preview** (if `show_outbound_package=on`; `should-ask package`): show the EXACT package (grade-locked spine + contested claims + draft brief; never raw source docs) for **confirm / edit / cancel** before anything leaves. Repeat per counterparty when M>1.
-5. **Setup + smoke:** `cd harness/`; the operator sets the key in their own shell (never in chat; Windows PowerShell `$env:OPENAI_API_KEY = Read-Host "Paste key"`); `python preflight.py` (expect READY), then `python preflight.py --live` (cheap smoke). To target a model, set the standing `crosslab_model` (the harness reads it as a fallback) or override just this run with the `CROSSLAB_MODEL` env var (env wins).
+5. **Setup + smoke:** this all runs in the operator's OWN local terminal on their computer, never in chat - tell them to use **PowerShell** rather than Command Prompt, because PowerShell output selects and copies cleanly to paste back here for Claude to read (Command Prompt is fiddlier to copy from, and its `set VAR=` key syntax differs). `cd harness/`; the operator sets the key in their own shell (never in chat; Windows PowerShell `$env:OPENAI_API_KEY = Read-Host "Paste key"`); `python preflight.py` (expect READY), then `python preflight.py --live` (cheap smoke). To target a model, set the standing `crosslab_model` (the harness reads it as a fallback) or override just this run with the `CROSSLAB_MODEL` env var (env wins).
 6. **Run:** `python run_crosslab.py --live` on the finished analysis's blind package -> 7.
 
 **Branch on the harness's stable tag** (the tag begins the message; match by *line contains*, never by provider wording). Never auto-retry a paid `--live`; never auto-descend a rung - each is a fresh yes.
-- `CROSSLAB-BLOCKED [no-key]` -> guide key setup (platform.openai.com/api-keys; set in their own terminal), or drop to B/C/D.
+- `CROSSLAB-BLOCKED [no-key]` -> guide key setup in their own local PowerShell terminal (platform.openai.com/api-keys; never in chat), or drop to B/C/D.
 - `CROSSLAB-BLOCKED [privileged]` -> governance block; offer the typed override (if `block_override=allowed`) or B/C/D.
 - `CROSSLAB-BLOCKED [egress-off]` -> harness fail-safe; set `egress_mode` to redacted/full.
 - `CROSSLAB-FAILED [auth 401]` -> re-set/regenerate the key, check billing; retry.

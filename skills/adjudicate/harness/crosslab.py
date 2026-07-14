@@ -57,7 +57,7 @@ class CrossLabAdjudicator:
         k = os.environ.get("OPENAI_API_KEY")
         if not k: raise RuntimeError(
             "CROSSLAB-BLOCKED [no-key] OPENAI_API_KEY is not set in this shell. Cross-lab needs your own "
-            "OpenAI API key, set by you in your own terminal (never pasted into chat; a new window needs it "
+            "OpenAI API key, set by you in your own local terminal - PowerShell is easiest (its output copies cleanly back into chat): $env:OPENAI_API_KEY = Read-Host 'Paste key'. Never paste the key into chat; a new window needs it "
             "set again). Options: set the key and re-run, or use an in-boundary rung (B Fable / C Opus panel "
             "/ D self-adversarial).")
         return k

@@ -26,7 +26,7 @@ MockAdjudicator(...)   # identical interface + gates, canned report, no network/
 
 **Run:**
 - MOCK (offline, proven here): `python3 run_crosslab.py`
-- LIVE (your environment, your key, **paid**): `OPENAI_API_KEY=sk-... python3 run_crosslab.py --live`
+- LIVE (your own local terminal, your key, **paid**): in **PowerShell** (recommended over Command Prompt — its output copies cleanly back into chat), set the key then run — `$env:OPENAI_API_KEY = Read-Host 'Paste key'` then `python run_crosslab.py --live`. (The `OPENAI_API_KEY=sk-... python3 run_crosslab.py --live` one-liner is bash / macOS-Linux only.)
   → **Verify the request/response shape against current OpenAI docs first** — the body targets the Responses
   API as understood at build time and is a single dict, easy to adjust.
 
