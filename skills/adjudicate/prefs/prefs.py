@@ -2,8 +2,11 @@
 """
 User-level preferences for the Insight Engine adjudication layer (Step 10).
 
-Schema v2: a 13-key switchable settings block (adjudication.settings) plus a
-DERIVED standing_opt_out mirror so older plugins still honour an opt-out.
+Schema v3: a 17-key switchable settings block (adjudication.settings) plus a
+DERIVED standing_opt_out mirror so older plugins still honour an opt-out. v3 adds
+the multi-provider cross-lab keys (crosslab_provider / crosslab_base_url /
+crosslab_other_key_env / crosslab_other_lineage) and defaults crosslab_model to
+'auto' (= the resolved provider's own default model).
 Everything is operator-switchable, standing and per-run; nothing is centrally
 locked (personal-use philosophy). Defaults are the cautious behaviour; a change
 that removes a per-run ask or widens egress is a deliberate, confirmed act.
@@ -28,13 +31,13 @@ stderr note. On doubt we offer; no rung ever runs without an explicit yes.
 
 Stdlib only. Pure ASCII.
 """
-import json, os, sys, argparse, datetime, tempfile
+import json, os, re, sys, argparse, datetime, tempfile
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 SCOPES = ["none", "crosslab", "all"]  # legacy opt-out scopes (mirror + aliases)
 ONOFF = ["on", "off"]
 
-# ---- the 13 switchable settings: type, allowed values / range, default ----
+# ---- the 17 switchable settings: type, allowed values / range, default ----
 KEYS = {
     "offer":                 {"type": "enum", "values": ONOFF,                       "default": "on"},
     "crosslab":              {"type": "enum", "values": ONOFF,                       "default": "on"},
@@ -44,7 +47,11 @@ KEYS = {
     "show_outbound_package": {"type": "enum", "values": ONOFF,                       "default": "on"},
     "block_override":        {"type": "enum", "values": ["allowed", "disabled"],     "default": "allowed"},
     "rung_consent":          {"type": "enum", "values": ONOFF,                       "default": "on"},
-    "crosslab_model":        {"type": "str",                                         "default": "gpt-5.6-sol"},
+    "crosslab_model":        {"type": "str",                                         "default": "auto"},
+    "crosslab_provider":     {"type": "enum", "values": ["auto", "openai", "google", "xai", "other"], "default": "auto"},
+    "crosslab_base_url":     {"type": "url",                                         "default": ""},
+    "crosslab_other_key_env":{"type": "envname",                                     "default": "CROSSLAB_OTHER_API_KEY"},
+    "crosslab_other_lineage":{"type": "str0",                                        "default": ""},
     "log_overrides":         {"type": "enum", "values": ONOFF,                       "default": "on"},
     "panel_size":            {"type": "int",  "min": 2, "max": 5,                    "default": 2},
     "crosslab_breadth":      {"type": "int",  "min": 1, "max": 3,                    "default": 1},
@@ -93,6 +100,20 @@ def parse_value(key, raw):
         elif n > spec["max"]:
             warn = "clamped %d down to %d" % (n, spec["max"]); n = spec["max"]
         return n, warn
+    if t == "url":
+        s = str(raw).strip()
+        if s == "":
+            return "", None
+        if not s.startswith("https://"):
+            raise ValueError("value for %s must be an https:// URL or empty (got %r)" % (key, raw))
+        return s, None
+    if t == "envname":
+        s = str(raw).strip()
+        if not re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", s):
+            raise ValueError("value for %s must be a valid environment-variable name (got %r)" % (key, raw))
+        return s, None
+    if t == "str0":
+        return (str(raw) if raw is not None else ""), None
     if isinstance(raw, str) and raw.strip():
         return raw, None
     raise ValueError("value for %s must be a non-empty string" % key)
@@ -116,7 +137,7 @@ def _derive_mirror(settings, prev=None):
 
 
 def _coerce(raw):
-    """Return a valid v2 prefs dict from possibly-partial/older/corrupt data."""
+    """Return a valid v3 prefs dict from possibly-partial/older/corrupt data."""
     out = _default()
     if not isinstance(raw, dict):
         return out
@@ -221,6 +242,12 @@ def transition(key, old, new):
         c = "Above 3 Opus instances is mostly cost, not signal - same-lineage runs are correlated."
     elif key == "runs_per_model" and str(new) in ("2", "3"):
         c = "Each extra run is a full paid call. Repeat runs de-noise a single verdict; they do not add new coverage."
+    elif key == "crosslab_provider" and new == "other":
+        needs = True; c = "Provider 'other' sends your redacted package to an operator-supplied endpoint (CROSSLAB_BASE_URL). It runs only after you also set its key env + CROSSLAB_OTHER_LINEAGE and confirm the destination per run."
+    elif key == "crosslab_provider" and new in ("openai", "google", "xai") and old != new:
+        c = "Rung A will now target %s - a different organisation that holds your redacted package under its own retention terms." % new
+    elif key == "crosslab_base_url" and new:
+        needs = True; c = "This is the cross-lab egress destination for provider 'other'. Confirm you trust this endpoint with your redacted package."
     return {"needs_confirm": needs, "consequence": c}
 
 
@@ -384,7 +411,7 @@ def _selftest():
         print("  [%s] %s" % ("ok  " if cond else "FAIL", msg))
 
     s = get_settings(p)
-    check(all(s[k] == KEYS[k]["default"] for k in KEY_ORDER), "missing file -> all 13 defaults")
+    check(all(s[k] == KEYS[k]["default"] for k in KEY_ORDER), "missing file -> all 17 defaults")
     check(should_offer("A", p) and should_offer("B", p), "defaults -> offer all rungs")
 
     for scope, exp in (("all", ("off", "on")), ("crosslab", ("on", "off")), ("none", ("on", "on"))):
@@ -431,6 +458,45 @@ def _selftest():
     v, w = parse_value("panel_size", "9")
     check(v == 5 and w, "panel_size 9 -> clamped to 5 with warn")
 
+    # v3 multi-provider keys + confirm rules + migration
+    reset_all(p)
+    check(get_value("crosslab_provider", p) == "auto" and get_value("crosslab_model", p) == "auto"
+          and get_value("crosslab_base_url", p) == "" and get_value("crosslab_other_key_env", p) == "CROSSLAB_OTHER_API_KEY"
+          and get_value("crosslab_other_lineage", p) == "", "v3 -> new provider keys default")
+    r = set_value("crosslab_provider", "google", path=p)
+    check(r["status"] == "ok" and r["consequence"], "provider google -> ok with retention consequence, no confirm")
+    r = set_value("crosslab_provider", "other", path=p)
+    check(r["status"] == "confirm-required", "provider other -> needs --confirm")
+    r = set_value("crosslab_base_url", "https://api.example.com/v1", path=p)
+    check(r["status"] == "confirm-required", "crosslab_base_url -> needs --confirm (egress destination)")
+    r = set_value("crosslab_base_url", "http://x", confirm=True, path=p)
+    check(r["status"] == "invalid", "non-https base_url -> invalid")
+    r = set_value("crosslab_other_key_env", "MY KEY", path=p)
+    check(r["status"] == "invalid", "bad env-var name -> invalid")
+    r = set_value("crosslab_other_key_env", "MY_KEY", path=p)
+    check(r["status"] == "ok", "valid env-var name -> ok, no confirm")
+    r = set_value("crosslab_other_lineage", "mistral", path=p)
+    check(r["status"] == "ok", "crosslab_other_lineage -> ok, no confirm")
+    v2 = os.path.join(tf, "v2.json")
+    v2keys = ("offer", "crosslab", "default_rung", "privilege_ask", "egress_mode", "show_outbound_package",
+              "block_override", "rung_consent", "log_overrides", "panel_size", "crosslab_breadth", "runs_per_model")
+    v2set = {k: KEYS[k]["default"] for k in v2keys}
+    v2set["crosslab"] = "off"; v2set["crosslab_model"] = "gpt-5.6-sol"
+    v2doc = {"schema_version": 2, "adjudication": {"settings": v2set, "meta": {},
+             "standing_opt_out": {"scope": "crosslab", "set_on": "2026-01-01", "note": None}}}
+    with open(v2, "w", encoding="utf-8") as f:
+        json.dump(v2doc, f)
+    sv = get_settings(v2)
+    check(sv["crosslab"] == "off" and sv["crosslab_model"] == "gpt-5.6-sol" and sv["crosslab_provider"] == "auto",
+          "v2->v3: values preserved (incl. explicit crosslab_model), new keys default")
+    mg = _coerce(v2doc)
+    check(mg["schema_version"] == 3 and mg["adjudication"]["standing_opt_out"]["scope"] == "crosslab"
+          and mg["adjudication"]["standing_opt_out"]["set_on"] == "2026-01-01",
+          "v2->v3: schema bumped to 3, standing_opt_out mirror preserved")
+    v2set2 = {k: KEYS[k]["default"] for k in v2keys}  # a v2 file with NO crosslab_model
+    mg2 = _coerce({"schema_version": 2, "adjudication": {"settings": v2set2, "meta": {}, "standing_opt_out": {"scope": "none"}}})
+    check(mg2["adjudication"]["settings"]["crosslab_model"] == "auto", "v2->v3: absent crosslab_model -> auto")
+
     reset_all(p)
     check(gate_default_rung(p) == (True, None), "default_rung ask -> interactive")
     set_value("default_rung", "B", confirm=True, path=p)
@@ -461,7 +527,7 @@ def _selftest():
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="Insight Engine adjudication preferences (v2 switchable settings).")
+    ap = argparse.ArgumentParser(description="Insight Engine adjudication preferences (v3 switchable settings).")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     sub.add_parser("status", help="one-line offer/cross-lab/default-rung state")

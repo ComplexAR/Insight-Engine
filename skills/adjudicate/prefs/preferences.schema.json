@@ -1,15 +1,15 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/ComplexAR/Insight-Engine/skills/adjudicate/prefs/preferences.schema.json",
-  "title": "Insight Engine user preferences (v2)",
+  "title": "Insight Engine user preferences (v3)",
   "description": "User-level, cross-session preferences for the Insight Engine adjudication layer. Lives OUTSIDE the plugin (default ~/.insight-engine/preferences.json) so it survives upgrades and is never version-controlled. DOCUMENTATION ONLY: prefs.py does not validate against this file at runtime; migration and coercion live in prefs.py _coerce(). v1 files (schema_version 1, only adjudication.standing_opt_out) are migrated in code: scope all -> offer=off, scope crosslab -> crosslab=off, scope none -> defaults.",
   "type": "object",
   "required": ["schema_version", "adjudication"],
   "additionalProperties": false,
   "properties": {
     "schema_version": {
-      "const": 2,
-      "description": "Bumped from 1 to 2 for the switchable-settings block. v1 files are migrated in prefs.py, not rejected."
+      "const": 3,
+      "description": "Bumped 1->2 (switchable-settings block) then 2->3 (multi-provider cross-lab keys). Older files are migrated in prefs.py _coerce(), not rejected: v2 values are preserved, new keys default, and a missing crosslab_model becomes 'auto'."
     },
     "adjudication": {
       "type": "object",
@@ -19,7 +19,7 @@
         "settings": {
           "type": "object",
           "additionalProperties": false,
-          "description": "The 13 switchable settings. Every one is operator-changeable, standing and per-run; nothing is centrally locked. Ask-removing / egress-widening / breadth-raise / block-reopen changes require a deliberate --confirm in prefs.py.",
+          "description": "The 17 switchable settings. Every one is operator-changeable, standing and per-run; nothing is centrally locked. Ask-removing / egress-widening / breadth-raise / block-reopen / provider-other / base-url changes require a deliberate --confirm in prefs.py.",
           "properties": {
             "offer":                 {"enum": ["on", "off"], "default": "on",  "description": "Whether the Step 10 offer appears at all (off = old opt-out scope 'all')."},
             "crosslab":              {"enum": ["on", "off"], "default": "on",  "description": "Whether cross-lab rung A appears (off = old opt-out scope 'crosslab'; A removed, B/C still offered)."},
@@ -29,7 +29,11 @@
             "show_outbound_package": {"enum": ["on", "off"], "default": "on",  "description": "on = show the exact package for confirm/edit/cancel before any send."},
             "block_override":        {"enum": ["allowed", "disabled"], "default": "allowed", "description": "Whether a fired governance block can be overridden by the deliberate typed act; disabled = self-binding until switched back (re-enabling needs --confirm)."},
             "rung_consent":          {"enum": ["on", "off"], "default": "on",  "description": "on = each rung's consent recap (spend/egress/retention/caveat) before dispatch."},
-            "crosslab_model":        {"type": "string", "minLength": 1, "default": "gpt-5.6-sol", "description": "Which cross-lab model rung A targets (exported as CROSSLAB_MODEL). Not enum-validated (labs change); verified on the next preflight."},
+            "crosslab_model":        {"type": "string", "minLength": 1, "default": "auto", "description": "Which model rung A targets, exported as CROSSLAB_MODEL. 'auto' = the resolved provider's own default model. Not enum-validated (labs change); verified on the next preflight."},
+            "crosslab_provider":     {"enum": ["auto", "openai", "google", "xai", "other"], "default": "auto", "description": "Which lab rung A targets: auto = infer from the model name; openai/google/xai = predefined adapters; other = an OpenAI-compatible endpoint you configure. Switching to 'other' needs --confirm; switching between predefined labs writes a retention consequence line."},
+            "crosslab_base_url":     {"type": "string", "default": "", "description": "For provider 'other': the https API root (e.g. https://api.example.com/v1); the harness appends /chat/completions. Empty otherwise. Setting it needs --confirm (it is an egress destination)."},
+            "crosslab_other_key_env":{"type": "string", "default": "CROSSLAB_OTHER_API_KEY", "description": "For provider 'other': the NAME of the environment variable holding the key (never the key value). Must be a valid env-var name."},
+            "crosslab_other_lineage":{"type": "string", "default": "", "description": "For provider 'other': the lab/lineage behind the endpoint (e.g. 'openai', 'mistral'), so the same-lineage guard can confirm it is not the Anthropic analyser. Required non-empty before an 'other' run."},
             "log_overrides":         {"enum": ["on", "off"], "default": "on",  "description": "Record governance-block overrides in the local monitor; never in the deliverable, never version-controlled. off leaves overrides with no record anywhere."},
             "panel_size":            {"type": "integer", "minimum": 2, "maximum": 5, "default": 2, "description": "Rung-C Opus instances (N). N is the depth axis; runs_per_model is NOT multiplied on top. Above 3 is mostly cost."},
             "crosslab_breadth":      {"type": "integer", "minimum": 1, "maximum": 3, "default": 1, "description": "Distinct cross-lab models on rung A (M). Each added lab is a new counterparty; a raise needs --confirm."},

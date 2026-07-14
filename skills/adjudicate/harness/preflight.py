@@ -14,7 +14,7 @@ if not os.environ.get("CROSSLAB_MODEL"):
         sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "prefs"))
         import prefs as _prefs
         _m = _prefs.get_value("crosslab_model")
-        if _m:
+        if _m and _m != "auto":                 # "auto" => let the adapter use its provider default_model
             os.environ["CROSSLAB_MODEL"] = _m
     except Exception:
         pass
