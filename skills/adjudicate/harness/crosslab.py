@@ -16,7 +16,7 @@ prefs -> env before importing this module). Adapters target each lab's frontier 
 CAVEAT: each adapter's request/response shape targets that lab's API as understood at build time.
 VERIFY against current provider docs before the live run; each body is a single dict, easy to adjust.
 """
-import os, json, urllib.request, urllib.error
+import os, re, json, urllib.request, urllib.error, urllib.parse
 
 # --- resolution (env only; keeps crosslab.py pure - it never imports prefs) ---
 DEFAULT_PROVIDER = os.environ.get("CROSSLAB_PROVIDER", "openai")
@@ -25,6 +25,41 @@ DEFAULT_MODEL    = os.environ.get("CROSSLAB_MODEL", "")   # "" -> resolved to th
 OPENAI_URL = "https://api.openai.com/v1/responses"
 
 class EgressBlocked(Exception): pass
+
+# --- same-lineage guard (3A): rung A must be a DIFFERENT lab from the Anthropic analyser ---
+ANTHROPIC_HOSTS = ("anthropic.com", "claude.ai")
+_LINEAGE_TOKENS = re.compile(r"(?<![a-z0-9])(claude|opus|sonnet|haiku|fable)(?![a-z0-9])")
+
+def _host(url):
+    try:
+        h = urllib.parse.urlsplit(url).hostname
+        if not h and url: h = urllib.parse.urlsplit("//" + url.lstrip("/")).hostname   # scheme-less
+        return (h or "").lower()
+    except Exception:
+        return ""
+
+def _same_lineage_reason(provider_lineage, model, base_url=None, declared_lineage=None):
+    """Return a short reason if the rung-A target is the analyser's (Anthropic) lineage, else ''.
+    Provider / host / declared-lineage are the firm signals; model-name tokens are matched with
+    word boundaries so an innocent name from a genuinely different lab is not falsely trapped."""
+    if (provider_lineage or "").lower() == "anthropic": return f"provider lineage '{provider_lineage}'"
+    dl = (declared_lineage or "").lower()
+    if "anthropic" in dl or "claude" in dl: return f"declared lineage '{declared_lineage}'"
+    h = _host(base_url or "")
+    if h and any(h == a or h.endswith("." + a) for a in ANTHROPIC_HOSTS): return f"endpoint host '{h}'"
+    if "anthropic" in (base_url or "").lower(): return "endpoint URL contains 'anthropic'"
+    m = (model or "").lower()
+    if "anthropic" in m or _LINEAGE_TOKENS.search(m): return f"model name '{model}'"
+    return ""
+
+def _lineage_guard(provider_lineage, model, base_url=None, declared_lineage=None):
+    reason = _same_lineage_reason(provider_lineage, model, base_url, declared_lineage)
+    if reason:
+        raise EgressBlocked(
+            f"CROSSLAB-BLOCKED [same-lineage] the configured rung-A target ({reason}) is the same lineage as the "
+            "analyser (Anthropic) - this is NOT cross-lab, so the decorrelation rung A exists for collapses. There "
+            "is no override. Use a different lab for rung A, or use rung B (Fable) / C (Opus panel), which are "
+            "honestly declared as same-lineage checks.")
 
 def build_blind_text(blind_pkg, adjudicate_prompt):
     pj = json.dumps(blind_pkg, indent=2)
@@ -192,6 +227,7 @@ class CrossLabAdjudicator:
             "/ D self-adversarial).")
         return k
     def _gate(self, privileged, override_privileged=False):
+        _lineage_guard(self._adapter["lineage"], self.model, self.base_url, os.environ.get("CROSSLAB_OTHER_LINEAGE"))
         if privileged and not override_privileged:
             raise EgressBlocked(
                 "CROSSLAB-BLOCKED [privileged] privileged/confidential matter - cross-lab egress is blocked by "

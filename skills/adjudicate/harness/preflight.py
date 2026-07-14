@@ -94,6 +94,20 @@ def offline():
                 except RuntimeError as _e: _perr_ok=_perr_ok and ("CROSSLAB-FAILED "+_tag) in str(_e)
             os.environ.pop(_kenv,None)
         print("  provider errors (google/xai) ....... "+("OK" if _perr_ok else "FAIL")); ok=ok and _perr_ok
+        # same-lineage hard guard (A3): rung A must refuse the analyser's Anthropic lineage
+        _g=_cl._same_lineage_reason
+        _guard_ok=(bool(_g("anthropic","gpt")) and bool(_g("openai","claude-opus-5")) and bool(_g("openai","opus"))
+                   and bool(_g("openai","x","https://api.anthropic.com/v1")) and bool(_g("openai","x","","anthropic"))
+                   and bool(_g("openai","x","","claude")) and (not _g("openai","gpt-5.6-sol"))
+                   and (not _g("xai","grok-4.5")) and (not _g("google","gemini-3.5-flash"))
+                   and (not _g("openai","opusfoo")) and bool(_g("openai","x","api.anthropic.com")))
+        os.environ["OPENAI_API_KEY"]="sk-selftest"
+        try:
+            CrossLabAdjudicator(provider="openai", model="claude-opus-5", egress_policy="redacted").dispatch({"f":"x"},"p")
+            _guard_ok=False
+        except _cl.EgressBlocked as _e:
+            _guard_ok=_guard_ok and ("CROSSLAB-BLOCKED [same-lineage]" in str(_e))
+        print("  same-lineage guard (A3) ...... "+("OK (blocks Anthropic, allows others)" if _guard_ok else "FAIL")); ok=ok and _guard_ok
     finally:
         _cl.urllib.request.urlopen=_saved
         if _hadkey is None: os.environ.pop("OPENAI_API_KEY",None)
