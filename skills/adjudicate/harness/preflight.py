@@ -108,6 +108,29 @@ def offline():
         except _cl.EgressBlocked as _e:
             _guard_ok=_guard_ok and ("CROSSLAB-BLOCKED [same-lineage]" in str(_e))
         print("  same-lineage guard (A3) ...... "+("OK (blocks Anthropic, allows others)" if _guard_ok else "FAIL")); ok=ok and _guard_ok
+        # "Other" OpenAI-compatible mode (A4)
+        _other_ok=True
+        os.environ["CROSSLAB_OTHER_API_KEY"]="sk-selftest"; os.environ["CROSSLAB_OTHER_LINEAGE"]="mistral"
+        _oc={}
+        def _cap2(req, timeout=None):
+            _oc['url']=req.full_url; _oc['auth']=req.get_header("Authorization"); _oc['data']=req.data; _oc['ctype']=req.get_header("Content-type"); raise _ue.URLError("cap")
+        _cl.urllib.request.urlopen=_cap2
+        try: CrossLabAdjudicator(provider="other", base_url="https://api.example.com/v1", model="some-model", egress_policy="redacted").dispatch({"f":"x"},"P {{blind_package}}")
+        except RuntimeError: pass
+        _expb={"model":"some-model","messages":[{"role":"user","content":_cl.build_blind_text({"f":"x"},"P {{blind_package}}")}]}
+        _other_ok=_other_ok and _oc.get('url')=="https://api.example.com/v1/chat/completions" and _oc.get('auth')=="Bearer sk-selftest" and _oc.get('ctype')=="application/json" and _oc.get('data')==json.dumps(_expb).encode()
+        try: CrossLabAdjudicator(provider="other", base_url="http://x/v1", model="m", egress_policy="redacted").dispatch({"f":"x"},"p"); _other_ok=False
+        except _cl.EgressBlocked as _e: _other_ok=_other_ok and "[no-base-url]" in str(_e)
+        try: CrossLabAdjudicator(provider="other", base_url="https://api.example.com/v1", model="", egress_policy="redacted").dispatch({"f":"x"},"p"); _other_ok=False
+        except _cl.EgressBlocked as _e: _other_ok=_other_ok and "[no-model]" in str(_e)
+        os.environ.pop("CROSSLAB_OTHER_LINEAGE",None)
+        try: CrossLabAdjudicator(provider="other", base_url="https://api.example.com/v1", model="m", egress_policy="redacted").dispatch({"f":"x"},"p"); _other_ok=False
+        except _cl.EgressBlocked as _e: _other_ok=_other_ok and "[lineage-undeclared]" in str(_e)
+        os.environ["CROSSLAB_OTHER_LINEAGE"]="mistral"
+        try: CrossLabAdjudicator(provider="other", base_url="https://api.anthropic.com/v1", model="m", egress_policy="redacted").dispatch({"f":"x"},"p"); _other_ok=False
+        except _cl.EgressBlocked as _e: _other_ok=_other_ok and "[same-lineage]" in str(_e)
+        os.environ.pop("CROSSLAB_OTHER_API_KEY",None); os.environ.pop("CROSSLAB_OTHER_LINEAGE",None)
+        print("  other OpenAI-compat mode (A4)  "+("OK" if _other_ok else "FAIL")); ok=ok and _other_ok
     finally:
         _cl.urllib.request.urlopen=_saved
         if _hadkey is None: os.environ.pop("OPENAI_API_KEY",None)

@@ -157,6 +157,23 @@ def _xai_classify(e, model, url):
             f"chat-completions schema may have moved - adjust the xai adapter in crosslab.py against current "
             f"xAI docs and re-run the smoke - or use an in-boundary rung. Raw: {body!r}")
 
+def _other_classify(e, model, url):
+    body = e.read()[:300]
+    if e.code == 401:
+        return (f"CROSSLAB-FAILED [auth 401] the configured endpoint rejected the credentials (check the key env "
+                f"named by CROSSLAB_OTHER_KEY_ENV). Fix: re-set the key, then re-run - or use a predefined provider "
+                f"/ an in-boundary rung. Raw: {body!r}")
+    if e.code == 404:
+        return (f"CROSSLAB-FAILED [model-unavailable 404] the endpoint could not serve model '{model}' at {url}. "
+                f"Your CROSSLAB_BASE_URL may need or must drop a path segment (e.g. '/v1'), or the endpoint is not "
+                f"OpenAI-chat-completions compatible, or the model name is wrong. Raw: {body!r}")
+    if e.code == 429:
+        return (f"CROSSLAB-FAILED [quota 429] the endpoint hit a rate or credit limit. Fix: check billing/limits, "
+                f"wait, then re-run - or use an in-boundary rung. Raw: {body!r}")
+    return (f"CROSSLAB-FAILED [api {e.code}] unexpected error from the configured endpoint {url}. If a 4xx about "
+            f"the request body, this endpoint may not be OpenAI-chat-completions compatible; use a predefined "
+            f"provider or the pluggable-adapter mode - or an in-boundary rung. Raw: {body!r}")
+
 PROVIDERS = {
     "openai": {
         "key_env":        "OPENAI_API_KEY",
@@ -194,6 +211,18 @@ PROVIDERS = {
         "extract_text":   _xai_extract_text,
         "classify":       _xai_classify,
     },
+    "other": {
+        "key_env":        "CROSSLAB_OTHER_API_KEY",
+        "label":          "cross-lab endpoint",
+        "default_model":  "",
+        "lineage":        "",
+        "model_prefixes": (),
+        "endpoint":       lambda model, base_url: (base_url or "").rstrip("/") + "/chat/completions",
+        "headers":        lambda key: {"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+        "body":           lambda model, text, effort: {"model": model, "messages": [{"role": "user", "content": text}]},
+        "extract_text":   _xai_extract_text,
+        "classify":       _other_classify,
+    },
 }
 
 def _parse_report(text, model, provider):
@@ -214,11 +243,17 @@ class CrossLabAdjudicator:
                 f"CROSSLAB-BLOCKED [provider-unknown] no adapter for provider '{self.provider}'. "
                 f"Known: {', '.join(sorted(PROVIDERS))}. Set CROSSLAB_PROVIDER to one of these.")
         self._adapter = PROVIDERS[self.provider]
+        self.key_env = self._adapter["key_env"]
+        self.label   = self._adapter["label"]
         m = model if model is not None else DEFAULT_MODEL
         self.model = m or self._adapter["default_model"]
+        if self.provider == "other":
+            self.key_env = os.environ.get("CROSSLAB_OTHER_KEY_ENV") or "CROSSLAB_OTHER_API_KEY"
+            self.label   = "cross-lab endpoint"
+            if base_url is None: base_url = os.environ.get("CROSSLAB_BASE_URL")
         self.base_url, self.egress_policy, self.effort, self.timeout = base_url, egress_policy, effort, timeout
     def _key(self):
-        ke = self._adapter["key_env"]; label = self._adapter["label"]
+        ke = self.key_env; label = self.label
         k = os.environ.get(ke)
         if not k: raise RuntimeError(
             f"CROSSLAB-BLOCKED [no-key] {ke} is not set in this shell. Cross-lab needs your own "
@@ -227,6 +262,13 @@ class CrossLabAdjudicator:
             "/ D self-adversarial).")
         return k
     def _gate(self, privileged, override_privileged=False):
+        if self.provider == "other":
+            if not (self.base_url or "").startswith("https://"):
+                raise EgressBlocked("CROSSLAB-BLOCKED [no-base-url] provider 'other' needs CROSSLAB_BASE_URL as an https:// API root (e.g. https://api.example.com/v1). Set it, or use a predefined provider / an in-boundary rung.")
+            if not self.model:
+                raise EgressBlocked("CROSSLAB-BLOCKED [no-model] provider 'other' has no default model - set CROSSLAB_MODEL to the model the endpoint serves.")
+            if not os.environ.get("CROSSLAB_OTHER_LINEAGE"):
+                raise EgressBlocked("CROSSLAB-BLOCKED [lineage-undeclared] provider 'other' needs CROSSLAB_OTHER_LINEAGE set to the lab behind the endpoint, so the same-lineage guard can confirm it is NOT the analyser's (Anthropic) lineage. Set it (e.g. 'openai', 'mistral', 'deepseek'), or use a predefined provider.")
         _lineage_guard(self._adapter["lineage"], self.model, self.base_url, os.environ.get("CROSSLAB_OTHER_LINEAGE"))
         if privileged and not override_privileged:
             raise EgressBlocked(
