@@ -73,7 +73,7 @@
 <div class="doc">
 
   <h1>Insight Engine</h1>
-  <div class="tagline">User Operating Manual &nbsp;<span class="ver">v0.1.16</span></div>
+  <div class="tagline">User Operating Manual &nbsp;<span class="ver">v0.1.18</span></div>
   <p class="lead">A tool for investigating high-stakes, complex, contested, and wicked problems &mdash; the kind where the important things hide, the evidence is mixed or interested, and the deciding questions are value judgements. The engine surfaces the hidden contributors, conditions, and causal structure beneath a situation &mdash; sources of success and adaptation as well as failure &mdash; verifies every load-bearing claim against current sources, and routes what cannot be verified to your judgement. It offers understanding and a defensible next step, not control or prediction: wicked problems are navigated, not solved. <b>The large language model provides the insight; the engine makes it verified, defensible, and audience-ready.</b></p>
 
   <h2>1. What it&rsquo;s for (and when not)</h2>
@@ -227,7 +227,7 @@
     <div class="card"><h3><span class="cmd">/verify</span></h3><p style="margin:0">Hand it a set of claims or a premise. It routes each (web-checkable / your-document / value-judgement), grades and tiers them, searches for counter-evidence, and tells you which are exposed. Use it to check something before you rely on it.</p></div>
     <div class="card"><h3><span class="cmd">/render</span></h3><p style="margin:0">Takes a finished analysis and re-voices it for a reader. It will ask who &mdash; or you name them: a board, counsel, a regulator, a journalist, the family, an adversary. The grades never change; only the register does.</p></div>
     <div class="card"><h3><span class="cmd">/track</span></h3><p style="margin:0">For inquiries that evolve. <b>OPEN</b> starts a dossier; <b>UPDATE</b> folds in new facts and re-verifies; <b>STATUS</b> reads back where it stands. (Newest skill &mdash; sound, but the least battle-tested.)</p></div>
-    <div class="card"><h3><span class="cmd">/adjudicate</span></h3><p style="margin:0">Put a finished high-stakes analysis to an independent second pass: a different model (ideally from a different lab) re-derives it blind, then attacks it &mdash; disagreements fold back in, and it never changes a claim, a grade, or the call. Opt-in and off by default; one word declines it, &ldquo;don&rsquo;t offer again&rdquo; is remembered, and the cross-lab model is a configurable choice (GPT-5.6 Sol, Google Gemini, or xAI Grok). For privileged or confidential material the cross-lab pass is blocked by default and lifts only on a deliberate, logged override, with the redacted package shown for confirm / edit / cancel.</p></div>
+    <div class="card"><h3><span class="cmd">/adjudicate</span></h3><p style="margin:0">Put a finished high-stakes analysis to an independent second pass: a different model (ideally from a different lab) re-derives it blind, then attacks it &mdash; disagreements fold back in, and it never changes a claim, a grade, or the call. Opt-in and off by default; one word declines it, &ldquo;don&rsquo;t offer again&rdquo; is remembered, and you choose the lab (OpenAI GPT-5.6 Sol, Google Gemini, or xAI Grok, or an OpenAI-compatible &ldquo;Other&rdquo; endpoint; a Claude-lineage model is refused). For privileged or confidential material the cross-lab pass is blocked by default and lifts only on a deliberate, logged override, with the redacted package shown for confirm / edit / cancel. OpenAI is live-verified; the Gemini/xAI adapters are built to each lab&rsquo;s current API and live-verified only when you run the smoke with that lab&rsquo;s key.</p></div>
     <div class="card"><h3>Chaining them</h3><p style="margin:0">A natural flow: <span class="cmd">/analyse</span> a problem &rarr; (optionally <span class="cmd">/adjudicate</span> a high-stakes result) &rarr; <span class="cmd">/render</span> it for each stakeholder &rarr; <span class="cmd">/track</span> it as the situation develops. <span class="cmd">/verify</span> can be used at any point to re-check a claim.</p></div>
   </div>
 
@@ -273,7 +273,7 @@
   </table>
 
   <div class="foot">
-    <b>Insight Engine v0.1.16</b> &mdash; User Operating Manual. The large language model provides the insight; the engine makes it verified, defensible, and audience-ready. For the full design specification, layer-by-layer detail, and the controlled-testing record behind each feature, see the companion <i>Insight Engine Architecture</i> document.
+    <b>Insight Engine v0.1.18</b> &mdash; User Operating Manual. The large language model provides the insight; the engine makes it verified, defensible, and audience-ready. For the full design specification, layer-by-layer detail, and the controlled-testing record behind each feature, see the companion <i>Insight Engine Architecture</i> document.
   </div>
 
 </div>
