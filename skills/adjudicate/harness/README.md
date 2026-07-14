@@ -1,11 +1,18 @@
-# harness/
+# harness/ — the cross-lab adjudicator (rung A)
 
-- `tadj.py`     — frozen constants (`T`, from the LOCK), case model, manifest checks, blind-package
-                  assembly, endpoint computation (P1–P8, MC1–3), gate dispositions (§6), report.
-- `adapters.py` — `AgentDispatchAdapter` (emit prompts for the Agent tool) and `ApiAdapter`
-                  (Anthropic/OpenAI call shapes, keys from env, stubbed). `ARM_SPEC` = model/rung/mode/effort/temp per arm.
-- `run.py`      — CLI: `validate` | `emit` | `report`.
-- `selftest.py` — synthetic end-to-end proof of the deterministic core (no model calls).
-- `prompts/`    — author (arm A), adjudicate (blind→adversarial), filter (different-lineage), rater (coding + P7).
+- `crosslab.py`      — the rung-A adapter: the `PROVIDERS` registry (OpenAI / Google / xAI / Other +
+                       operator adapter files), `CrossLabAdjudicator` (governance gates, same-lineage
+                       guard, provider routing), and a `MockAdjudicator` for offline tests. Stdlib only;
+                       reads only `CROSSLAB_*` env (never imports prefs).
+- `crosslab_env.py`  — resolves adjudication prefs → `CROSSLAB_*` env before crosslab is imported
+                       (shell env wins > standing pref > default; provider auto-inference from the model).
+- `run_crosslab.py`  — MOCK (default) / LIVE (`--live`, paid) run on a blind package; `--privileged` /
+                       `--override-privileged` drive the governance gate.
+- `preflight.py`     — offline checks (import, prompt, mock dispatch, gates, per-provider parse + tagged
+                       errors, same-lineage guard, routing/mismatch, the "Other" mode, and the adapter
+                       loader) plus a cheap `--live` smoke against the resolved provider.
+- `prompts/adjudicate.txt` — the blind→adversarial two-pass adjudication prompt.
+- `CROSSLAB.md` — interface / operation / governance.  `PREFLIGHT.md` — the per-lab live-run checklist.
 
-Thresholds are the LOCK's; do not edit `T` without a dated pre-registration amendment.
+Stdlib only. Keys are read from the environment, never logged. `~/.insight-engine/` (preferences and any
+operator adapter files) lives outside this folder and is never version-controlled.
