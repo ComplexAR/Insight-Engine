@@ -7,7 +7,7 @@ description: Insight Engine independent-adjudication layer (Step 10) — an OPT-
 
 An independent second pass on a **finished** analysis. It re-derives the call blind, then tries to break it, and hands back discrepancies that fold in under grade-lock - **you always own the final call; the adjudicator never changes it.**
 
-> **Honest claim - hold this line.** This is a *conditional, high-stakes-gated, off-by-default rigour-and-defensibility check*. Its **decision-flip** benefit - catching an error the disciplined first pass missed - is **unproven** (constructed-case testing was null; one real cross-lab run to date flipped nothing). What it does, safely and demonstrably, is **sharpen a sound analysis**: it flags where a load-bearing claim is asserted-but-not-established, without corrupting a correct call. Present it as that. It is **not** a safety net, and it is never run automatically. More decorrelation (a different lab) sharpens the *check*; it does not make the flip benefit proven, and no panel of any size ever flips the call.
+> **Honest claim - state it exactly as follows.** This is a *conditional, high-stakes-gated, off-by-default rigour-and-defensibility check*. Its **decision-flip** benefit - catching an error the disciplined first pass missed - is **unproven** (constructed-case testing was null; one real cross-lab run to date flipped nothing). What it does, safely and demonstrably, is **sharpen a sound analysis**: it flags where a load-bearing claim is asserted-but-not-established, without corrupting a correct call. Present it as that. Do not present it as reliably catching errors the first pass missed; it is never run automatically. More decorrelation (a different lab) sharpens the *check*; it does not make the flip benefit proven, and no panel of any size ever flips the call.
 
 ## 0 - Nothing runs without an explicit opt-in
 
@@ -21,7 +21,7 @@ Before offering, run the gate and **declare the result either way** ("adjudicati
 - **G1 Stakes** - high-stakes or wicked (irreversible, binds people not in the room, legal exposure, contested blame, material money). Routine/reversible -> do not raise it.
 - **G2 Confidentiality** - if the matter is privileged or confidential, cross-lab (A) is **blocked by default** (external egress). It is **operator-overridable** by a deliberate typed act when `block_override=allowed` (see 6), logged to the monitor and never written into the deliverable. In-boundary rungs (B/C/D) are unaffected. (This supersedes the old "never waivable" rule.)
 - **G3 Residual judgment** - a live, decision-relevant, contestable judgment still remains. If the disciplined pass settled everything, adjudication is redundant.
-- **G4 In-boundary sufficiency (A vs B/C)** - cross-lab's only marginal value over the cheaper in-house rungs is lineage decorrelation (Opus and Fable share Anthropic training). Reach for A only when the residual point is where shared blind spots bite.
+- **G4 In-boundary sufficiency (A vs B/C)** - cross-lab's only marginal value over the cheaper in-house rungs is lineage decorrelation (Opus and Fable share Anthropic training). Use A only when the residual point is where shared blind spots are most likely to matter.
 
 **Consult the code-backed settings before offering** (do not rely on session memory):
 - `python prefs/prefs.py should-offer --rung A` and `--rung B` (exit 0 = offer, 1 = suppressed). `offer=off` suppresses the whole offer; `crosslab=off` removes rung A only. Showing the offer is not running it.
@@ -55,9 +55,9 @@ Tag each rung by **independence**, not an invented quality ranking. Render rung 
 - **C - Opus panel** (same lineage - divergence is the signal, convergence is stability not proof). Dispatch `panel_size` instances (default 2); on decision-relevant divergence, **offer** a 3rd for the 2-vs-1 read.
 - **D - self-adversarial** (weakest - same session, shared blind spots).
 
-**Panel sizing.** Get the dispatch plan from `python prefs/prefs.py panel-plan --rung <A|C>`: rung C = `panel_size` instances (N is the depth axis; `runs_per_model` is NOT multiplied on top); rung A = `crosslab_breadth` models at `runs_per_model` each (`auto` = 2 runs for a lone lab, 1 each in a multi-lab panel; on divergence, offer one targeted re-run of only the divergent model). Present repeat runs as a **noise filter** (does this verdict reproduce?), never a truth amplifier.
+**Panel sizing.** Get the dispatch plan from `python prefs/prefs.py panel-plan --rung <A|C>`: rung C = `panel_size` instances (N is the depth axis; `runs_per_model` is NOT multiplied on top); rung A = `crosslab_breadth` models at `runs_per_model` each (`auto` = 2 runs for a lone lab, 1 each in a multi-lab panel; on divergence, offer one targeted re-run of only the divergent model). Present repeat runs as a **noise filter** (does this verdict reproduce?), never as evidence that the verdict is more likely correct.
 
-**"Other" labs and adapters.** For a lab with no built-in adapter: set `crosslab_provider other` + `crosslab_base_url` (its https API root) + `crosslab_other_lineage` + a key in the env var `crosslab_other_key_env` names - the harness speaks the OpenAI-compatible `chat/completions` shape. For a non-compatible API, an operator-written adapter file (`~/.insight-engine/adapters/<name>.py`) can be enabled with `set crosslab_adapter_files on --confirm` and approved with `set crosslab_other_adapter <name> --confirm`. An adapter runs the operator's own code in the egress path (opt-in and default-off, hash-pinned, shape- and lineage-checked, with every gate enforced around it), so only enable one they wrote or have read in full - the engine validates its shape and hash, not its behaviour.
+**"Other" labs and adapters.** For a lab with no built-in adapter: set `crosslab_provider other` + `crosslab_base_url` (its https API root) + `crosslab_other_lineage` + a key in the env var `crosslab_other_key_env` names - the harness uses the OpenAI-compatible `chat/completions` shape. For a non-compatible API, an operator-written adapter file (`~/.insight-engine/adapters/<name>.py`) can be enabled with `set crosslab_adapter_files on --confirm` and approved with `set crosslab_other_adapter <name> --confirm`. An adapter runs the operator's own code in the egress path (opt-in and default-off, hash-pinned, shape- and lineage-checked, with every gate enforced around it), so only enable one they wrote or have read in full - the engine validates its shape and hash, not its behaviour.
 
 ## 6 - Cross-lab (rung A) setup, governance, and the tagged-error branch
 
@@ -87,7 +87,7 @@ The operator runs the paid call; **you never handle the key.** Walk it **one ste
 - `CROSSLAB-FAILED [api NNN]` -> a 4xx about the body likely means that provider's API schema moved; adjust that provider's adapter in `harness/crosslab.py` and re-smoke.
 - untagged/unexpected -> generic: show it verbatim; offer fix / B/C/D / skip.
 
-**In-boundary rungs (B/C)** need only a light consent: "this spawns a Fable / Opus adjudicator subagent and spends your Claude credits - proceed?" If a B/C subagent dispatch fails, show the error verbatim (do not parse the wording) and offer retry / another rung / skip; a panel returning fewer than `panel_size` instances is a degraded panel - say so.
+**In-boundary rungs (B/C)** need only a brief consent: "this spawns a Fable / Opus adjudicator subagent and spends your Claude credits - proceed?" If a B/C subagent dispatch fails, show the error verbatim (do not parse the wording) and offer retry / another rung / skip; a panel returning fewer than `panel_size` instances is a degraded panel - say so.
 
 ## 7 - After the run: rank, fold, log
 

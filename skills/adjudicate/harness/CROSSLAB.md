@@ -38,7 +38,7 @@ MockAdjudicator(...)   # identical interface + gates, canned report, no network/
 **Feeds the monitor.** Log each real cross-lab run with `adjudicator_rung:"A-crosslab"`; the monitor's
 **AMENDMENT-1** cross-lab-specific read-out then isolates whether cross-lab *specifically* earned its place.
 
-**Status (v0.1.20).** OpenAI (the rung-A default) is **live-verified** — a real smoke returned a clean parse.
+**Status (v0.1.21).** OpenAI (the rung-A default) is **live-verified** — a real smoke returned a clean parse.
 The **Google Gemini and xAI Grok adapters are built to each lab's current published API (verified 2026-07-09)
 but NOT live-smoked** (no billing set up for those labs); they are live-verified only when you run
 `preflight.py --live` with that lab's key. All governance gates, the same-lineage guard, provider routing,

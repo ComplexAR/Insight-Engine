@@ -22,7 +22,7 @@ This repo is **both** a Claude Code plugin **and** a single-plugin marketplace. 
    ```
    zip -D -X -9 -r dist/insight-engine-<version>.plugin .claude-plugin/plugin.json README.md LICENSE skills
    ```
-   (Note: this packages `plugin.json` but **not** `marketplace.json` — the `.plugin` is the plugin alone.) The recursive `skills` argument also sweeps in any runtime files, so before building **never package `skills/adjudicate/monitor/ledger.jsonl`** (the real-use run log) — delete or git-ignore it first. User adjudication preferences live outside the plugin at `~/.insight-engine/` and are never packaged.
+   (Note: this packages `plugin.json` but **not** `marketplace.json` — the `.plugin` is the plugin alone.) The recursive `skills` argument also includes any runtime files, so before building **never package `skills/adjudicate/monitor/ledger.jsonl`** (the real-use run log) — delete or git-ignore it first. User adjudication preferences live outside the plugin at `~/.insight-engine/` and are never packaged.
 4. Commit, then tag and push:
    ```
    git add -A

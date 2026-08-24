@@ -59,7 +59,7 @@ is tested; the data is yours to accrue.
     counterparty type) — **reset the window** on a class shift.
   - **Monoculture watch (instrument-health, not yield):** track rung-A **blind-pass divergence rate** over time.
     If cross-lab divergence trends toward zero across classes **while** ground-truth errors still surface
-    elsewhere, that signals decorrelation collapse — treat rung A's silence as **loss of signal, not safety**,
+    elsewhere, that signals decorrelation collapse — treat an absence of rung-A divergence as **loss of signal, not as safety**,
     and do not read it as "models got good enough."
   - **Honesty bounds on this rule (do not soften):** convergence/agreement is evidence of low *yield* (the right
     variable for a cost decision), **not** proof the calls were correct. And because catches are tail events,

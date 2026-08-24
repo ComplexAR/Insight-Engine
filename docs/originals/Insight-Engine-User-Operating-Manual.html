@@ -73,11 +73,11 @@
 <div class="doc">
 
   <h1>Insight Engine</h1>
-  <div class="tagline">User Operating Manual &nbsp;<span class="ver">v0.1.20</span></div>
-  <p class="lead">A tool for investigating high-stakes, complex, contested, and wicked problems &mdash; the kind where the important things hide, the evidence is mixed or interested, and the deciding questions are value judgements. The engine surfaces the hidden contributors, conditions, and causal structure beneath a situation &mdash; sources of success and adaptation as well as failure &mdash; verifies every load-bearing claim against current sources, and routes what cannot be verified to your judgement. It offers understanding and a defensible next step, not control or prediction: wicked problems are navigated, not solved. <b>The large language model provides the insight; the engine makes it verified, defensible, and audience-ready.</b></p>
+  <div class="tagline">User Operating Manual &nbsp;<span class="ver">v0.1.21</span></div>
+  <p class="lead">A tool for investigating high-stakes, complex, contested, and wicked problems &mdash; the kind where the important things are easy to miss, the evidence is mixed or interested, and the deciding questions are value judgements. The engine surfaces the hidden contributors, conditions, and causal structure beneath a situation &mdash; sources of success and adaptation as well as failure &mdash; verifies every load-bearing claim against current sources, and routes what cannot be verified to your judgement. It offers understanding and a defensible next step, not control or prediction: wicked problems are navigated, not solved. <b>The large language model provides the insight; the engine makes it verified, defensible, and audience-ready.</b></p>
 
   <h2>1. What it&rsquo;s for (and when not)</h2>
-  <p>Reach for the Insight Engine when a decision matters and the surface is not the whole story &mdash; a strategy call, a post-incident review, a contract or regulatory question, an investment, a contested situation where you need to know what is really going on and how strongly you actually know it.</p>
+  <p>Use the Insight Engine when a decision matters and the surface is not the whole story &mdash; a strategy call, a post-incident review, a contract or regulatory question, an investment, a contested situation where you need to know what is really going on and how strongly you actually know it.</p>
   <p>It is not a search box or a chatbot. It is a discipline: <b>verify what can be verified, grade how strongly each claim is established, separate fact from value, and make you own the value calls.</b> What you get back is a graded, defensible analysis and a decision brief &mdash; and, on request, the same analysis re-voiced for a particular reader, or kept live as an investigation.</p>
   <div class="callout">You don&rsquo;t need it for genuinely trivial things. It will notice triviality and right-size itself to a short answer &mdash; but you get the most from it on problems that actually have hidden depth.</div>
 
@@ -129,7 +129,7 @@
           <div class="spine-note">the invariant running through every layer</div>
           <ul>
             <li><b>[V1]</b> primary &middot; <b>[V2]</b> secondary</li>
-            <li><b>[V3]</b> weak/contested &middot; <b>[N]</b> interested party</li>
+            <li><b>[V3]</b> weak/contested &middot; <b>[N]</b> not independently verified</li>
             <li>the single <b>dominant unknown</b></li>
             <li>the <b>non-droppable caveat core</b></li>
           </ul>
@@ -148,7 +148,7 @@
       <div class="skill"><b>/adjudicate</b><div class="sf">Step 10 standalone &mdash; opt-in independent second pass; never flips the call</div></div>
     </div>
   </div>
-  <p style="font-size:13px;color:#5b6776">In short: <b>L0</b> the model is the substrate; <b>L1&ndash;L6</b> are the processing layers; the <b>spine</b> is the epistemic backbone that never bends; the <b>gate</b> is where you act; the <b>triage</b> decides how much machinery to run.</p>
+  <p style="font-size:13px;color:#5b6776">In short: <b>L0</b> the model is the substrate; <b>L1&ndash;L6</b> are the processing layers; the <b>spine</b> is the invariant that never changes; the <b>gate</b> is where you act; the <b>triage</b> decides how much machinery to run.</p>
 
   <h2>4. How it works</h2>
   <p>Here is what actually happens when you hand it a problem. Most of the pipeline runs silently &mdash; the one place it stops for you is the gate.</p>
@@ -203,13 +203,13 @@
     <li><b>Defer</b> &mdash; logged, not ignored; the brief notes it as open.</li>
   </ul>
   <p>The gate opens by asking for your own standpoint in one line. Where the systems pass ran, it also asks at what level to intervene: this problem, or the problem it is a symptom of.</p>
-  <div class="callout"><b>Why it&rsquo;s forced.</b> The engine learned, by test, that if these questions are merely <em>shown</em> to you they get read and then ignored &mdash; attention slides to the verifiable. Being made to take a position is what gets the value questions actually addressed. In real use, an operator&rsquo;s override at the gate materially reshaped the final brief. This is the engine&rsquo;s most valuable interaction; treat it as the decision, not a form to clear.</div>
+  <div class="callout"><b>Why it&rsquo;s forced.</b> The engine learned, by test, that if these questions are merely <em>shown</em> to you they get read and then ignored &mdash; attention shifts to the verifiable. Being made to take a position is what gets the value questions actually addressed. In real use, an operator&rsquo;s override at the gate materially reshaped the final brief. This is the engine&rsquo;s most valuable interaction; treat it as the decision, not a form to clear.</div>
 
   <h2>7. Reading the output</h2>
   <p>Every full-pass deliverable ends with a fixed plain-language legend restating the grade markers in one sentence each &mdash; you never need this manual open to read a brief. One further rule protects you: an official finding of personal fault (a coroner&rsquo;s or inquiry&rsquo;s &ldquo;X failed&rdquo;) is reported as that body&rsquo;s recorded judgement, never as established fact &mdash; blame is always yours to judge at the gate.</p>
   <h3>The grade markers</h3>
-  <p>Every load-bearing claim is marked. <code>[V]</code> = independently corroborated; <code>[N]</code> = rests on an interested or self-reporting party. A <code>[V]</code> always carries a strength tier: <code>[V1]</code> primary (the regulation, the official statistic, the study), <code>[V2]</code> secondary (reputable reporting on top of primaries), <code>[V3]</code> weak or contested. The <code>[V3]</code> and <code>[N]</code> items are where the analysis is exposed &mdash; that is where to push.</p>
-  <p>An <code>[N]</code> does not tell you <i>why</i> a claim is unverified &mdash; the claim&rsquo;s own line does. It may be uncorroborated after a real search; rest only on an interested party; be waiting on a named document that would settle it; inherit the cap from an unverified thing it depends on; or be a judgement or prediction the engine never grades higher, however strong the evidence &mdash; which loop dominates, whether acting at a leverage point will work, and whether or when a system tips are permanently <code>[N]</code> by design. <b>Only the first three can be moved by looking harder.</b> Where a causal map is included, a tier on a map <b>link</b> grades support for that mechanism <i>in general</i>, not that the arrow is the operative cause in your case.</p>
+  <p>Every load-bearing claim is marked. <code>[V]</code> = independently corroborated; <code>[N]</code> = not independently verified (five situations, set out below). A <code>[V]</code> always carries a strength tier: <code>[V1]</code> primary (the regulation, the official statistic, the study), <code>[V2]</code> secondary (reputable reporting on top of primaries), <code>[V3]</code> weak or contested. The <code>[V3]</code> and <code>[N]</code> items are where the analysis is exposed &mdash; that is where to direct further verification.</p>
+  <p>An <code>[N]</code> does not tell you <i>why</i> a claim is unverified &mdash; the claim&rsquo;s own line does. It may be uncorroborated after a real search; rest only on an interested party; be waiting on a named document that would settle it; inherit the cap from an unverified thing it depends on; or be a judgement or prediction the engine never grades higher, however strong the evidence &mdash; which loop dominates, whether acting at a leverage point will work, and whether or when a system tips are permanently <code>[N]</code> by design. <b>Only the first three can be moved by looking harder; the fourth moves only when the unverified thing it depends on is itself verified.</b> Where a causal map is included, a tier on a map <b>link</b> grades support for that mechanism <i>in general</i>, not that the arrow is the operative cause in your case.</p>
   <h3>The decision brief (always five parts)</h3>
   <ul>
     <li><b>The call</b> &mdash; the actual recommendation.</li>
@@ -228,7 +228,7 @@
   <div class="grid2">
     <div class="card"><h3><span class="cmd">/verify</span></h3><p style="margin:0">Hand it a set of claims or a premise. It routes each (web-checkable / your-document / value-judgement), grades and tiers them, searches for counter-evidence, and tells you which are exposed. Use it to check something before you rely on it.</p></div>
     <div class="card"><h3><span class="cmd">/render</span></h3><p style="margin:0">Takes a finished analysis and re-voices it for a reader. It will ask who &mdash; or you name them: a board, counsel, a regulator, a journalist, the family, an adversary. The grades never change; only the register does.</p></div>
-    <div class="card"><h3><span class="cmd">/track</span></h3><p style="margin:0">For inquiries that evolve. <b>OPEN</b> starts a dossier; <b>UPDATE</b> folds in new facts and re-verifies; <b>STATUS</b> reads back where it stands. (Newest skill &mdash; sound, but the least battle-tested.)</p></div>
+    <div class="card"><h3><span class="cmd">/track</span></h3><p style="margin:0">For inquiries that evolve. <b>OPEN</b> starts a dossier; <b>UPDATE</b> folds in new facts and re-verifies; <b>STATUS</b> reads back where it stands. (Newest skill &mdash; sound, but the least tested in real use.)</p></div>
     <div class="card"><h3><span class="cmd">/adjudicate</span></h3><p style="margin:0">Put a finished high-stakes analysis to an independent second pass: a different model (ideally from a different lab) re-derives it blind, then attacks it &mdash; disagreements fold back in, and it never changes a claim, a grade, or the call. Opt-in and off by default; one word declines it, &ldquo;don&rsquo;t offer again&rdquo; is remembered, and you choose the lab (OpenAI GPT-5.6 Sol, Google Gemini, or xAI Grok, or an OpenAI-compatible &ldquo;Other&rdquo; endpoint; a Claude-lineage model is refused). For privileged or confidential material the cross-lab pass is blocked by default and lifts only on a deliberate, logged override, with the redacted package shown for confirm / edit / cancel. OpenAI is live-verified; the Gemini/xAI adapters are built to each lab&rsquo;s current API and live-verified only when you run the smoke with that lab&rsquo;s key.</p></div>
     <div class="card"><h3>Chaining them</h3><p style="margin:0">A natural flow: <span class="cmd">/analyse</span> a problem &rarr; (optionally <span class="cmd">/adjudicate</span> a high-stakes result) &rarr; <span class="cmd">/render</span> it for each stakeholder &rarr; <span class="cmd">/track</span> it as the situation develops. <span class="cmd">/verify</span> can be used at any point to re-check a claim.</p></div>
   </div>
@@ -240,7 +240,7 @@
     <li><b>Answer the gate honestly, and override it when you disagree.</b> That is the point of the gate.</li>
     <li><b>Don&rsquo;t rewrite for a different reader</b> &mdash; use <span class="cmd">/render</span>; the grades stay intact.</li>
     <li><b>For something that will change, use <span class="cmd">/track</span></b> rather than re-running from scratch.</li>
-    <li><b>Trust the tiers.</b> A <code>[V1]</code> is solid; a <code>[V3]</code> or <code>[N]</code> the call leans on is the soft spot &mdash; push there.</li>
+    <li><b>Trust the tiers.</b> A <code>[V1]</code> is solid; a <code>[V3]</code> or <code>[N]</code> the call leans on is the weakest point &mdash; verify there first.</li>
   </ul>
 
   <h2>10. What it won&rsquo;t do</h2>
@@ -257,7 +257,7 @@
 
   <h2>11. Glossary</h2>
   <table class="gloss">
-    <tr><td class="k">[V] / [N]</td><td>A claim is <b>[V]</b> (independently corroborated) or <b>[N]</b> (not independently verified). <b>[N]</b> covers five situations: uncorroborated after search; resting only on an interested or self-reporting party; awaiting a named document; inheriting the cap from an unverified thing it depends on; or a judgement or prediction the engine never grades higher by design. Only the first three can be moved by further verification &mdash; the claim&rsquo;s own line says which it is.</td></tr>
+    <tr><td class="k">[V] / [N]</td><td>A claim is <b>[V]</b> (independently corroborated) or <b>[N]</b> (not independently verified). <b>[N]</b> covers five situations: uncorroborated after search; resting only on an interested or self-reporting party; awaiting a named document; inheriting the cap from an unverified thing it depends on; or a judgement or prediction the engine never grades higher by design. Only the first three can be moved by further verification; the fourth moves only when the unverified thing it depends on is itself verified; the fifth never moves &mdash; the claim&rsquo;s own line says which it is.</td></tr>
     <tr><td class="k">[N] by design</td><td>The permanent kind. Which loop dominates, whether acting at a leverage point will work, and whether or when a system tips carry a hard ceiling of <b>[N]</b> and route to you. No amount of further research lifts them; the engine is declining to manufacture confidence, not reporting a gap in its work.</td></tr>
     <tr><td class="k">Tier on a map link</td><td>On a causal-map link, <b>[V1]</b>/<b>[V2]</b>/<b>[V3]</b> grade the support for that mechanism <i>in general</i> &mdash; not that this arrow is the operative, correctly-directed cause in your case. A weaker promise than the same symbol on a claim.</td></tr>
     <tr><td class="k">Adjudication (Step 10)</td><td>An opt-in, off-by-default independent second pass on a finished high-stakes analysis, run blind and then adversarially. It folds discrepancies back under grade-lock and never flips the call &mdash; that stays yours.</td></tr>
@@ -279,7 +279,7 @@
   </table>
 
   <div class="foot">
-    <b>Insight Engine v0.1.20</b> &mdash; User Operating Manual. The large language model provides the insight; the engine makes it verified, defensible, and audience-ready. For the full design specification, layer-by-layer detail, and the controlled-testing record behind each feature, see the companion <i>Insight Engine Architecture</i> document.
+    <b>Insight Engine v0.1.21</b> &mdash; User Operating Manual. The large language model provides the insight; the engine makes it verified, defensible, and audience-ready. For the full design specification, layer-by-layer detail, and the controlled-testing record behind each feature, see the companion <i>Insight Engine Architecture</i> document.
   </div>
 
 </div>
