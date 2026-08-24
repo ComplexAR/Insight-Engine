@@ -15,7 +15,7 @@ One file per investigation, named `track-<slug>-<date>.md`, kept in the operator
 - **Open (deep core)** — the framing / legitimacy / opportunity-cost / value questions, with the operator's recorded positions (carried from the `analyse` gate) or marked unresolved.
 - **Pending (party-held)** — each item with the exact document or evidence that would settle it.
 - **Watch-list (update triggers)** — the facts, documents, or events that would change the call; this is what an update is checked against.
-- **The call** — the current decision-brief call + calibration, re-derived whenever the spine moves.
+- **The call** — the current decision-brief call + confidence basis, re-derived whenever the spine moves.
 - **Sources.**
 - **Update log** — dated entries. Each records either a grade change (before -> after, with the evidence that moved it) or a **checked-and-held** result: **HELD-FIRM** (the check found nothing to change the grade) or **HELD-ERODED** (a *cited* new observation was found that is insufficient to change the grade — e.g. a corroborating source retracted while the primary holds; a bare "less sure" with no citable observation is not allowed, and two HELD-ERODED entries on one claim force a full re-grade review). Every entry — change or held — names in one line what was searched and what would have counted as disconfirmation: a "held" without a named falsifier is not a check.
 
@@ -33,7 +33,7 @@ Begin by asking the operator **what has arrived** — a new document, a web deve
 2. Re-verify those claims (run the `verify` skill — router, source-tiering, and a disconfirmation pass on the load-bearing few): web-verifiable items against current sources; a newly-arrived party-held document against the pending list.
 3. Update grades EXPLICITLY — never silently: record before -> after in the log and state what evidence changed it. Where re-verification does NOT change a grade, still record a **checked-and-held** entry (HELD-FIRM, or HELD-ERODED with its cited observation), naming what was searched and what would have counted as disconfirmation — so the log distinguishes "re-checked and survived" from "never revisited", and update the claim's `last-verified` date.
 4. Re-surface the dominant unknown (it may have moved) and clear any pending item the new evidence settles.
-5. **Re-derive the call** — if the spine moved, recompute the decision brief (call · calibration · dominant unknown · what-to-verify-first · what-flips-it) and say whether the call flipped.
+5. **Re-derive the call** — if the spine moved, recompute the decision brief (call · confidence basis · dominant unknown · what-to-verify-first · what-flips-it) and say whether the call flipped.
 6. Append a dated log entry: what arrived, what changed, what is still open.
 
 ## Mode 3 — STATUS (where does it stand?): READ, don't re-verify

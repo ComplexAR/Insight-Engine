@@ -73,7 +73,7 @@
 <div class="doc">
 
   <h1>Insight Engine</h1>
-  <div class="tagline">User Operating Manual &nbsp;<span class="ver">v0.1.19</span></div>
+  <div class="tagline">User Operating Manual &nbsp;<span class="ver">v0.1.20</span></div>
   <p class="lead">A tool for investigating high-stakes, complex, contested, and wicked problems &mdash; the kind where the important things hide, the evidence is mixed or interested, and the deciding questions are value judgements. The engine surfaces the hidden contributors, conditions, and causal structure beneath a situation &mdash; sources of success and adaptation as well as failure &mdash; verifies every load-bearing claim against current sources, and routes what cannot be verified to your judgement. It offers understanding and a defensible next step, not control or prediction: wicked problems are navigated, not solved. <b>The large language model provides the insight; the engine makes it verified, defensible, and audience-ready.</b></p>
 
   <h2>1. What it&rsquo;s for (and when not)</h2>
@@ -88,6 +88,7 @@
     <div class="card"><h3><span class="cmd">/verify</span></h3><p style="margin:0">Fact-check a set of claims or a premise before you rely on it.</p></div>
     <div class="card"><h3><span class="cmd">/render</span></h3><p style="margin:0">Re-voice a finished analysis for a specific reader.</p></div>
     <div class="card"><h3><span class="cmd">/track</span></h3><p style="margin:0">Keep an investigation live across sessions as new facts arrive.</p></div>
+    <div class="card"><h3><span class="cmd">/adjudicate</span></h3><p style="margin:0">Opt-in independent second pass on a finished high-stakes analysis. It never changes the call.</p></div>
   </div>
   <p style="margin-top:12px"><b>Simplest use:</b> type <span class="cmd">/analyse</span> followed by your problem, answer the gate when it asks, and read the brief.</p>
 
@@ -98,7 +99,7 @@
     <li><b>Scoping (optional)</b> &mdash; up to five short questions: the trouble and why now; whose problem it is and who will read the answer; what a good outcome and a serious cost look like; what is fixed and in scope; any documents only you hold. Skip any or all &mdash; skipped items become stated assumptions, and if you skip scoping entirely the engine states its own one-line problem statement (trouble, owner, core question) as an assumption before proceeding.</li>
     <li><b>Findings arrive graded</b> &mdash; e.g. the vendor&rsquo;s &ldquo;guaranteed 99.9% uptime&rdquo; rests on its own marketing <b>[N]</b>; a 30% discount is roughly the market norm for 5-year exclusivity <b>[V2]</b>; exit costs sit in the contract you hold &mdash; <em>party-held</em>: the termination schedule would settle it.</li>
     <li><b>The gate</b> &mdash; one question at a time, each with a one-line example answer, with &ldquo;I don&rsquo;t know &mdash; explain this&rdquo; and <em>defer</em> always available. Your positions go on the record at the top of the brief.</li>
-    <li><b>The decision brief</b> &mdash; the call, calibration, the dominant unknown, what to verify first, what would flip the call &mdash; then sources and the plain-language legend.</li>
+    <li><b>The decision brief</b> &mdash; the call, confidence basis, the dominant unknown, what to verify first, what would flip the call &mdash; then sources and the plain-language legend.</li>
   </ol>
   <p>Nothing in the run predicts the future or makes the value calls for you; that part is deliberately yours.</p>
 
@@ -119,7 +120,7 @@
           <div class="layer"><span class="ln" style="font-size:10.5px">2.5</span><div><b>Systems pass <span style="font-size:10px;color:#5b6776;font-weight:600">&middot; conditional</span></b><div class="sf">feedback-driven problems only &middot; graded causal map: loops &middot; tipping conditions &middot; leverage &middot; investigate, don&rsquo;t predict</div></div></div>
           <div class="layer"><span class="ln">L3</span><div><b>Deep-core routing</b><div class="sf">framing &middot; legitimacy &middot; opportunity-cost &middot; value &rarr; the un-verifiable OPEN list</div></div></div>
           <div class="layer gate"><span class="ln">&#9733;</span><div><b>Forced judgement gate <span class="you">YOU</span></b><div class="sf">you record a one-line position on each deep-core question &mdash; or defer</div></div></div>
-          <div class="layer"><span class="ln">L4</span><div><b>Assembly &mdash; the decision brief</b><div class="sf">call &middot; calibration &middot; dominant unknown &middot; what-to-verify-first &middot; what-would-flip-it</div></div></div>
+          <div class="layer"><span class="ln">L4</span><div><b>Assembly &mdash; the decision brief</b><div class="sf">call &middot; confidence basis &middot; dominant unknown &middot; what-to-verify-first &middot; what-would-flip-it</div></div></div>
           <div class="layer"><span class="ln">L5</span><div><b>Rendering</b><div class="sf">audience re-voicing: adversarial &middot; advocate &middot; board &middot; counsel &middot; regulator &middot; family &middot; any</div></div></div>
           <div class="layer"><span class="ln">L6</span><div><b>Workspace</b><div class="sf">living dossier across sessions: OPEN &middot; UPDATE &middot; STATUS</div></div></div>
         </div>
@@ -175,7 +176,7 @@
       <div class="arr">&#9660;</div>
       <div class="node gate"><span class="step">STEP 8</span><br><b>&#9733; THE FORCED GATE <span class="you">YOU</span></b><div class="nsub">you take a one-line position on each deep-core question &mdash; or explicitly defer.<br><b>The brief does not finalise until you do.</b></div></div>
       <div class="arr">&#9660;</div>
-      <div class="node"><span class="step">STEP 9</span><br><b>Assemble &rarr; the decision brief</b><div class="nsub">your positions &middot; graded findings &middot; <b>call &middot; calibration &middot; dominant unknown &middot; what-to-verify-first &middot; what-would-flip-it</b> &middot; sources</div></div>
+      <div class="node"><span class="step">STEP 9</span><br><b>Assemble &rarr; the decision brief</b><div class="nsub">your positions &middot; graded findings &middot; <b>call &middot; confidence basis &middot; dominant unknown &middot; what-to-verify-first &middot; what-would-flip-it</b> &middot; sources</div></div>
       <div class="arr">&#9660;</div>
       <div class="node decision"><span class="step">STEP 10 &middot; opt-in</span><br><b>Offer independent adjudication</b><div class="nsub">off by default &middot; high-stakes only &mdash; a different model re-derives it blind, then adversarially; it never flips the call. YOU opt in.</div></div>
       <div class="arr">&#9660;</div>
@@ -208,10 +209,11 @@
   <p>Every full-pass deliverable ends with a fixed plain-language legend restating the grade markers in one sentence each &mdash; you never need this manual open to read a brief. One further rule protects you: an official finding of personal fault (a coroner&rsquo;s or inquiry&rsquo;s &ldquo;X failed&rdquo;) is reported as that body&rsquo;s recorded judgement, never as established fact &mdash; blame is always yours to judge at the gate.</p>
   <h3>The grade markers</h3>
   <p>Every load-bearing claim is marked. <code>[V]</code> = independently corroborated; <code>[N]</code> = rests on an interested or self-reporting party. A <code>[V]</code> always carries a strength tier: <code>[V1]</code> primary (the regulation, the official statistic, the study), <code>[V2]</code> secondary (reputable reporting on top of primaries), <code>[V3]</code> weak or contested. The <code>[V3]</code> and <code>[N]</code> items are where the analysis is exposed &mdash; that is where to push.</p>
+  <p>An <code>[N]</code> does not tell you <i>why</i> a claim is unverified &mdash; the claim&rsquo;s own line does. It may be uncorroborated after a real search; rest only on an interested party; be waiting on a named document that would settle it; inherit the cap from an unverified thing it depends on; or be a judgement or prediction the engine never grades higher, however strong the evidence &mdash; which loop dominates, whether acting at a leverage point will work, and whether or when a system tips are permanently <code>[N]</code> by design. <b>Only the first three can be moved by looking harder.</b> Where a causal map is included, a tier on a map <b>link</b> grades support for that mechanism <i>in general</i>, not that the arrow is the operative cause in your case.</p>
   <h3>The decision brief (always five parts)</h3>
   <ul>
     <li><b>The call</b> &mdash; the actual recommendation.</li>
-    <li><b>Calibration</b> &mdash; how sure, and the conditions under which it changes (it will name the weakest grade the call leans on).</li>
+    <li><b>Confidence basis</b> &mdash; what the call rests on evidentially, and the conditions under which it changes (it will name the weakest grade the call leans on).</li>
     <li><b>The dominant unknown</b> &mdash; the one fact that would most change the conclusion. Chase this first.</li>
     <li><b>What to verify first</b> &mdash; the cheapest next step that most reduces risk.</li>
     <li><b>What would flip the call</b> &mdash; including any assumptions that, moved together, the call could not survive.</li>
@@ -255,7 +257,11 @@
 
   <h2>11. Glossary</h2>
   <table class="gloss">
-    <tr><td class="k">[V] / [N]</td><td>A claim is <b>[V]</b> (independently corroborated) or <b>[N]</b> (rests on an interested or self-reporting party).</td></tr>
+    <tr><td class="k">[V] / [N]</td><td>A claim is <b>[V]</b> (independently corroborated) or <b>[N]</b> (not independently verified). <b>[N]</b> covers five situations: uncorroborated after search; resting only on an interested or self-reporting party; awaiting a named document; inheriting the cap from an unverified thing it depends on; or a judgement or prediction the engine never grades higher by design. Only the first three can be moved by further verification &mdash; the claim&rsquo;s own line says which it is.</td></tr>
+    <tr><td class="k">[N] by design</td><td>The permanent kind. Which loop dominates, whether acting at a leverage point will work, and whether or when a system tips carry a hard ceiling of <b>[N]</b> and route to you. No amount of further research lifts them; the engine is declining to manufacture confidence, not reporting a gap in its work.</td></tr>
+    <tr><td class="k">Tier on a map link</td><td>On a causal-map link, <b>[V1]</b>/<b>[V2]</b>/<b>[V3]</b> grade the support for that mechanism <i>in general</i> &mdash; not that this arrow is the operative, correctly-directed cause in your case. A weaker promise than the same symbol on a claim.</td></tr>
+    <tr><td class="k">Adjudication (Step 10)</td><td>An opt-in, off-by-default independent second pass on a finished high-stakes analysis, run blind and then adversarially. It folds discrepancies back under grade-lock and never flips the call &mdash; that stays yours.</td></tr>
+    <tr><td class="k">Independence ladder / rung</td><td>The order of adjudicators, strongest first: <b>A</b> a different-lab model &middot; <b>B</b> a different in-house model &middot; <b>C</b> a panel of same-model instances &middot; <b>D</b> a self-adversarial reset. The rung reached is always declared, because a lower rung is a weaker check.</td></tr>
     <tr><td class="k">[V1] / [V2] / [V3]</td><td>Source-strength tiers on a [V] &mdash; how strong the corroborating source itself is. The tier is part of the grade: it travels with the claim and is never dropped.</td></tr>
     <tr><td class="k">[V1] &mdash; primary</td><td>The strongest tier: the claim is confirmed against the authoritative source itself &mdash; the text of the regulation or statute, the court ruling, the official statistic or regulator publication, the peer-reviewed study, the primary dataset or standard. Nothing stands between the claim and its evidence. Note: <i>primary</i> means the source is proximate, not that it is trustworthy &mdash; an interested party&rsquo;s own primary material does not by itself earn [V1] on a claim it has a stake in; grade that claim on independent corroboration.</td></tr>
     <tr><td class="k">[V2] &mdash; secondary</td><td>Confirmed against reputable reporting or interpretation resting on primary sources &mdash; an established news organisation, a professional body, a textbook, a well-regarded analyst. Reliable, but one step removed; where it can, the engine names the primary source that would lift the claim to [V1].</td></tr>
@@ -273,7 +279,7 @@
   </table>
 
   <div class="foot">
-    <b>Insight Engine v0.1.19</b> &mdash; User Operating Manual. The large language model provides the insight; the engine makes it verified, defensible, and audience-ready. For the full design specification, layer-by-layer detail, and the controlled-testing record behind each feature, see the companion <i>Insight Engine Architecture</i> document.
+    <b>Insight Engine v0.1.20</b> &mdash; User Operating Manual. The large language model provides the insight; the engine makes it verified, defensible, and audience-ready. For the full design specification, layer-by-layer detail, and the controlled-testing record behind each feature, see the companion <i>Insight Engine Architecture</i> document.
   </div>
 
 </div>

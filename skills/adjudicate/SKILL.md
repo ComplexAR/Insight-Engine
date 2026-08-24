@@ -44,7 +44,7 @@ Personal-use tool: **every setting is operator-switchable, standing and per-run;
 
 ## 4 - How the pass runs (any rung)
 
-Run the adjudicator as a **subagent** - its own isolated context, handed **facts + grade-locked spine + draft brief, NOT the first model's reasoning** (so it cannot anchor). Two passes: **blind** (re-derive: does it reach the same call?) then **adversarial** (break the load-bearing claims and the call). **Fold under grade-lock:** a factual challenge -> re-verify (logged); a value challenge -> re-open one gate item for the human; an irreducible one -> caveat. **Never auto-flip.** Then **rank by decision-relevance and surface only the top ~3**. **Declare the rung reached**; same-lineage agreement is stability, not proof.
+Run the adjudicator as a **subagent** - its own isolated context, handed **facts + grade-locked spine + draft brief, NOT the first model's reasoning** (so it cannot anchor). Two passes: **blind** (re-derive: does it reach the same call?) then **adversarial** (break the load-bearing claims and the call). **Fold under grade-lock:** a factual challenge -> re-verify (logged); a value challenge -> re-open one deep-core item at the Step-8 judgement gate; an irreducible one -> caveat. **Never auto-flip.** Then **rank by decision-relevance and surface only the top ~3**. **Declare the rung reached**; same-lineage agreement is stability, not proof.
 
 ## 5 - The independence ladder (strongest first; each opt-in)
 
