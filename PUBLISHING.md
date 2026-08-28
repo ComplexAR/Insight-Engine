@@ -22,7 +22,7 @@ This repo is **both** a Claude Code plugin **and** a single-plugin marketplace. 
    ```
    zip -D -X -9 -r dist/insight-engine-<version>.plugin .claude-plugin/plugin.json README.md LICENSE skills
    ```
-   (Note: this packages `plugin.json` but **not** `marketplace.json` — the `.plugin` is the plugin alone.) The recursive `skills` argument also includes any runtime files, so before building **never package `skills/adjudicate/monitor/ledger.jsonl`** (the real-use run log) — delete or git-ignore it first. User adjudication preferences live outside the plugin at `~/.insight-engine/` and are never packaged.
+   (Note: this packages `plugin.json` but **not** `marketplace.json` — the `.plugin` is the plugin alone.) The recursive `skills` argument also includes any runtime files, so before building **never package `skills/adjudicate/monitor/ledger.jsonl`** (the real-use run log) — delete or git-ignore it first. **Also exclude every `__pycache__/` directory and every `.pyc` file.** Running `monitor.py`, `prefs.py` or the cross-lab harness leaves Python bytecode caches beside the sources; a naive recursive zip picks them up. On 25 August 2026 a first build of 0.1.22 packaged seven of them, adding 127 KB of stale bytecode and taking the archive from 24 files to 31. Build from a staging copy that filters them out, and check the packaged file list against the previous release: it should differ only in the files this release changes. User adjudication preferences live outside the plugin at `~/.insight-engine/` and are never packaged.
 4. Commit, then tag and push:
    ```
    git add -A
@@ -36,6 +36,6 @@ This repo is **both** a Claude Code plugin **and** a single-plugin marketplace. 
 
 Semantic — MAJOR.MINOR.PATCH. A new capability that earned its place on a test → a minor bump (this is how 0.1.7 added the systems-investigation pass); a fix → a patch bump; a breaking change to how the skills behave → a major bump.
 
-## If validation complains
+## If validation fails
 
 Run `claude plugin validate --strict` from the repo root before pushing. If it reports a missing `owner.email`, add an `email` to the `owner` object in `marketplace.json`. Unrecognised fields are warnings, not errors, unless you use `--strict`.
