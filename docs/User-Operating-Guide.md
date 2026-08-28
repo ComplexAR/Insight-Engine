@@ -1,6 +1,6 @@
 # Insight Engine — User Operating Guide
 
-**`v0.1.21`** · A tool for investigating high-stakes, complex, contested, and wicked problems — the kind where the important things are easy to miss, the evidence is mixed or interested, and the deciding questions are value judgements. The engine surfaces the hidden contributors, conditions, and causal structure beneath a situation — sources of success and adaptation as well as failure — verifies every load-bearing claim against current sources, and routes what cannot be verified to your judgement. It offers understanding and a defensible next step, not control or prediction: wicked problems are navigated, not solved. **The large language model provides the insight; the engine makes it verified, defensible, and audience-ready.**
+**`v0.1.22`** · A tool for investigating high-stakes, complex, contested, and wicked problems — the kind where the important things are easy to miss, the evidence is mixed or interested, and the deciding questions are value judgements. The engine surfaces the hidden contributors, conditions, and causal structure beneath a situation — sources of success and adaptation as well as failure — verifies every load-bearing claim against current sources, and routes what cannot be verified to your judgement. It offers understanding and a defensible next step, not control or prediction: wicked problems are navigated, not solved. **The large language model provides the insight; the engine makes it verified, defensible, and audience-ready.**
 
 > This is the Markdown edition, for reading on GitHub. The original styled version (with the rich diagrams) is in [`originals/`](originals/) and on the [project site](https://complexar.github.io/Insight-Engine/).
 
@@ -82,12 +82,12 @@ flowchart TD
     T -->|"YES — rare"| SH["A short, proportionate answer<br/>+ an offer to run the full pass"]
     T -->|"NO / any doubt → full depth (the default)"| S0["STEP 2 · Optional scoping<br/>a few skippable questions"]
     S0 --> S1["STEP 3 · Provocation pass<br/>surface what's material but sits where attention doesn't go; mark each claim V or N"]
-    S1 --> S2["STEP 4 · Verification<br/>route each claim · tier it V1/V2/V3 · search the negation of the load-bearing few · re-scan"]
+    S1 --> S2["STEP 4 · Verification<br/>route each claim · tier it V1/V2/V3 · search the negation of the load-bearing few"]
     S2 --> S25["STEP 5 · Systems-investigation pass — conditional<br/>only if genuinely systemic (feedback · stocks · delays · tipping):<br/>a graded causal map of loops, tipping conditions, leverage · investigate, don't predict"]
     S25 --> S3["STEP 6 · Deep-core routing<br/>set aside the questions no evidence can settle: framing · legitimacy · opportunity-cost · value"]
     S3 --> S4["STEP 7 · Grade-lock + resilience check<br/>fix every grade; stress-test whether the call survives its assumptions moving together"]
     S4 --> G["★ STEP 8 · THE FORCED GATE — YOU<br/>take a one-line position on each deep-core question, or explicitly defer.<br/>The brief does not finalise until you do."]
-    G --> S6["STEP 9 · Assemble → the decision brief<br/>your positions · graded findings · call · confidence basis · dominant unknown · verify-first · flip-it · sources"]
+    G --> S6["STEP 9 · Assemble → the decision brief<br/>coverage-retention re-scan · your positions · graded findings · call · confidence basis · dominant unknown · verify-first · flip-it · sources"]
     S6 --> S10["STEP 10 · Offer independent adjudication<br/>opt-in, off by default · high-stakes only · blind → adversarial · never flips the call"]
     S10 --> S11["STEP 11 · Offer /render"]
     S11 --> S12["STEP 12 · Offer /track"]
@@ -131,9 +131,11 @@ The gate opens by asking for your own standpoint in one line. Where the systems 
 
 ### The grade markers
 
-Every load-bearing claim is marked. `[V]` = independently corroborated; `[N]` = not independently verified (five situations, set out below). A `[V]` always carries a strength tier: `[V1]` primary (the regulation, the official statistic, the study), `[V2]` secondary (reputable reporting on top of primaries), `[V3]` weak or contested — the **primary/secondary** distinction marking *proximity of the source, not trust in it* (`[V3]` is a judgement about strength, not proximity): an interested party's own document does not earn `[V1]` on a claim it has a stake in, and a claim resting only on that party's own account is `[N]`, not `[V3]`. An `[N]` does not tell you *why* the claim is unverified — the claim's own line does. It may be uncorroborated after a real search; rest only on an interested party; be waiting on a named document that would settle it; inherit the cap from an unverified thing it depends on; or be a judgement or prediction the engine never grades higher, however strong the evidence — which loop dominates, whether acting at a leverage point will work, and whether or when a system tips are permanently `[N]` by design. **Only the first three can be moved by looking harder; the fourth moves only when the unverified thing it depends on is itself verified.** The last kind is not a gap in the research; it is the engine declining to pretend.
+Every load-bearing claim is marked. `[V]` = independently corroborated; `[N]` = not independently verified (five situations, set out below). A `[V]` always carries a strength tier: `[V1]` primary (the regulation, the official statistic, the study), `[V2]` secondary (reputable reporting on top of primaries), `[V3]` weak or contested — the **primary/secondary** distinction marking *proximity of the source, not trust in it* (`[V3]` is a judgement about strength, not proximity): an interested party's own document does not earn `[V1]` on a claim it has a stake in, and a claim resting only on that party's own account is `[N]`, not `[V3]`. An `[N]` does not tell you *why* the claim is unverified — the claim's own line does. It may be uncorroborated — or contradicted — after a real search; rest only on an interested or self-reporting party; be waiting on a named document that would settle it; inherit the cap from an unverified thing it depends on; or be a judgement or prediction the engine never grades higher, however strong the evidence — which loop dominates, whether acting at a leverage point will work, and whether or when a system tips are permanently `[N]` by design. **Only the first three can be moved by looking harder; the fourth moves only when the unverified thing it depends on is itself verified.** The last kind is not a gap in the research; it is the engine declining to pretend.
 
 A related point where causal maps are involved: a tier on a map **link** grades the support for that mechanism *in general* — not that this particular arrow is the operative cause in your case. The same symbol carries a weaker promise there than it does on a claim.
+
+Map elements and the analysis's numbered items carry fixed identifiers whose shape — a capitalised word stem plus a number: `Node1`, `Link1`, `LoopR1`, `ClaimReg1`, `Find1` — cannot be confused with a grade symbol, a domain acronym, or a layer tag. A bracketed `[V1]` is always a grade; `Node1` is always a map variable.
 
 The `[V3]` and `[N]` items are where the analysis is exposed — that is where to direct further verification. One further rule protects you: an official finding of personal fault (a coroner's or inquiry's "X failed") is reported as that body's recorded judgement, never as established fact — blame is always yours to judge at the gate. Every full-pass deliverable also ends with a fixed plain-language legend restating these markers in one sentence each — you never need this guide open to read a brief.
 
@@ -141,7 +143,7 @@ The `[V3]` and `[N]` items are where the analysis is exposed — that is where t
 
 - **The call** — the actual recommendation.
 - **Confidence basis** — confidence in the fact-chain and the conditions under which it changes (it names the weakest grade the call leans on), plus, separately, the action contingency: what must hold true after acting for the call to succeed. Evidence-quality transparency, not a track-record calibration.
-- **The dominant unknown** — the one fact that would most change the conclusion. Chase this first.
+- **The dominant unknown** — the one fact that would most change the conclusion. Verify this first.
 - **What to verify first** — the cheapest next step that most reduces risk.
 - **What would flip the call** — including any assumptions that, moved together, the call could not survive.
 
@@ -157,7 +159,7 @@ Findings in a brief may carry an optional tag borrowed from systems engineering 
 - **soft** — behavioural or political; there is no optimum, only a defensible accommodation; the verb is *resolve* (by satisficing).
 - **messy** — rooted in conflicting values or beliefs; the verb is *dissolve* (reframe the situation until the problem cannot arise in that form).
 
-A wicked problem is usually all three colliding, which is why one crisp verdict cannot fit every finding. Tags are reporting vocabulary only — they change no grade and add no pipeline step.
+A wicked problem is usually all three colliding, which is why a single verdict cannot fit every finding. Tags are reporting vocabulary only — they change no grade and add no pipeline step.
 
 ## 8. The other four skills
 
@@ -191,7 +193,7 @@ A wicked problem is usually all three colliding, which is why one crisp verdict 
 
 | Term | Meaning |
 |---|---|
-| `[V]` / `[N]` | A claim is **[V]** (independently corroborated) or **[N]** (not independently verified). That one mark covers five situations: uncorroborated or contradicted after a real search; resting only on an interested or self-reporting party; awaiting a named document that would settle it; inheriting the cap from an unverified thing it depends on; or permanently capped by design — which loop dominates now, whether acting at a leverage point will work, and whether or when the system tips. The first three move on further verification; the fourth moves only when the thing it depends on is verified; the fifth never moves. The claim's own line says which of the five it is. Questions of value, framing or blame, and forecasts made outside the systems map, carry no mark at all: they are routed to you as open questions, never graded. |
+| `[V]` / `[N]` | A claim is **[V]** (independently corroborated) or **[N]** (not independently verified). That one mark covers five situations: uncorroborated or contradicted after a real search; resting only on an interested or self-reporting party; awaiting a named document that would settle it; inheriting the cap from an unverified thing it depends on; or permanently capped by design — which loop dominates now, whether acting at a leverage point will work, and whether or when the system tips. The first three move on further verification; the fourth moves only when the thing it depends on is verified; the fifth never moves. The claim's own line says which of the five it is, and records any contradiction found. Questions of value, framing or blame, and forecasts made outside the systems map, carry no mark at all: they are routed to you as open questions, never graded. |
 | `[N]` by design | The permanent kind. Which loop dominates now, whether acting at a leverage point will work, and whether or when the system tips carry a hard ceiling of **[N]** and route to you. No further research lifts them: the engine is declining to manufacture confidence, not reporting a gap in its work. |
 | Tier on a map link | On a causal-map link, **[V1]**/**[V2]**/**[V3]** grade the support for that mechanism *in general* — not that this arrow is the operative, correctly-directed cause in your case. A weaker promise than the same symbol on a claim. |
 | `[V1]` / `[V2]` / `[V3]` | Source-strength tiers on a [V] — how strong the corroborating source itself is. The tier is part of the grade: it travels with the claim and is never dropped. |
@@ -213,4 +215,4 @@ A wicked problem is usually all three colliding, which is why one crisp verdict 
 
 ---
 
-**Insight Engine v0.1.21** — User Operating Guide. The large language model provides the insight; the engine makes it verified, defensible, and audience-ready. For the full design specification, layer-by-layer detail, and the controlled-testing record behind each feature, see the companion [Architecture](Architecture.md) document.
+**Insight Engine v0.1.22** — User Operating Guide. The large language model provides the insight; the engine makes it verified, defensible, and audience-ready. For the full design specification, layer-by-layer detail, and the controlled-testing record behind each feature, see the companion [Architecture](Architecture.md) document.
