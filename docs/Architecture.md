@@ -5,6 +5,8 @@
 > Markdown edition for reading on GitHub. A formatted `.docx` is in [`originals/`](originals/).
 >
 > For the ideas each layer is built on — and how to run the method on any capable model outside Claude — see the companion [**Foundations**](Foundations.md) document, written for the general reader.
+>
+> For every term, symbol and identifier series used here, see the [**Glossary**](Glossary.md).
 
 
 ## 1. What the Insight Engine is

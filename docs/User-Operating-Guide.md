@@ -191,6 +191,8 @@ A wicked problem is usually all three colliding, which is why a single verdict c
 
 ## 11. Glossary
 
+*The terms needed to read a brief are below. The full corpus vocabulary — every term, symbol, identifier series and abbreviation, with the multiple-meaning audit — is in the [Glossary](Glossary.md).*
+
 | Term | Meaning |
 |---|---|
 | `[V]` / `[N]` | A claim is **[V]** (independently corroborated) or **[N]** (not independently verified). That one mark covers five situations: uncorroborated or contradicted after a real search; resting only on an interested or self-reporting party; awaiting a named document that would settle it; inheriting the cap from an unverified thing it depends on; or permanently capped by design — which loop dominates now, whether acting at a leverage point will work, and whether or when the system tips. The first three move on further verification; the fourth moves only when the thing it depends on is verified; the fifth never moves. The claim's own line says which of the five it is, and records any contradiction found. Questions of value, framing or blame, and forecasts made outside the systems map, carry no mark at all: they are routed to you as open questions, never graded. |
