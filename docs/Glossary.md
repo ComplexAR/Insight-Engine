@@ -8,7 +8,7 @@ date: "27 August 2026"
 
 *Companion to the [User Operating Guide](User-Operating-Guide.md) and the [Architecture](Architecture.md) document.*
 
-**Corpus version described:** insight-engine **v0.1.22** (shipped). The identifier scheme in Section 4 is the shipped scheme, fixed by the specification in `skills/analyse/SKILL.md`.
+**Corpus version described:** insight-engine **v0.1.23** (shipped); the identifier scheme is unchanged since v0.1.22. The identifier scheme in Section 4 is the shipped scheme, fixed by the specification in `skills/analyse/SKILL.md`.
 
 **Provenance:** compiled 24 August 2026 by Fable 5 (`claude-fable-5`) against v0.1.21, when the identifier scheme was designed and unshipped; revised on first publication, 27 August 2026, to describe the scheme as shipped. The stems were fixed on 25 August 2026, five of them differing from those first proposed.
 
@@ -150,7 +150,7 @@ Authority: the fixed legend in `skills/analyse/SKILL.md` (Step 9 item 5); ADJ-00
 
 **Adversarial pass** — The second adjudication pass: the adjudicator tries to break the load-bearing claims and the call, after the blind pass. Authority: `adjudicate` §4.
 
-**Blind pass** — The first adjudication pass: a separate model, handed the facts, the grade-locked spine and the draft brief but not the first model's reasoning, re-derives the analysis to see whether it reaches the same call. Authority: `adjudicate` §4; Architecture §5.12.
+**Blind pass** — The first adjudication pass: a separate model, handed the facts and the grade-locked spine but not the call, the first model's reasoning or the operator's gate positions, re-derives the analysis to see whether it reaches the same call. Blind **by construction** — the withheld material is absent from the package sent, so blindness does not rest on the model's compliance. Authority: `adjudicate` §4; Architecture §5.12.
 
 **Checked-and-held** — A `track` update-log result recording that a claim was re-verified and its grade did not change: **HELD-FIRM** (nothing found bearing on the grade) or **HELD-ERODED** (a cited new observation was found that is insufficient to change the grade; two HELD-ERODED entries on one claim force a full re-grade review). Every entry names what was searched and what would have counted as disconfirmation. Authority: `track` Update log and Mode 2.
 
@@ -204,7 +204,7 @@ Every entry in this supplement serves the engine and record tier; the one reader
 
 **Noise filter** — The framing rule for repeat adjudication runs: they answer "does this verdict reproduce?", never "is this verdict more likely correct?". Protected §5.1 term. Authority: `adjudicate` §5 (panel sizing).
 
-**Outbound-package preview** — The confirm / edit / cancel display of the exact package (grade-locked spine, contested claims, draft brief) before anything leaves for a cross-lab counterparty. Authority: `adjudicate` §6.
+**Outbound-package preview** — The confirm / edit / cancel display of the exact package before anything leaves for a cross-lab counterparty. There are two, because adjudication is two dispatches: the pass-1 package (grade-locked spine and contested claims, and not the call) and the pass-2 package (the adjudicator's own pass-1 verdict and the draft brief). Raw source documents are sent in neither. Authority: `adjudicate` §6.
 
 **Real-use monitor (RUM)** — The accruing observational log of adjudication runs (`monitor/ledger.jsonl` plus `monitor.py`), answering whether a second pass ever catches a decision-relevant error or flips a call in real use, with a frozen coding rule and per-class retirement recommendations. Authority: `skills/adjudicate/monitor/README.md`; `adjudicate` §7.
 
@@ -513,4 +513,4 @@ This is the audit the glossary exists for: the word-level counterpart of the ide
 
 ---
 
-*The Insight Engine Glossary — first published 27 August 2026 with v0.1.22, compiled 24 August 2026 by Fable 5 (`claude-fable-5`). Describes insight-engine v0.1.22 as shipped.*
+*The Insight Engine Glossary — first published 27 August 2026 with v0.1.22, compiled 24 August 2026 by Fable 5 (`claude-fable-5`). Describes insight-engine v0.1.23 as shipped; the **Blind pass** and **Outbound-package preview** entries were revised on 29 August 2026 for the v0.1.23 adjudication blindness fix.*
