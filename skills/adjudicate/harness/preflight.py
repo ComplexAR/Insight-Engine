@@ -20,9 +20,10 @@ from crosslab import CrossLabAdjudicator, MockAdjudicator, EgressBlocked
 def offline():
     ok=True; print("[offline pre-flight]")
     try:
-        p=open(os.path.join(os.path.dirname(__file__),"prompts","adjudicate.txt"),encoding="utf-8").read()
-        print(f"  adjudicate.txt loads .......... OK ({len(p)} chars)")
-    except Exception as e: print("  adjudicate.txt ................ FAIL", e); ok=False
+        for _n in ("adjudicate.txt", "adversarial.txt"):
+            p=open(os.path.join(os.path.dirname(__file__),"prompts",_n),encoding="utf-8").read()
+            print(f"  {_n} loads ".ljust(32,".")+f" OK ({len(p)} chars)")
+    except Exception as e: print("  prompts ....................... FAIL", e); ok=False
     try:
         r=MockAdjudicator(provider="openai", egress_policy="redacted").dispatch({"facts":"x"},"P {{blind_package}}")
         assert r["_rung"]=="A-crosslab"; print("  mock dispatch + parse ......... OK")

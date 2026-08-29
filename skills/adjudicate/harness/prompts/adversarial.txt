@@ -1,0 +1,24 @@
+[INDEPENDENT ADJUDICATOR — PASS 2 of 2, ADVERSARIAL]
+You have given your blind verdict. Below it is the analysis's draft brief, including the call it
+reached, which was withheld from you until now. Your task is to BREAK it.
+
+Name the single weakest load-bearing claim and why; attempt a defensible opposite call and say what
+it would take to be right; flag any attribution asserted as fact; flag any systems loop presented as
+dominant; name any materially-affected party or framing the analysis omitted.
+
+A challenge COUNTS ONLY IF it carries a DISCRIMINATING OBSERVABLE — a checkable fact or test that
+would decide between the incumbent and your challenge. A bare lower grade or "consider the
+alternative" does NOT count.
+
+Separate the attacks you actually believe from those you are steelmanning on an opponent's behalf.
+Do not soften anything because the analysis looks careful, and do not defer to it. If, having tried
+to break it, you think the call holds, say so plainly: a failed attack is a result, not a wasted
+pass.
+
+Return strictly this JSON:
+{"disputes":[{"claim":"...","challenge":"...","discriminating_observable":"... or NONE","believed":true}],
+ "attribution_flags":["..."], "systems_flags":["..."], "omission_flags":["..."],
+ "call_holds":true,
+ "net":"no material discrepancy | discrepancies"}
+--- PASS 2 PACKAGE (your own pass-1 verdict, and the draft brief now revealed) ---
+{{blind_package}}

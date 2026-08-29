@@ -11,7 +11,8 @@ turns the unanswerable experiment into an **accumulating observational base rate
 ## The loop (per real high-stakes /analyse)
 1. Run `/analyse` normally on a genuine high-stakes problem; finish the brief.
 2. Run the independent second pass (cross-lab where the operator has set one up — OpenAI is live-verified — otherwise Fable) — blind,
-   then adversarial — on the finished analysis. (`../harness/prompts/adjudicate.txt`.)
+   then adversarial — on the finished analysis, as two dispatches.
+   (`../harness/prompts/adjudicate.txt`, then `../harness/prompts/adversarial.txt`.)
 3. Filter to observable-backed items, then **rank** and surface only the top ~3 (the reduced-test fix).
 4. **You** code each: real catch? would it have changed your decision? (a flip needs a discriminating
    observable, not a hunch).

@@ -13,7 +13,8 @@ CrossLabAdjudicator(model=None, provider=None, base_url=None, egress_policy="off
 MockAdjudicator(...)   # identical interface + gates, canned report, no network/key/spend
 ```
 - **Blind package** = facts + grade-locked spine + draft brief, **no reasoning**; `build_blind_text` injects it
-  into `prompts/adjudicate.txt` (blind→adversarial two-pass contract, discriminating-observable requirement).
+  into `prompts/adjudicate.txt` (pass 1, blind - the call is not in the package) and
+  `prompts/adversarial.txt` (pass 2, sent after pass 1 returns; discriminating-observable requirement).
 - **Request** is provider-specific, from the `PROVIDERS` registry in `crosslab.py`:
   - **openai** — `POST https://api.openai.com/v1/responses`, `{model, reasoning:{effort}, input}`, Bearer `OPENAI_API_KEY`, response `output[].content[].text`.
   - **google** — `POST .../v1beta/models/{model}:generateContent`, `{contents:[{parts:[{text}]}]}`, `x-goog-api-key` header (never a URL key), `GEMINI_API_KEY`, response `candidates[0].content.parts[].text`.

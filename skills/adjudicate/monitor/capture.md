@@ -4,7 +4,8 @@ After a genuine high-stakes `/analyse`, before you act on the brief:
 
 1. **Dispatch the adjudicator** on the finished analysis (blind package = facts + grade-locked spine +
    draft brief, NOT your reasoning). Prefer a different-lab model if built & egress-permitted; else Fable;
-   else an Opus panel. Prompt: `../harness/prompts/adjudicate.txt`.
+   else an Opus panel. Prompts: `../harness/prompts/adjudicate.txt` (blind), then
+   `../harness/prompts/adversarial.txt` (adversarial, after the blind verdict returns).
 2. **Filter** each returned item: keep only those with a genuine discriminating observable.
 3. **Rank** the survivors by "would acting on this change my call or a grade?" — surface the **top 3**.
 4. **Code the run** honestly against the top items:

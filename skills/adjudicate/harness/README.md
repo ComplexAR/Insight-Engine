@@ -11,7 +11,8 @@
 - `preflight.py`     — offline checks (import, prompt, mock dispatch, gates, per-provider parse + tagged
                        errors, same-lineage guard, routing/mismatch, the "Other" mode, and the adapter
                        loader) plus a cheap `--live` smoke against the resolved provider.
-- `prompts/adjudicate.txt` — the blind→adversarial two-pass adjudication prompt.
+- `prompts/adjudicate.txt` — the pass-1 prompt. Blind: facts + spine, the call withheld.
+- `prompts/adversarial.txt` — the pass-2 prompt, sent only after pass 1 returns, with the brief revealed.
 - `CROSSLAB.md` — interface / operation / governance.  `PREFLIGHT.md` — the per-lab live-run checklist.
 
 Stdlib only. Keys are read from the environment, never logged. `~/.insight-engine/` (preferences and any

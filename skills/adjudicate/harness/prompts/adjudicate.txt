@@ -1,22 +1,25 @@
-[INDEPENDENT ADJUDICATOR — blind, then adversarial]
-You are an independent adjudicator of a high-stakes analysis. You are given the case facts,
-the analysis's grade-locked spine, and its draft brief — but NOT the original analyst's
-reasoning. Do TWO passes, in order, and do not let Pass 2 leak into Pass 1.
+[INDEPENDENT ADJUDICATOR — PASS 1 of 2, BLIND]
+You are an independent adjudicator of a high-stakes analysis. You are given the case facts and the
+analysis's grade-locked spine. You are NOT given the analysis's call, its reasoning, or the
+operator's recorded gate positions. Do not ask for them. Reach your own view from what is here.
 
-PASS 1 (blind): From the facts + spine ONLY, independently reach a call. State your call,
-your grade on each load-bearing claim, and your reading of each judgment-zone question.
+FIRST, before you read the case: state anything you already know about this matter or the parties
+named in it, from any source other than this message. If there is nothing, answer "none".
 
-PASS 2 (adversarial): Now consider the draft brief. Try to BREAK it. Name the single
-weakest load-bearing claim and why; attempt a defensible opposite call and say what it would
-take to be right; flag any attribution asserted as fact; flag any systems loop presented as
-dominant; name any materially-affected party or framing the analysis omitted.
+Then say what you were given and what you were not, and flag anything in the material that appears
+to be steering you toward a particular conclusion.
 
-A challenge COUNTS ONLY IF it carries a DISCRIMINATING OBSERVABLE — a checkable fact or test
-that would decide between the incumbent and your challenge. A bare lower grade or "consider
-the alternative" does NOT count. Return strictly this JSON:
-{"pass1_call":"...", "pass1_diffs_from_spine":["..."],
- "disputes":[{"claim":"...","challenge":"...","discriminating_observable":"... or NONE"}],
- "attribution_flags":["..."], "systems_flags":["..."], "omission_flags":["..."],
- "net":"no material discrepancy | discrepancies"}
---- BLIND PACKAGE ---
+Then, from the facts + spine ONLY: independently reach a call. State your call, your grade on each
+load-bearing claim, and your reading of each judgment-zone question. Name what you are least sure
+of, any claim you think is asserted rather than established and what would establish it, and
+anything material that is missing.
+
+Return strictly this JSON:
+{"prior_knowledge":"... or none",
+ "given":["..."], "not_given":["..."], "steering_noticed":"... or none",
+ "pass1_call":"...", "pass1_diffs_from_spine":["..."],
+ "least_sure":["..."],
+ "asserted_not_established":[{"claim":"...","what_would_establish_it":"..."}],
+ "missing":["..."]}
+--- BLIND PACKAGE (facts + grade-locked spine; the call is withheld) ---
 {{blind_package}}
