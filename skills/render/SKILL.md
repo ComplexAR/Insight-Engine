@@ -8,7 +8,7 @@ description: Insight Engine addressee rendering, grade-locked. Triggers when the
 Re-express a finished, graded analysis for one or more audiences. This is a register transform over a grade-locked spine — never a re-analysis.
 
 ## Hard invariants
-1. **No claim or grade changes.** Carry every `[V]`/`[N]`, its source tier (`[V1]`/`[V2]`/`[V3]`), and the dominant unknown verbatim, and keep them visible. A lay render may put the tier in plain words ("confirmed against the primary source itself" / "confirmed by reputable reporting" / "weakly or disputedly corroborated") but must never upgrade a contested `[V3]` to sound settled. If you ever feel the need to change a grade to suit an audience, stop — that is the failure mode.
+1. **No claim or grade changes.** Carry every `[V]`/`[U]`, its source tier (`[V1]`/`[V2]`/`[V3]`), and the dominant unknown verbatim, and keep them visible. A lay render may put the tier in plain words ("confirmed against the primary source itself" / "confirmed by reputable reporting" / "weakly or disputedly corroborated") but must never upgrade a contested `[V3]` to sound settled. If you ever feel the need to change a grade to suit an audience, stop — that is the failure mode.
 2. **The non-droppable caveat core** (all grades + the dominant unknown + the one-line reliability caveat) appears in EVERY render.
 3. **Re-scope and re-frame for the reader, never distort.** You may re-order and select the audience-relevant subset; you may not distort a finding.
 4. **Tone.** Show understanding through accuracy and respect — acknowledge plainly what is at stake. Never ingratiating, saccharine, or over-familiar; no performed warmth. Empathy is carried by register, never by false certainty.

@@ -17,20 +17,29 @@ This repo is **both** a Claude Code plugin **and** a single-plugin marketplace. 
 ## Cutting a new release
 
 1. Make your changes to the skills.
-2. **Bump the version** in BOTH `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` (keep them equal). The version is the update cache key: if you don't bump it, already-installed users will not see the change.
-3. Rebuild the Cowork `.plugin` from the repo root (the `-D` flag keeps directory entries out of the zip, which the Cowork uploader requires):
+2. **If the release adds, renames or retires any vocabulary — a grade symbol, an identifier series, a
+   defined term — update `docs/Glossary.md` in the same release.** Not the next one. A stale glossary
+   asserts wrong meanings with reference authority, which is worse than no glossary at all. Where the
+   change touches the fixed legend, the Glossary's quotation of it is replaced **by copy** from the
+   shipped legend, never retyped — local paraphrase is the recorded cause of the v0.1.20 legend
+   defect. This step was called for by the Glossary's own governance section on 27 August 2026 and
+   was not added until the convergence release of 30 August 2026, which is itself the demonstration
+   of why it is needed: the release before it renamed the most-used symbol in the corpus and left the
+   Glossary silent.
+3. **Bump the version** in BOTH `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` (keep them equal). The version is the update cache key: if you don't bump it, already-installed users will not see the change.
+4. Rebuild the Cowork `.plugin` from the repo root (the `-D` flag keeps directory entries out of the zip, which the Cowork uploader requires):
    ```
    zip -D -X -9 -r dist/insight-engine-<version>.plugin .claude-plugin/plugin.json README.md LICENSE skills
    ```
    (Note: this packages `plugin.json` but **not** `marketplace.json` — the `.plugin` is the plugin alone.) The recursive `skills` argument also includes any runtime files, so before building **never package `skills/adjudicate/monitor/ledger.jsonl`** (the real-use run log) — delete or git-ignore it first. **Also exclude every `__pycache__/` directory and every `.pyc` file.** Running `monitor.py`, `prefs.py` or the cross-lab harness leaves Python bytecode caches beside the sources; a naive recursive zip picks them up. On 25 August 2026 a first build of 0.1.22 packaged seven of them, adding 127 KB of stale bytecode and taking the archive from 24 files to 31. Build from a staging copy that filters them out, and check the packaged file list against the previous release: it should differ only in the files this release changes. User adjudication preferences live outside the plugin at `~/.insight-engine/` and are never packaged.
-4. Commit, then tag and push:
+5. Commit, then tag and push:
    ```
    git add -A
    git commit -m "insight-engine <version>"
    git tag -a v<version> -m "insight-engine <version>"
    git push origin main --tags
    ```
-5. (Recommended) Create a GitHub **Release** for the tag and attach `dist/insight-engine-<version>.plugin` so Cowork users have a clean download link.
+6. (Recommended) Create a GitHub **Release** for the tag and attach `dist/insight-engine-<version>.plugin` so Cowork users have a clean download link.
 
 ## Versioning
 

@@ -67,6 +67,8 @@ coincide only in that one state. `U` collides with nothing in either edition.
 
 "N" also mapped awkwardly onto "not". `U` says what it means.
 
+**And there is direct evidence of reader confusion, which §5 originally denied.** The operator — the corpus's primary user and tester — reports having been confused by and misread `[N]` on multiple occasions. This is the failure the symbol change prevents, reported by the reader whose misreadings matter most. It is testimony rather than a controlled observation, and it was given after the decision rather than before it; both qualifications are stated so the ground can be weighed for what it is. It nonetheless moves the rename from a structural argument with no observed harm to a structural argument with observed harm.
+
 ## 5. The case against, recorded rather than omitted
 
 An independent assessment (Fable 5, 30 August 2026, held at
@@ -80,9 +82,21 @@ records its own justification is not a decision anyone can review:
   explicitly, rather than silently.
 - The 24 August precedent declined to rename `K_MIN` on the ground that renaming a shipped identifier
   is a larger act than a wording change — and `[N]` was the most-shipped symbol in the corpus.
-- **No reader was ever shown to misread `[N]` as a number.** The bracket channel already separated
-  them. The assessment's own words: *"the safety case in the 2.0.0 changelog is stronger than the
-  evidence behind it."*
+- ~~**No reader was ever shown to misread `[N]` as a number.**~~ **Corrected the same day, before the
+  implementing release: this was false.** The operator — the corpus's primary user and tester, and
+  therefore the most relevant reader there is — reports having been confused by and misreading `[N]`
+  on multiple occasions. That is direct evidence of the failure the rename prevents, and it was
+  available and simply not asked for. It is recorded here rather than in a later document because a
+  decision record whose stated case against turns out to rest on an untested assumption is exactly
+  the kind of document this corpus exists to stop producing. The evidence is operator-reported and
+  self-reported after the fact, which is worth stating plainly — but it is testimony from the one
+  reader whose misreadings actually matter, and it makes the rename better grounded than §4 claimed,
+  not worse. The remaining objections below stand as written.
+- **The bracket channel already separated the grade from every numeric use of the letter**, so the
+  collision was arguably contained before the rename. The assessment's own words: *"the safety case in
+  the 2.0.0 changelog is stronger than the evidence behind it."* That judgement was formed without the
+  operator's testimony above; with it, the safety case and the evidence are closer than the assessment
+  could have known.
 
 The decision proceeds notwithstanding, on the grounds in §4 and because the alternative — reverting —
 would create a third symbol era and re-open a collision that has already produced one defect.

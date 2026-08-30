@@ -241,7 +241,7 @@ card(s,0.70,1.75,5.80,1.15)
 tb(s,1.0,1.75,1.5,1.15,"[V]",34,GREEN,bold=True,anchor=MSO_ANCHOR.MIDDLE)
 tb(s,2.35,1.75,3.9,1.15,"verified — independently corroborated",17,INK,anchor=MSO_ANCHOR.MIDDLE)
 card(s,6.83,1.75,5.80,1.15)
-tb(s,7.13,1.75,1.5,1.15,"[N]",34,AMBER,bold=True,anchor=MSO_ANCHOR.MIDDLE)
+tb(s,7.13,1.75,1.5,1.15,"[U]",34,AMBER,bold=True,anchor=MSO_ANCHOR.MIDDLE)
 tb(s,8.48,1.75,3.9,1.15,"not — rests on an interested party",17,INK,anchor=MSO_ANCHOR.MIDDLE)
 tiers=[("[V1]","primary",GREEN),("[V2]","secondary",BLUE),("[V3]","weak / contested",DGOLD)]
 for i,(t,d,c) in enumerate(tiers):
@@ -267,7 +267,7 @@ card(s,0.70,3.28,7.35,2.5)
 gtiers=[("[V1]","primary — independent of any interested party",GREEN),
         ("[V2]","reputable reporting resting on those",BLUE),
         ("[V3]","weak but independent, or credible sources disagree",DGOLD),
-        ("[N]","nothing independent behind it, or an interested party's own account",AMBER)]
+        ("[U]","nothing independent behind it, or an interested party's own account",AMBER)]
 for i,(t,d,c) in enumerate(gtiers):
     y=3.48+i*0.57
     tb(s,1.0,y,1.15,0.5,t,17,c,bold=True)

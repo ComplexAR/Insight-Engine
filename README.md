@@ -4,7 +4,7 @@
 
 A light plugin for investigating high-stakes, complex, contested, and wicked problems — the kind where the important things are easy to miss, the evidence is mixed or interested, and the deciding questions are value judgements. The engine surfaces the hidden contributors, conditions, and causal structure beneath a situation — sources of success and adaptation as well as failure — verifies every load-bearing claim against current sources, and routes what cannot be verified to your judgement. It offers understanding and a defensible next step, not control or prediction: wicked problems are navigated, not solved. **The large language model provides the insight; the engine makes it verified, defensible, and audience-ready.**
 
-Built one controlled test at a time, keeping only what beats a strong plain pass. Every load-bearing claim is graded `[V]` (independently corroborated) or `[N]` (not independently verified — uncorroborated, resting only on an interested party, awaiting a named document, inheriting an unverified premise, or a judgement the engine never grades higher by design), with strength tiers `[V1]`/`[V2]`/`[V3]`; once a grade is set it is never changed downstream — only re-expressed.
+Built one controlled test at a time, keeping only what beats a strong plain pass. Every load-bearing claim is graded `[V]` (independently corroborated) or `[U]` (not independently verified — uncorroborated, resting only on an interested party, awaiting a named document, inheriting an unverified premise, or a judgement the engine never grades higher by design), with strength tiers `[V1]`/`[V2]`/`[V3]`; once a grade is set it is never changed downstream — only re-expressed.
 
 ## The five commands
 
@@ -31,12 +31,12 @@ It does not convene real stakeholders (simulated perspectives are labelled as su
 ### Claude Cowork (desktop app) — install from file
 The desktop app installs plugins from a file rather than from a GitHub marketplace:
 
-1. Download **`dist/insight-engine-0.1.23.plugin`** from this repo (or from the latest [Release](../../releases)).
+1. Download **`dist/insight-engine-1.0.0.plugin`** from this repo (or from the latest [Release](../../releases)).
 2. In Cowork, open **Customize → Skills → Upload from file** and choose the `.plugin`.
 
 ## Version
 
-**0.1.23.** For how releases are cut, see [PUBLISHING.md](PUBLISHING.md).
+**1.0.0.** For how releases are cut, see [PUBLISHING.md](PUBLISHING.md). Every term, symbol and identifier series is defined in the [Glossary](docs/Glossary.md).
 
 ## License
 
