@@ -32,14 +32,46 @@ This repo is **both** a Claude Code plugin **and** a single-plugin marketplace. 
    zip -D -X -9 -r dist/insight-engine-<version>.plugin .claude-plugin/plugin.json README.md LICENSE skills
    ```
    (Note: this packages `plugin.json` but **not** `marketplace.json` — the `.plugin` is the plugin alone.) The recursive `skills` argument also includes any runtime files, so before building **never package `skills/adjudicate/monitor/ledger.jsonl`** (the real-use run log) — delete or git-ignore it first. **Also exclude every `__pycache__/` directory and every `.pyc` file.** Running `monitor.py`, `prefs.py` or the cross-lab harness leaves Python bytecode caches beside the sources; a naive recursive zip picks them up. On 25 August 2026 a first build of 0.1.22 packaged seven of them, adding 127 KB of stale bytecode and taking the archive from 24 files to 31. Build from a staging copy that filters them out, and check the packaged file list against the previous release: it should differ only in the files this release changes. User adjudication preferences live outside the plugin at `~/.insight-engine/` and are never packaged.
-5. Commit, then tag and push:
+5. **Run the release guard, and do not skip it.**
+
+   ```
+   python <Portable-Edition>/conformance/release_guard.py . <version>
+   ```
+
+   It refuses the release unless a published run record in `conformance/results/runs/` **names this
+   version** and **carries this package's SHA-256**, and unless the published evidence still matches
+   the working copy it was taken from.
+
+   **A release ships with the records that evidence its claims.** Before 2026-08-31 this repository
+   carried a per-version account of what testing had found in `docs/Architecture.md` and **not one
+   evidence file**, so every testing claim in it was an assertion. The version number alone is not
+   enough either: a record can name the right version and have been produced against a different
+   build, which is why the hash is checked rather than the number. That is not hypothetical — a rule
+   correct in the working tree was absent from the built package on 2026-08-31, and only adjudication
+   reading inside the `.plugin` found it.
+
+   **The guard does not require that the run passed.** A release shipping with a recorded failure and
+   saying so is honest; a guard demanding green would produce a corpus of green records, which is what
+   a conformance record is supposed to be evidence against.
+
+   **A release may ship untested — but it must say so in a record.** Write the run folder with a
+   verdict stating that this version was not run and why. That is the whole point: shipping untested
+   becomes a deliberate, dated, visible act instead of a silent one. Versions 1.2.0 and 1.2.1 both
+   shipped on 2026-08-31 with no run, and nothing at the time noticed.
+
+   **Every shipped version gets its own release commit and tag.** `v1.1.0` has neither — it entered
+   the record inside the 1.1.1 commit — so that build cannot be checked out and nothing it claims can
+   be re-tested. The guard warns about it rather than blocking, because the fix for a past omission is
+   not to block a present release.
+
+6. Commit, then tag and push:
    ```
    git add -A
    git commit -m "insight-engine <version>"
    git tag -a v<version> -m "insight-engine <version>"
    git push origin main --tags
    ```
-6. (Recommended) Create a GitHub **Release** for the tag and attach `dist/insight-engine-<version>.plugin` so Cowork users have a clean download link.
+7. (Recommended) Create a GitHub **Release** for the tag and attach `dist/insight-engine-<version>.plugin` so Cowork users have a clean download link.
 
 ## Versioning
 

@@ -1,0 +1,11 @@
+
+results/runs/2026-08-31-1648-B10-converse-insight-engine-1.1.3/capture/deliverable.md
+  pass  F2 receipt shape       receipt present with the canonical fields
+  pass  F1 legend fidelity     legend matches the canonical text
+  pass  F3 receipt vs ledger   receipt and ledger agree (6/6 resolved)
+  n/a   X1 unverified purity   this run performed verification
+  pass  X2 tier vocabulary     only the fixed grade symbols appear
+  n/a   X3 era vs receipt      document is on the current contract
+  pass  X4 citation coherence  2 citation-URL pair(s) cohere — coherence, not correctness: nothing was opened
+
+all checks passed

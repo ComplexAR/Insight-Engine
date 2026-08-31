@@ -1,0 +1,11 @@
+
+/sessions/happy-dazzling-euler/mnt/Analytical Series of Frameworks/Insight-Engine-Portable/conformance/results/runs/2026-08-30-2336-resolved-gate-insight-engine-1.1.0/capture/analyse-deliverable.md
+  pass  F2 receipt shape       receipt present with the canonical fields
+  pass  F1 legend fidelity     legend matches the canonical text
+  pass  F3 receipt vs ledger   receipt and ledger agree (6/6 resolved)
+  n/a   X1 unverified purity   this run performed verification
+  pass  X2 tier vocabulary     only the fixed grade symbols appear
+  n/a   X3 era vs receipt      document is on the current contract
+  n/a   X4 citation coherence  no citation-URL pair this check can read — it covers only a UK neutral citation paired with a bailii.org or caselaw.nationalarchives.gov.uk URL on one line, or a document with exactly one of each
+
+all checks passed

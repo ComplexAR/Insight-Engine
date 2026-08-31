@@ -1,0 +1,24 @@
+
+/sessions/happy-dazzling-euler/mnt/Analytical Series of Frameworks/Insight-Engine-Portable/conformance/results/runs/2026-08-31-1024-boundary-regression-insight-engine-1.1.3/capture/pass1-deliverable.md
+  pass  F2 receipt shape       receipt present with the canonical fields
+  pass  F1 legend fidelity     legend matches the canonical text
+  pass  F3 receipt vs ledger   receipt and ledger agree (6/6 resolved)
+  n/a   X1 unverified purity   this run performed verification
+  pass  X2 tier vocabulary     only the fixed grade symbols appear
+  n/a   X3 era vs receipt      document is on the current contract
+  pass  X4 citation coherence  4 citation-URL pair(s) cohere — coherence, not correctness: nothing was opened; 1 pairing(s) skipped as ambiguous (more than one citation or URL)
+
+all checks passed
+
+=== pass2-deliverable.md — checker from Portable 2.0.9 ===
+
+/sessions/happy-dazzling-euler/mnt/Analytical Series of Frameworks/Insight-Engine-Portable/conformance/results/runs/2026-08-31-1024-boundary-regression-insight-engine-1.1.3/capture/pass2-deliverable.md
+  pass  F2 receipt shape       receipt present with the canonical fields
+  pass  F1 legend fidelity     legend matches the canonical text
+  pass  F3 receipt vs ledger   refused gate, ledger and receipt agree (5/6 defaulted)
+  n/a   X1 unverified purity   this run performed verification
+  pass  X2 tier vocabulary     only the fixed grade symbols appear
+  n/a   X3 era vs receipt      document is on the current contract
+  n/a   X4 citation coherence  no citation-URL pair this check can read — it covers only a UK neutral citation paired with a bailii.org or caselaw.nationalarchives.gov.uk URL on one line, or a document with exactly one of each
+
+all checks passed
