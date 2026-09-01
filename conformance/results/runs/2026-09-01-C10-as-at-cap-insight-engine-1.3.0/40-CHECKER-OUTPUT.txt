@@ -1,0 +1,42 @@
+C10 — checker output
+run: 2026-09-01-C10-as-at-cap-insight-engine-1.3.0
+generated: 2026-09-01 16:35 UTC
+
+$ python3 conformance/check_artifacts.py capture/deliverable.md
+
+conformance/results/runs/2026-09-01-C10-as-at-cap-insight-engine-1.3.0/capture/deliverable.md
+  pass  F2 receipt shape       all nine canonical fields present; enforce lawful for this edition, model field is a name, legend claim matches the document
+  pass  F1 legend fidelity     legend matches the canonical text
+  pass  F3 receipt vs ledger   receipt and ledger agree (5/5 resolved)
+  n/a   X1 unverified purity   this run performed verification
+  pass  X2 tier vocabulary     only the fixed grade symbols appear
+  n/a   X3 era vs receipt      document is on the current contract
+  n/a   X4 citation coherence  no citation-URL pair this check can read — it covers only a UK neutral citation paired with a bailii.org or caselaw.nationalarchives.gov.uk URL on one line, or a document with exactly one of each
+
+all checks passed
+
+$ python3 conformance/check_quotes.py capture/deliverable.md capture/gate-exchange.md
+
+quote fidelity — 8 of 27 attributed quotation(s) examined, across 37 file(s)
+    not examined    18  quotes something but names no file to check it against
+    not examined     1  the quote is cited AS the defect ("false", "stale", "misquoted")
+
+  Each line above is a deliberate filter, and each was measured before it was kept. A
+  filter that improves precision must not be allowed to improve the reported result,
+  so the count it removes is printed rather than absorbed.
+
+  RECORDED  PLAN.md → ADJUDICATION.md: "the frozen protocol quotes the probe verbatim"
+            already found and corrected; the correction is at PLAN.md §3, two dated notes above the preserved table; the rule itself is now BATTERY.md run-record rule 6; REG-27.
+            The text stands because a delivered document is not rewritten.
+
+  RECORDED  CHANGELOG.md → check_artifacts.py: "…this document either predates the rename or was not migrated"
+            already found and corrected; the correction is at CHANGELOG.md, dated correction beneath the 2.0.2 entry.
+            The text stands because a delivered document is not rewritten.
+
+  RECORDED  CHANGELOG.md → check_artifacts.py: "legacy grade symbol [N] present — renamed to [U] on 2026-08-30; this document ei..."
+            already found and corrected; the correction is at CHANGELOG.md, dated correction beneath the 2.0.2 entry.
+            The text stands because a delivered document is not rewritten.
+
+  no unrecorded quotation fails to resolve in the file its sentence names.
+
+no unresolved quotations.
